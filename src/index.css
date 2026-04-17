@@ -1,0 +1,62 @@
+@import "normalize.css/normalize.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Prefer Garamond Nova (local, Adobe, or files in /public/fonts); EB Garamond loads from Google */
+    --font-body:
+      "Garamond Nova", "EB Garamond", "Apple Garamond", "Palatino Linotype", Palatino, Georgia,
+      "Times New Roman", serif;
+    --background: 240 6% 7%;
+    --foreground: 40 20% 95%;
+    --card: 240 5% 10%;
+    --card-foreground: 40 15% 92%;
+    --popover: 240 5% 10%;
+    --popover-foreground: 40 15% 92%;
+    --primary: 15 85% 62%;
+    --primary-foreground: 240 6% 6%;
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 40 10% 88%;
+    --muted: 240 4% 18%;
+    --muted-foreground: 240 6% 58%;
+    --accent: 32 90% 55%;
+    --accent-foreground: 240 8% 8%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5% 20%;
+    --input: 240 5% 20%;
+    --ring: 32 90% 55%;
+    --radius: 0.2rem;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Garamond Nova: uses installed fonts, or drop GaramondNova.woff2 into public/fonts/ and extend src */
+  @font-face {
+    font-family: "Garamond Nova";
+    font-style: normal;
+    font-weight: 400 700;
+    font-display: swap;
+    src: local("Garamond Nova"), local("Garamond Nova Pro"), local("Garamond Nova Display");
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-sans;
+  }
+
+  #root {
+    min-height: 100dvh;
+  }
+}
+
+@layer components {
+  .brutalist-frame {
+    border: 2px solid hsl(var(--foreground));
+    box-shadow: 6px 6px 0 0 hsl(var(--foreground) / 0.85);
+  }
+}
