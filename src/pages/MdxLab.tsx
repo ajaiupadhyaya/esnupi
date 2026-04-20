@@ -1,17 +1,29 @@
 import Hello from "@/content/hello.mdx";
+import { DateTime } from "luxon";
 import { Link } from "react-router-dom";
+import "./mdx-lab.css";
 
 export default function MdxLab() {
+  const date = DateTime.now().toFormat("dd LLL yyyy");
   return (
-    <div className="mx-auto max-w-2xl px-4 pb-24 pt-12 sm:px-6">
-      <article className="prose prose-invert prose-sm max-w-none prose-headings:tracking-tight prose-a:text-primary">
-        <Hello />
-        <p className="not-prose mt-10">
-          <Link to="/" className="text-primary underline-offset-4 hover:underline">
-            ← Back home
+    <div className="mdx-lab">
+      <div className="mdx-lab__paper">
+        <div className="mdx-lab__stamp" aria-hidden>
+          <div className="mdx-lab__stamp-inner">
+            <div className="mdx-lab__stamp-line">printed on</div>
+            <div className="mdx-lab__stamp-date">{date}</div>
+            <div className="mdx-lab__stamp-sub">esnupi · lab</div>
+          </div>
+        </div>
+        <article className="mdx-lab__article">
+          <Hello />
+        </article>
+        <p className="mdx-lab__back">
+          <Link to="/" className="mdx-lab__keycap">
+            <kbd>← Return to desktop</kbd>
           </Link>
         </p>
-      </article>
+      </div>
     </div>
   );
 }

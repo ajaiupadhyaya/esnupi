@@ -1,5 +1,6 @@
-import { playMacWindowClose } from "@/lib/retroMacSounds";
-import { type ReactNode, useCallback, useEffect, useRef } from "react";
+import { playMacMaximize, playMacMinimize, playMacWindowClose } from "@/lib/retroMacSounds";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 /** Must match `--mac-menu-h` and dock reserve used in `MacintoshDesktop` positioning. */
 const MENU_BAR_H = 28;
@@ -16,8 +17,12 @@ export type DesktopWindowProps = {
   height: number;
   zIndex: number;
   active: boolean;
+  minimized?: boolean;
+  /** Optional anchor (screen coords) used to play a "zoom rect" open animation. */
+  spawnAnchor?: { x: number; y: number };
   onActivate: () => void;
   onClose: () => void;
+  onMinimizeToggle?: () => void;
   onMove: (x: number, y: number) => void;
 };
 
@@ -30,12 +35,22 @@ export function DesktopWindow({
   height,
   zIndex,
   active,
+  minimized,
+  spawnAnchor,
   onActivate,
   onClose,
+  onMinimizeToggle,
   onMove,
 }: DesktopWindowProps) {
   const sizeRef = useRef({ width, height });
   sizeRef.current = { width, height };
+  const [mounted, setMounted] = useState(false);
+  const [dragShadow, setDragShadow] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   const dragRef = useRef<{
     pointerId: number;
@@ -76,6 +91,7 @@ export function DesktopWindow({
     if (!d) return;
     if (e && e.pointerId !== d.pointerId) return;
     dragRef.current = null;
+    setDragShadow(false);
     document.removeEventListener("pointermove", onPointerMove, true);
     document.removeEventListener("pointerup", endDrag, true);
     document.removeEventListener("pointercancel", endDrag, true);
@@ -87,6 +103,7 @@ export function DesktopWindow({
     e.preventDefault();
     e.stopPropagation();
     onActivate();
+    setDragShadow(true);
     dragRef.current = {
       pointerId: e.pointerId,
       startX: e.clientX,
@@ -108,10 +125,32 @@ export function DesktopWindow({
     return () => endDrag();
   }, [endDrag]);
 
+  // Zoom-rect open animation — scale from spawnAnchor if given
+  const transformOrigin = spawnAnchor
+    ? `${spawnAnchor.x - x}px ${spawnAnchor.y - y}px`
+    : "50% 50%";
+  const openScale = mounted ? 1 : 0.08;
+
   return (
     <div
-      className={`mac-window ${active ? "" : "mac-window--inactive"}`}
-      style={{ left: x, top: y, width, height, zIndex }}
+      className={cn(
+        "mac-window",
+        !active && "mac-window--inactive",
+        minimized && "mac-window--shaded",
+        dragShadow && "mac-window--dragging",
+      )}
+      style={{
+        left: x,
+        top: y,
+        width,
+        height: minimized ? 28 : height,
+        zIndex,
+        transformOrigin,
+        transform: `scale(${openScale})`,
+        opacity: mounted ? 1 : 0,
+        transition:
+          "transform 180ms cubic-bezier(0.2, 0.9, 0.3, 1.2), opacity 120ms ease, height 300ms ease",
+      }}
       role="dialog"
       aria-label={title}
       onPointerDown={(ev) => {
@@ -133,8 +172,23 @@ export function DesktopWindow({
           <span className="sr-only">Close</span>
         </button>
         <div className="mac-window__title">{title}</div>
+        {onMinimizeToggle && (
+          <button
+            type="button"
+            className="mac-window__zoom"
+            aria-label={`${minimized ? "Expand" : "Collapse"} ${title}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (minimized) playMacMaximize();
+              else playMacMinimize();
+              onMinimizeToggle();
+            }}
+          >
+            <span className="sr-only">Zoom</span>
+          </button>
+        )}
       </div>
-      <div className="mac-window__body">{children}</div>
+      {!minimized && <div className="mac-window__body">{children}</div>}
     </div>
   );
 }
