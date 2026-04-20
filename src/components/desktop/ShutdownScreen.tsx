@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { playMacChirp } from "@/lib/retroMacSounds";
+import { playMacChirp, playShutdownSequence } from "@/lib/retroMacSounds";
+import { stopAmbient } from "@/lib/ambientAudio";
 
 type Mode = "shutdown" | "restart";
 
@@ -20,6 +21,10 @@ export function ShutdownScreen({
   const [stage, setStage] = useState<"collapse" | "dark">("collapse");
 
   useEffect(() => {
+    /* Shutdown layered audio: disk-park click (0ms) → fan decel (0.5s)
+       → CRT bloom hiss (0.7s). Simultaneously ramp the ambient bed down. */
+    playShutdownSequence();
+    stopAmbient();
     playMacChirp(false);
     const id = window.setTimeout(() => setStage("dark"), 650);
     return () => window.clearTimeout(id);

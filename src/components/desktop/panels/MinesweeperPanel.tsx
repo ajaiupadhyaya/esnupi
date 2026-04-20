@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { playMacChirp, playMacErrorBeep, playMacIconSelect } from "@/lib/retroMacSounds";
+import {
+  playMinesCascade,
+  playMinesExplosion,
+  playMinesFlag,
+  playMinesReveal,
+  playMinesVictory,
+} from "@/lib/retroMacSounds";
+import { hydraStage } from "@/lib/hydraStage";
 
 type Difficulty = "easy" | "medium" | "hard";
 const CONFIG: Record<Difficulty, { rows: number; cols: number; mines: number }> = {
@@ -117,16 +124,20 @@ export function MinesweeperPanel() {
             if (x.mine) x.revealed = true;
           });
           setStatus("lost");
-          playMacErrorBeep();
+          playMinesExplosion();
           return next;
         }
+        const prevRevealed = prev.flat().filter((x) => x.revealed).length;
         if (cell.adj === 0) floodReveal(next, r, c);
         else cell.revealed = true;
-        playMacIconSelect();
+        const newlyRevealed = next.flat().filter((x) => x.revealed).length - prevRevealed;
+        if (newlyRevealed > 2) playMinesCascade(newlyRevealed);
+        else playMinesReveal(r + c);
         const unrevealedSafe = next.flat().filter((x) => !x.mine && !x.revealed).length;
         if (unrevealedSafe === 0) {
           setStatus("won");
-          playMacChirp(true);
+          playMinesVictory();
+          hydraStage.spinHue(2000);
         }
         return next;
       });
@@ -143,6 +154,7 @@ export function MinesweeperPanel() {
         const cell = next[r]![c]!;
         if (cell.revealed) return next;
         cell.flagged = !cell.flagged;
+        if (cell.flagged) playMinesFlag();
         return next;
       });
     },

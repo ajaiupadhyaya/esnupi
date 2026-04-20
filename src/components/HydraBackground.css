@@ -1,12 +1,42 @@
-.hydra-backdrop {
+.hydra-backdrop-wrap {
   position: fixed;
   inset: 0;
   z-index: 0;
+  pointer-events: none;
+  will-change: filter;
+}
+/* Idle breathing overlay — a faint radial wash that swells every ~6s. */
+.hydra-breathing-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0) 70%);
+  opacity: 0;
+  animation: hydra-breathe 7s ease-in-out infinite;
+}
+@keyframes hydra-breathe {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hydra-breathing-overlay { animation: none; opacity: 0; }
+}
+
+.hydra-backdrop {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  will-change: transform;
 }
+
+/* Keep the old selector working: matrix mode targets .hydra-backdrop directly. */
+.hydra-backdrop-wrap.hydra-fallback,
+.hydra-fallback { }
+
 
 /* Shown when WebGL / Hydra is unavailable so the rest of the UI still works */
 .hydra-fallback {

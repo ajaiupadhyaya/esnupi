@@ -4,8 +4,9 @@ import {
   playMacDiskInsert,
   playSadMacChord,
 } from "@/lib/retroMacSounds";
+import { dipAmbient } from "@/lib/ambientAudio";
 
-type Phase = "bios" | "post" | "logo" | "sadmac" | "done";
+type Phase = "bios" | "post" | "blackbeat" | "logo" | "sadmac" | "done" | "welcomeback";
 
 const ERROR_CODES = [
   "ERROR 0F0003: MEMORY PARITY",
@@ -33,9 +34,20 @@ const BIOS_LINES = [
  *
  * Interactive: click/Enter/Space skips ahead.
  */
-export function BootSequence({ onDone }: { onDone: () => void }) {
-  const rollSadMac = useMemo(() => Math.random() < 0.15, []);
-  const [phase, setPhase] = useState<Phase>("bios");
+export function BootSequence({
+  onDone,
+  shortForm = false,
+}: {
+  onDone: () => void;
+  /**
+   * If true, skip the POST/BIOS phases entirely and show a single "Welcome back"
+   * line before the Happy Mac. Used for return visitors (visitCount > 1) — the
+   * machine knows you and doesn't need to introduce itself again.
+   */
+  shortForm?: boolean;
+}) {
+  const rollSadMac = useMemo(() => (shortForm ? false : Math.random() < 0.15), [shortForm]);
+  const [phase, setPhase] = useState<Phase>(shortForm ? "welcomeback" : "bios");
   const [postMem, setPostMem] = useState(0);
   const [postTotal] = useState(128);
   const [barPct, setBarPct] = useState(0);
@@ -75,10 +87,8 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
         const next = m + 4;
         if (next >= postTotal) {
           window.clearInterval(id);
-          window.setTimeout(() => {
-            playMacDiskInsert();
-            setPhase(rollSadMac ? "sadmac" : "logo");
-          }, 260);
+          // Silent 600ms black beat before Happy Mac — the most important 600ms on the site.
+          window.setTimeout(() => setPhase("blackbeat"), 260);
           return postTotal;
         }
         return next;
@@ -86,6 +96,28 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
     }, 30);
     return () => window.clearInterval(id);
   }, [phase, postTotal, rollSadMac]);
+
+  useEffect(() => {
+    if (phase !== "welcomeback") return;
+    /* Two-beat: show the greeting briefly, then hand off to the happy Mac. */
+    const id = window.setTimeout(() => {
+      playMacDiskInsert();
+      setPhase("logo");
+    }, 1_200);
+    return () => window.clearTimeout(id);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "blackbeat") return;
+    /* Shape the silence: ramp ambient to zero 200ms before the beat, hold
+       through it, and ramp back up 200ms after — per the v4 brief. */
+    dipAmbient(200, 600);
+    const id = window.setTimeout(() => {
+      playMacDiskInsert();
+      setPhase(rollSadMac ? "sadmac" : "logo");
+    }, 600);
+    return () => window.clearTimeout(id);
+  }, [phase, rollSadMac]);
 
   useEffect(() => {
     if (phase !== "logo" && phase !== "sadmac") return;
@@ -127,6 +159,11 @@ export function BootSequence({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="mac-boot-root" role="presentation" onClick={finish}>
+      {phase === "welcomeback" && (
+        <div className="mac-boot-welcome">
+          <div className="mac-boot-welcome__line">Welcome back.</div>
+        </div>
+      )}
       {phase === "bios" && (
         <div className="mac-boot-bios">
           {BIOS_LINES.slice(0, biosLineCount).map((line, i) => (

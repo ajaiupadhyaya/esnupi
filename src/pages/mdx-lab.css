@@ -1,128 +1,218 @@
-@import url("https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:wght@400;600&display=swap");
+/* /lab — a separate room. Reading first, product second. */
 
 .mdx-lab {
-  min-height: 100dvh;
-  padding: 48px 16px 96px;
-  background:
-    radial-gradient(circle at 20% 15%, rgba(235, 220, 180, 0.15), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(200, 220, 235, 0.08), transparent 55%),
-    #f3ecd7;
-  color: #2b2519;
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  padding: 120px 24px 160px;
+  background: #f7f5ef;
+  color: #111;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+  font-variant-numeric: oldstyle-nums;
+  font-feature-settings: "onum" 1, "liga" 1;
+}
+
+.mdx-lab__progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 1px;
+  background: #ff3b00;
+  z-index: 10;
+  transition: width 80ms linear;
+  pointer-events: none;
 }
 
 .mdx-lab__paper {
-  position: relative;
-  max-width: 720px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 52px 48px 64px;
-  background-color: #fbf5e2;
-  background-image:
-    radial-gradient(circle at 10px 12px, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
-    radial-gradient(circle at 30px 30px, rgba(0, 0, 0, 0.028) 1px, transparent 1px),
-    repeating-linear-gradient(0deg, rgba(123, 98, 54, 0.04) 0 1px, transparent 1px 28px);
-  background-size: 40px 40px, 80px 80px, 100% 28px;
-  box-shadow:
-    0 32px 80px rgba(0, 0, 0, 0.35),
-    0 2px 0 rgba(0, 0, 0, 0.08);
+  padding-left: 120px;
+  padding-right: 0;
+  position: relative;
 }
 
-.mdx-lab__stamp {
-  position: absolute;
-  top: -18px;
-  right: 40px;
-  transform: rotate(6deg);
-  padding: 10px 16px;
-  border: 2px solid #8b2a1e;
-  color: #8b2a1e;
-  background: rgba(251, 245, 226, 0.4);
-  font-family: "Special Elite", "Courier New", monospace;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+@media (max-width: 900px) {
+  .mdx-lab__paper { padding-left: 0; }
+}
+
+.mdx-lab__head {
+  margin-bottom: 80px;
+}
+.mdx-lab__meta {
+  display: flex;
+  gap: 10px;
+  font-family: "Barlow Condensed", "IBM Plex Mono", sans-serif;
   font-size: 11px;
-  opacity: 0.88;
-  filter: blur(0.25px);
-  box-shadow: inset 0 0 0 3px rgba(139, 42, 30, 0.08);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #888;
 }
-.mdx-lab__stamp-inner { text-align: center; }
-.mdx-lab__stamp-date { font-size: 18px; letter-spacing: 0.16em; margin: 2px 0 1px; }
-.mdx-lab__stamp-sub { font-size: 9px; opacity: 0.75; }
+.mdx-lab__meta-sep { opacity: 0.5; }
 
-.mdx-lab__article {
-  font-family: "Special Elite", "Courier New", "Source Serif 4", serif;
-  font-size: 15px;
-  line-height: 1.8;
-  color: #2b2519;
+.mdx-lab__article h1 {
+  font-family: "Barlow Condensed", "IBM Plex Mono", sans-serif;
+  font-weight: 500;
+  font-size: clamp(48px, 8vw, 96px);
+  line-height: 1;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin: 0 0 56px;
+  color: #000;
 }
-.mdx-lab__article :where(h1, h2, h3) {
-  font-family: "Source Serif 4", "New York", Georgia, serif;
-  color: #1e1a10;
-  margin: 1.6em 0 0.4em;
-}
-.mdx-lab__article h1 { font-size: 32px; line-height: 1.15; }
-.mdx-lab__article h2 { font-size: 22px; }
-.mdx-lab__article h3 { font-size: 18px; }
-.mdx-lab__article p  { margin: 0 0 1.1em; }
-.mdx-lab__article a  { color: #355c8e; text-decoration: underline; text-underline-offset: 3px; }
-.mdx-lab__article a:hover { color: #8b2a1e; }
-.mdx-lab__article code {
-  background: rgba(90, 60, 20, 0.08);
-  padding: 1px 4px;
-  border-radius: 2px;
-  font-family: "VT323", "Courier New", monospace;
-  font-size: 16px;
-}
-.mdx-lab__article pre {
-  background: #f0e8cc;
-  border: 1px solid #c4b58a;
-  padding: 12px 14px;
-  border-radius: 2px;
-  font-family: "VT323", "Courier New", monospace;
-  overflow: auto;
-}
-.mdx-lab__article blockquote {
-  border-left: 3px solid #8b2a1e;
-  margin: 1em 0;
-  padding: 2px 14px;
-  color: #4b4434;
-  font-style: italic;
-}
-
-.mdx-lab__back {
-  margin-top: 36px;
-  text-align: center;
-}
-.mdx-lab__keycap {
-  display: inline-block;
-  padding: 0;
-  text-decoration: none;
-}
-.mdx-lab__keycap kbd {
-  display: inline-block;
-  padding: 10px 18px;
-  border: 1px solid #5f5a4e;
-  border-radius: 5px;
-  background: linear-gradient(180deg, #fbfbf5 0%, #d8d2b8 100%);
-  color: #23200f;
-  font-family: "Special Elite", "Courier New", monospace;
+.mdx-lab__article h2 {
+  font-family: "Barlow Condensed", "IBM Plex Mono", sans-serif;
+  font-weight: 500;
   font-size: 14px;
-  letter-spacing: 0.04em;
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 3px 0 #a59c7a,
-    0 4px 8px rgba(0, 0, 0, 0.28);
-  transition: transform 80ms ease, box-shadow 80ms ease;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #000;
+  margin: 80px 0 24px;
 }
-.mdx-lab__keycap:hover kbd {
-  transform: translateY(1px);
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 2px 0 #a59c7a,
-    0 3px 6px rgba(0, 0, 0, 0.28);
+.mdx-lab__article h3 {
+  font-family: "Barlow Condensed", "IBM Plex Mono", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #000;
+  margin: 64px 0 16px;
 }
-.mdx-lab__keycap:active kbd {
-  transform: translateY(3px);
-  box-shadow:
-    inset 0 1px 0 #ffffff,
-    0 0 0 #a59c7a,
-    0 1px 3px rgba(0, 0, 0, 0.28);
+
+.mdx-lab__article p {
+  margin: 0 0 1.3em;
+  font-size: 18px;
+  line-height: 1.9;
 }
+.mdx-lab__article .lab-lede {
+  font-size: 22px;
+  line-height: 1.7;
+  margin-bottom: 2em;
+}
+.mdx-lab__article .lab-lede::first-letter {
+  font-family: "Lora", Georgia, serif;
+  font-weight: 500;
+  float: left;
+  font-size: 96px;
+  line-height: 0.85;
+  padding: 12px 14px 0 0;
+  color: #ff3b00;
+}
+
+.mdx-lab__article a {
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.mdx-lab__article a:hover { color: #ff3b00; }
+
+.mdx-lab__article blockquote {
+  border-left: 2px solid #000;
+  margin: 2em 0;
+  padding: 0 0 0 24px;
+  font-style: italic;
+  font-size: 18px;
+}
+
+/* Inline code: orange keyword only. */
+.mdx-lab__article :not(pre) > code {
+  font-family: "Courier Prime", "Space Mono", monospace;
+  font-size: 15px;
+  color: #ff3b00;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Block code: thermal paper, grey + orange only. */
+.mdx-lab__article pre {
+  margin: 2em 0;
+  padding: 24px 28px;
+  background: #ece9e0;
+  border: 0;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000;
+  border-radius: 0;
+  overflow-x: auto;
+  font-family: "Courier Prime", "Space Mono", monospace;
+  font-size: 14px;
+  line-height: 1.8;
+  color: #555;
+  position: relative;
+}
+.mdx-lab__article pre::before,
+.mdx-lab__article pre::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image:
+    linear-gradient(135deg, transparent 33.33%, #ece9e0 33.33%, #ece9e0 66.66%, transparent 66.66%),
+    linear-gradient(45deg,  transparent 33.33%, #ece9e0 33.33%, #ece9e0 66.66%, transparent 66.66%);
+  background-size: 12px 6px;
+  background-color: transparent;
+}
+.mdx-lab__article pre::before { top: -1px; transform: translateY(-100%); }
+.mdx-lab__article pre::after  { bottom: -1px; transform: translateY(100%); }
+
+/* Minimal two-token highlight: strings/keywords in orange. */
+.mdx-lab__article pre code { color: #555; }
+.mdx-lab__article pre .tok-kw,
+.mdx-lab__article pre .tok-str { color: #ff3b00; }
+
+/* Margin notes — left gutter, small caps, in the flow on narrow screens. */
+.lab-aside {
+  position: absolute;
+  left: -120px;
+  width: 100px;
+  margin-top: 4px;
+  font-family: "Courier Prime", "Space Mono", monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #888;
+  text-align: right;
+  padding-right: 0;
+}
+@media (max-width: 900px) {
+  .lab-aside {
+    position: relative;
+    left: 0;
+    width: auto;
+    text-align: left;
+    padding: 12px 16px;
+    margin: 0 0 1.3em;
+    border-left: 2px solid #888;
+    color: #555;
+  }
+}
+
+.mdx-lab__foot {
+  margin: 120px 0 0;
+  display: grid;
+  gap: 40px;
+  align-items: baseline;
+}
+.mdx-lab__stamp {
+  font-family: "Courier Prime", "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #ff3b00;
+  transform: rotate(-2deg);
+  display: inline-block;
+}
+.mdx-lab__back {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-family: "Barlow Condensed", "IBM Plex Mono", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #000;
+  cursor: pointer;
+  text-align: left;
+  justify-self: start;
+}
+.mdx-lab__back:hover { color: #ff3b00; }

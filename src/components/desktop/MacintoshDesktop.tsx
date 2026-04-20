@@ -34,13 +34,31 @@ import {
   FELT_FRAME,
   type WindowId,
 } from "./desktopIconConfig";
-import { MacTerminalApp } from "./MacTerminalApp";
 import { DesktopWindow } from "./DesktopWindow";
+import { ContextMenuProvider, useContextMenu } from "./ContextMenu";
+import { TrashCan } from "./TrashCan";
+import { MagneticDock } from "./MagneticDock";
 import { BootSequence } from "./BootSequence";
 import { ShutdownScreen } from "./ShutdownScreen";
 import { MobileAlert } from "./MobileAlert";
 import { MacMenuBar, type MenuAction, type OpenWindowInfo } from "./MacMenuBar";
 import { useKonamiCode } from "./useKonamiCode";
+import { hydraStage } from "@/lib/hydraStage";
+import {
+  restartAmbient,
+  setAmbientMuted,
+  startAmbient,
+  stopAmbient,
+} from "@/lib/ambientAudio";
+import { getControlSettings, useControlSettings } from "./controlSettings";
+import {
+  accumulateTime,
+  beginVisit,
+  incrementWindowsOpened,
+  markKonamiUsed,
+  markSecretFound,
+} from "@/lib/visitMemory";
+import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CursorTrails } from "./overlays/CursorTrails";
 import { DustMotes } from "./overlays/DustMotes";
 import { ScreenFlicker } from "./overlays/ScreenFlicker";
@@ -48,11 +66,59 @@ import { MacNotifications } from "./overlays/Notifications";
 import { AboutThisMacPanel } from "./panels/AboutThisMacPanel";
 import { SecretPanel } from "./panels/SecretPanel";
 import { StickyNotePanel } from "./panels/StickyNotePanel";
-import { MinesweeperPanel } from "./panels/MinesweeperPanel";
-import { PhotoboothPanel } from "./panels/PhotoboothPanel";
-import { PhotobookPanel } from "./panels/PhotobookPanel";
-import { MusicPlayerPanel, type MusicTrack } from "./panels/MusicPlayerPanel";
-import { WebBrowserPanel } from "./panels/WebBrowserPanel";
+import {
+  AboutPanel as NewAboutPanel,
+  WorkPanel,
+  FindPanel,
+  LabStubPanel,
+} from "./panels/ContentPanels";
+import type { MusicTrack } from "./panels/MusicPlayerPanel";
+import { DefragScreensaver } from "./overlays/DefragScreensaver";
+
+/* Heavy / app-like panels load on demand so the desktop boots fast. */
+const MacTerminalApp = lazy(() =>
+  import("./MacTerminalApp").then((m) => ({ default: m.MacTerminalApp })),
+);
+const PhotoboothPanel = lazy(() =>
+  import("./panels/PhotoboothPanel").then((m) => ({ default: m.PhotoboothPanel })),
+);
+const ScrapbookPanel = lazy(() =>
+  import("./panels/ScrapbookPanel").then((m) => ({ default: m.ScrapbookPanel })),
+);
+const MusicPlayerPanel = lazy(() =>
+  import("./panels/MusicPlayerPanel").then((m) => ({ default: m.MusicPlayerPanel })),
+);
+const WebBrowserPanel = lazy(() =>
+  import("./panels/WebBrowserPanel").then((m) => ({ default: m.WebBrowserPanel })),
+);
+const MinesweeperPanel = lazy(() =>
+  import("./panels/MinesweeperPanel").then((m) => ({ default: m.MinesweeperPanel })),
+);
+const ControlPanelsPanel = lazy(() =>
+  import("./panels/ControlPanelsPanel").then((m) => ({ default: m.ControlPanelsPanel })),
+);
+const ClockPanel = lazy(() =>
+  import("./programs/ClockPanel").then((m) => ({ default: m.ClockPanel })),
+);
+const TypistPanel = lazy(() =>
+  import("./programs/TypistPanel").then((m) => ({ default: m.TypistPanel })),
+);
+const NotepadPanel = lazy(() =>
+  import("./programs/NotepadPanel").then((m) => ({ default: m.NotepadPanel })),
+);
+const KaleidoscopePanel = lazy(() =>
+  import("./programs/KaleidoscopePanel").then((m) => ({ default: m.KaleidoscopePanel })),
+);
+const SlideshowPanel = lazy(() =>
+  import("./programs/SlideshowPanel").then((m) => ({ default: m.SlideshowPanel })),
+);
+const InternalsPanel = lazy(() =>
+  import("./panels/InternalsPanel").then((m) => ({ default: m.InternalsPanel })),
+);
+const FinderPanel = lazy(() =>
+  import("./panels/FinderPanel").then((m) => ({ default: m.FinderPanel })),
+);
+
 
 import "./macintosh-desktop.css";
 
@@ -77,7 +143,15 @@ type AnyWindowId =
   | "secret"
   | "sticky"
   | "minesweeper"
-  | "getinfo";
+  | "getinfo"
+  | "controls"
+  | "clock"
+  | "typist"
+  | "notepad"
+  | "kaleidoscope"
+  | "slideshow"
+  | "internals"
+  | "finder";
 
 const musicModules = import.meta.glob("/src/music/*.{mp3,wav,ogg,m4a,flac,aac}", {
   eager: true,
@@ -109,20 +183,28 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
 ];
 
 const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
-  about: { title: "Home / About", w: 560, h: 420 },
-  projects: { title: "Projects Studio", w: 620, h: 460 },
-  contact: { title: "Contact + Links", w: 520, h: 400 },
-  lab: { title: "Writing / Lab", w: 600, h: 440 },
+  about: { title: "About", w: 520, h: 440 },
+  projects: { title: "Work", w: 560, h: 460 },
+  contact: { title: "Find", w: 520, h: 420 },
+  lab: { title: "Lab", w: 560, h: 420 },
   terminal: { title: "Terminal", w: 820, h: 520 },
   photobooth: { title: "Photobooth", w: 720, h: 620 },
-  photobook: { title: "Museum Photobook", w: 920, h: 640 },
-  music: { title: "Music Player", w: 620, h: 520 },
-  browser: { title: "Web Browser", w: 1020, h: 680 },
+  photobook: { title: "Scrapbook", w: 960, h: 640 },
+  music: { title: "Jukebox", w: 620, h: 520 },
+  browser: { title: "Browser", w: 1020, h: 680 },
   aboutMac: { title: "About this Mac", w: 480, h: 440 },
   secret: { title: "— private collection —", w: 640, h: 520 },
   sticky: { title: "Note", w: 260, h: 220 },
   minesweeper: { title: "Minefield", w: 560, h: 520 },
   getinfo: { title: "Get Info", w: 360, h: 300 },
+  controls: { title: "Control Panels", w: 520, h: 520 },
+  clock: { title: "Clock", w: 280, h: 360 },
+  typist: { title: "Typist", w: 640, h: 520 },
+  notepad: { title: "Notepad", w: 560, h: 480 },
+  kaleidoscope: { title: "Kaleidoscope", w: 620, h: 560 },
+  slideshow: { title: "Slideshow", w: 880, h: 620 },
+  internals: { title: "INTERNALS", w: 720, h: 560 },
+  finder: { title: "Desktop", w: 620, h: 440 },
 };
 
 function clampWindowPosition(anchorX: number, anchorY: number, width: number, height: number) {
@@ -162,99 +244,39 @@ function loadIconPositions(): IconPositions {
   }
 }
 
-// --- Scaffold copy for panels --------------------------------------------
-const WINDOW_CONTENT = {
-  about: {
-    intro:
-      "esnupi is a portfolio playground built like a late-90s Macintosh desktop: a live Hydra shader for a wallpaper, draggable platinum windows, and a handful of small apps that feel right on System 7–8. Look around. Some doors are locked; some doors remember you.",
-    sections: [
-      {
-        heading: "At a glance",
-        items: [
-          "Creative technologist · designer who writes code",
-          "Focus: interactive web, real-time graphics, tactile UI",
-          "Based in [your city] · open to [remote / collaboration]",
-        ],
-      },
-      {
-        heading: "On this desktop",
-        items: [
-          "Projects — case studies and build notes",
-          "Lab — longer writing and experiments (/lab)",
-          "Photobooth & Photobook — visitor-facing mini apps",
-          "Terminal — try `neofetch`, `fortune`, or `matrix`",
-          "↑↑↓↓←→←→BA — try it. you know you want to.",
-        ],
-      },
-    ],
-  },
-  projects: {
-    intro:
-      "Each card below is a chapter waiting for a real project: title, one-line pitch, stack, link, and what you learned. Keep it short — the work should carry the page.",
-    sections: [
-      {
-        heading: "Featured — [Project name]",
-        items: [
-          "One-line pitch: what it does and for whom",
-          "Role: design, front-end, shaders, collaboration",
-          "Stack: e.g. React, Three.js, WebGL, custom tooling",
-          "Outcome: metric, launch, or personal takeaway",
-        ],
-      },
-      {
-        heading: "More on the shelf",
-        items: [
-          "Smaller experiments and repos",
-          "Talks, workshops, or teaching",
-          "Archive / older work you still stand behind",
-        ],
-      },
-    ],
-  },
-  contact: {
-    intro:
-      "Give people a single place to start a conversation. Lead with the channel you actually monitor; keep socials secondary.",
-    sections: [
-      {
-        heading: "Primary",
-        items: ["Email — best for inquiries and project briefs", "Calendar or booking link — optional", "Timezone — so async feels human"],
-      },
-      { heading: "Elsewhere", items: ["GitHub / code", "Are.na / reference library", "LinkedIn / profile you keep current"] },
-    ],
-    links: [
-      { label: "Email", href: "mailto:hello@example.com" },
-      { label: "GitHub", href: "https://github.com/" },
-      { label: "Open Lab (MDX)", href: "/lab" },
-    ],
-  },
-  lab: {
-    intro:
-      "The Lab route is for writing that does not fit in a window: essays, tutorials, dev logs, and links out.",
-    sections: [
-      {
-        heading: "What lives here",
-        items: ["Longer posts (MDX) with code and images", "Process notes: sketches, shaders, failed ideas worth saving", "Reading lists and references for future you"],
-      },
-    ],
-    links: [{ label: "Go to Lab →", href: "/lab" }],
-  },
-};
 
 // =========================================================================
 // Main component
 // =========================================================================
 
+/** Registered once per page load — everything else derives from this. */
+const initialVisit = typeof window === "undefined" ? null : beginVisit();
+
 export function MacintoshDesktop() {
+  return (
+    <ContextMenuProvider>
+      <MacintoshDesktopInner />
+    </ContextMenuProvider>
+  );
+}
+
+function MacintoshDesktopInner() {
   const [bootKey, setBootKey] = useState(0);
+  const contextMenu = useContextMenu();
+  const [trashedIcons, setTrashedIcons] = useState<Set<string>>(new Set());
   const [booting, setBooting] = useState(true);
+  /* shortForm boot after the very first visit — the machine remembers you. */
+  const [shortBoot, setShortBoot] = useState(
+    (initialVisit?.visitCount ?? 1) > 1,
+  );
   const [shutdownMode, setShutdownMode] = useState<null | "shutdown" | "restart">(null);
   const [balloonHelp, setBalloonHelp] = useState(false);
   const [sound, setSound] = useState(!isMacSoundsMuted());
+  const [controlSettings] = useControlSettings();
   const [showFps, setShowFps] = useState(false);
   const [konamiUnlocked, setKonamiUnlocked] = useState(false);
   const [matrixMode, setMatrixMode] = useState(false);
   const [iconsWobble, setIconsWobble] = useState(false);
-  const [hydraPaused] = useState(false);
   const [iconPositions, setIconPositions] = useState<IconPositions>(() => loadIconPositions());
   const [, setAppleClicks] = useState(0);
   const [, setSessionOpenCount] = useState(0);
@@ -266,7 +288,9 @@ export function MacintoshDesktop() {
     about: false, projects: false, contact: false, lab: false,
     terminal: false, photobooth: false, photobook: false, music: false,
     browser: false, aboutMac: false, secret: false, sticky: false,
-    minesweeper: false, getinfo: false,
+    minesweeper: false, getinfo: false, controls: false,
+    clock: false, typist: false, notepad: false, kaleidoscope: false,
+    slideshow: false, internals: false, finder: false,
   });
   const [geom, setGeom] = useState<Record<AnyWindowId, { x: number; y: number; w: number; h: number }>>(
     () => Object.fromEntries(Object.entries(INITIAL).map(([k, v]) => [k, { x: 80, y: 80, w: v.w, h: v.h }])) as never,
@@ -280,6 +304,11 @@ export function MacintoshDesktop() {
   const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
   const spawnAnchors = useRef<Record<string, { x: number; y: number }>>({});
 
+  const routeTransition = useRouteTransition();
+  const navigateToLab = useCallback(() => {
+    routeTransition.goto("/lab");
+  }, [routeTransition]);
+
   /* --- Persist icon positions ------------------------------------------- */
   useEffect(() => {
     localStorage.setItem(ICON_STORAGE_KEY, JSON.stringify(iconPositions));
@@ -290,30 +319,81 @@ export function MacintoshDesktop() {
     setMacSoundsMuted(!sound);
   }, [sound]);
 
-  /* --- Visibility: desaturate Hydra on blur ----------------------------- */
+  /* --- Ambient audio room-tone: start on first user gesture ------------- */
   useEffect(() => {
-    const apply = () => {
-      const canvas = document.querySelector<HTMLCanvasElement>(".hydra-backdrop");
-      if (!canvas) return;
-      if (document.hidden || hydraPaused) {
-        canvas.style.filter = "grayscale(1) brightness(0.75)";
-        canvas.style.transition = "filter 2s ease";
-      } else {
-        canvas.style.filter = "grayscale(0) brightness(1)";
-      }
+    let started = false;
+    const boot = () => {
+      if (started) return;
+      started = true;
+      if (getControlSettings().ambientSounds) startAmbient();
+      window.removeEventListener("pointerdown", boot);
+      window.removeEventListener("keydown", boot);
     };
-    apply();
-    document.addEventListener("visibilitychange", apply);
-    return () => document.removeEventListener("visibilitychange", apply);
-  }, [hydraPaused]);
+    window.addEventListener("pointerdown", boot);
+    window.addEventListener("keydown", boot);
+    return () => {
+      window.removeEventListener("pointerdown", boot);
+      window.removeEventListener("keydown", boot);
+      stopAmbient();
+    };
+  }, []);
+
+  /* --- Ambient toggles ---------------------------------------------------- */
+  const prevAmbientRef = useRef({
+    ambientSounds: controlSettings.ambientSounds,
+    reduceMotion: controlSettings.reduceMotion,
+  });
+  useEffect(() => {
+    const prev = prevAmbientRef.current;
+    if (prev.ambientSounds !== controlSettings.ambientSounds) {
+      setAmbientMuted(!controlSettings.ambientSounds);
+    } else if (
+      controlSettings.ambientSounds &&
+      prev.reduceMotion !== controlSettings.reduceMotion
+    ) {
+      /* Reduce-motion toggle only affects the CRT whine chain; restart for clarity. */
+      restartAmbient();
+    }
+    prevAmbientRef.current = {
+      ambientSounds: controlSettings.ambientSounds,
+      reduceMotion: controlSettings.reduceMotion,
+    };
+  }, [controlSettings.ambientSounds, controlSettings.reduceMotion]);
 
   /* --- Konami --------------------------------------------------------- */
   useKonamiCode(() => {
     if (konamiUnlocked) return;
     setKonamiUnlocked(true);
+    markKonamiUsed();
     playKonamiFanfare();
+    hydraStage.setMood("ARCHIVE");
     openWindow("secret");
   });
+
+  /* --- Accumulate total-time-on-site every 30 s while tab is visible --- */
+  useEffect(() => {
+    let sessionStart = Date.now();
+    const tick = () => {
+      if (document.visibilityState === "visible") {
+        const now = Date.now();
+        accumulateTime(now - sessionStart);
+        sessionStart = now;
+      }
+    };
+    const onVisibility = () => {
+      sessionStart = Date.now();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+    const id = window.setInterval(tick, 30_000);
+    const onBeforeUnload = () => tick();
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.clearInterval(id);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      tick();
+    };
+  }, []);
 
   /* --- Dynamic body classes ------------------------------------------- */
   useEffect(() => {
@@ -321,7 +401,21 @@ export function MacintoshDesktop() {
     document.body.classList.toggle("mac-icons-wobble", iconsWobble);
     document.body.classList.toggle("mac-balloon-help", balloonHelp);
     document.body.classList.toggle("mac-konami-unlocked", konamiUnlocked);
+    hydraStage.setMatrix(matrixMode);
   }, [matrixMode, iconsWobble, balloonHelp, konamiUnlocked]);
+
+  /* --- Preload desktop icon artwork so the first arrival animation is instant. */
+  useEffect(() => {
+    const urls = new Set<string>();
+    for (const def of DESKTOP_ICONS) urls.add(def.src);
+    urls.add(FELT_FRAME.blob1);
+    urls.add(FELT_FRAME.blob2);
+    for (const url of urls) {
+      const img = new Image();
+      img.decoding = "async";
+      img.src = url;
+    }
+  }, []);
 
   /* --- Fetch shared photos ------------------------------------------- */
   const refreshPhotos = useCallback(async () => {
@@ -372,9 +466,15 @@ export function MacintoshDesktop() {
         };
       });
       if (anchor) spawnAnchors.current[id] = anchor;
-      setOpen((o) => ({ ...o, [id]: true }));
+      setOpen((o) => {
+        const wasOpen = o[id];
+        if (!wasOpen) incrementWindowsOpened();
+        return { ...o, [id]: true };
+      });
       setMinimized((m) => ({ ...m, [id]: false }));
       bringToFront(id);
+      hydraStage.pulse();
+      if (id === "secret") markSecretFound();
       setSessionOpenCount((c) => {
         const next = c + 1;
         if (next === 5) {
@@ -411,6 +511,19 @@ export function MacintoshDesktop() {
     setGeom((g) => ({ ...g, [id]: { ...g[id], x, y } }));
   }, []);
 
+  /* Global Escape — closes the frontmost window unless focus is inside a
+     text input/textarea (so typing Esc there doesn't kill the window). */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (activeId) closeWindow(activeId);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeId, closeWindow]);
+
   const toggleMinimize = useCallback((id: AnyWindowId) => {
     setMinimized((m) => ({ ...m, [id]: !m[id] }));
   }, []);
@@ -443,7 +556,7 @@ export function MacintoshDesktop() {
           openWindow("sticky");
           break;
         case "open-finder":
-          openWindow("about"); // fake "Open…" dialog — route to about for now
+          openWindow("finder");
           break;
         case "open-getinfo":
           setGetInfoTarget(activeId);
@@ -455,8 +568,34 @@ export function MacintoshDesktop() {
         case "open-music":
           openWindow("music");
           break;
+        case "open-controls":
+          openWindow("controls");
+          break;
+        case "open-lab":
+          navigateToLab();
+          break;
+        case "open-clock":
+          openWindow("clock");
+          break;
+        case "open-typist":
+          openWindow("typist");
+          break;
+        case "open-notepad":
+          openWindow("notepad");
+          break;
+        case "open-kaleidoscope":
+          openWindow("kaleidoscope");
+          break;
+        case "open-slideshow":
+          openWindow("slideshow");
+          break;
+        case "export-note":
+          void import("./programs/TypistPanel").then((m) => m.exportTypistNote());
+          break;
         case "empty-trash":
           playMacTrashEmpty();
+          hydraStage.invert();
+          setTrashedIcons(new Set());
           break;
         case "restart":
           setShutdownMode("restart");
@@ -504,6 +643,11 @@ export function MacintoshDesktop() {
     [open],
   );
 
+  /* --- Pause Hydra under window-coverage heuristic -------------------- */
+  useEffect(() => {
+    hydraStage.setPaused(visibleWindows.length > 4);
+  }, [visibleWindows.length]);
+
   const openWindowsInfo: OpenWindowInfo[] = useMemo(
     () =>
       visibleWindows.map((id) => ({
@@ -517,12 +661,25 @@ export function MacintoshDesktop() {
   /* --- Icons computed with overrides --------------------------------- */
   const icons = useMemo(
     () =>
-      DESKTOP_ICONS.map((def) => {
+      DESKTOP_ICONS.filter((def) => !trashedIcons.has(def.id)).map((def) => {
         const override = iconPositions[def.id];
         return override ? { ...def, xPct: override.xPct, yPct: override.yPct } : def;
       }),
-    [iconPositions],
+    [iconPositions, trashedIcons],
   );
+
+  /* Reading-order sequence (top-to-bottom, then left-to-right) for the
+     "Finder is drawing the desktop" materialization effect. */
+  const iconSequence = useMemo(() => {
+    const order = [...icons]
+      .map((i, originalIndex) => ({ id: i.id, originalIndex, y: i.yPct, x: i.xPct }))
+      .sort((a, b) => (a.y !== b.y ? a.y - b.y : a.x - b.x));
+    const m: Record<string, number> = {};
+    order.forEach((item, i) => {
+      m[item.id] = i;
+    });
+    return m;
+  }, [icons]);
 
   const handleIconDragEnd = useCallback((id: string, xPct: number, yPct: number) => {
     setIconPositions((pos) => ({ ...pos, [id]: { xPct, yPct } }));
@@ -547,6 +704,7 @@ export function MacintoshDesktop() {
       <div className="mac-desktop-root mac-desktop-root--booting">
         <BootSequence
           key={bootKey}
+          shortForm={shortBoot}
           onDone={() => {
             setBooting(false);
             playMacDiskInsert();
@@ -562,7 +720,31 @@ export function MacintoshDesktop() {
         "mac-desktop-root",
         beachBall && "mac-beachball",
         corruptedActive && "mac-corrupted",
+        activeId === null && "mac-desktop-root--defocused",
       )}
+      onMouseDown={(e) => {
+        /* Clicks that land on the desktop root itself (not a window or icon)
+           remove focus so open windows desaturate per the v4 brief. */
+        if (e.target === e.currentTarget) setActiveId(null);
+      }}
+      onDoubleClick={(e) => {
+        if (e.target === e.currentTarget) openWindow("finder");
+      }}
+      onContextMenu={(e) => {
+        if (e.target !== e.currentTarget) return;
+        contextMenu.show(e, [
+          { label: "New Note", onClick: () => openWindow("sticky") },
+          { label: "Open Desktop…", onClick: () => openWindow("finder") },
+          { kind: "divider" },
+          {
+            label: "Change Wallpaper",
+            onClick: () => hydraStage.pulse(),
+          },
+          { label: "Clean Up Icons", onClick: () => undefined, disabled: true },
+          { kind: "divider" },
+          { label: "About This Mac", onClick: () => openWindow("aboutMac") },
+        ]);
+      }}
     >
       <MacMenuBar
         onAction={handleMenuAction}
@@ -575,6 +757,7 @@ export function MacintoshDesktop() {
       />
 
       <div className="mac-crt-overlay" aria-hidden />
+      <div className="hydra-breathing-overlay" aria-hidden />
       <div className="mac-desktop-dither" aria-hidden />
       <div className="mac-vignette-scanlines" aria-hidden />
       <Suspense fallback={null}>
@@ -594,14 +777,26 @@ export function MacintoshDesktop() {
             if (e.target === e.currentTarget) setSelectedIconId(null);
           }}
         >
-          {icons.map((def, i) => (
+          {icons.map((def) => (
             <DesktopFeltIcon
               key={def.id}
               def={def}
-              index={i}
+              index={iconSequence[def.id] ?? 0}
               selected={selectedIconId === def.id}
               onSelect={() => setSelectedIconId(def.id)}
               onDragEnd={(xPct, yPct) => handleIconDragEnd(def.id, xPct, yPct)}
+              onMoveToTrash={() => {
+                setTrashedIcons((prev) => {
+                  const next = new Set(prev);
+                  next.add(def.id);
+                  return next;
+                });
+                playMacIconSelect();
+              }}
+              onGetInfo={() => {
+                setGetInfoTarget(def.windowId as AnyWindowId);
+                openWindow("getinfo");
+              }}
               onOpen={(anchor) => {
                 playMacIconOpen();
                 if (def.id === "heart4" && def.windowId === "lab") {
@@ -623,6 +818,7 @@ export function MacintoshDesktop() {
           return (
             <DesktopWindow
               key={id}
+              windowId={id}
               title={title}
               x={g.x}
               y={g.y}
@@ -636,70 +832,108 @@ export function MacintoshDesktop() {
               onClose={() => closeWindow(id)}
               onMinimizeToggle={() => toggleMinimize(id)}
               onMove={(nx, ny) => moveWindow(id, nx, ny)}
+              onTitleContextMenu={(e) =>
+                contextMenu.show(e, [
+                  { label: "Close", onClick: () => closeWindow(id) },
+                  { label: "Minimize", onClick: () => toggleMinimize(id) },
+                  { kind: "divider" },
+                  {
+                    label: "Get Info",
+                    onClick: () => {
+                      setGetInfoTarget(id);
+                      openWindow("getinfo");
+                    },
+                  },
+                ])
+              }
             >
-              {id === "about" && <AboutPanel />}
-              {id === "projects" && <ProjectsPanel />}
-              {id === "contact" && <ContactPanel />}
-              {id === "lab" && <LabPanel />}
-              {id === "terminal" && (
-                <MacTerminalApp
-                  onOpenWindow={(w) => openWindow(w)}
-                  onGlitch={wobbleIcons}
-                  onMatrixMode={() => {
-                    setMatrixMode(true);
-                    window.setTimeout(() => setMatrixMode(false), 10_000);
-                  }}
-                />
-              )}
-              {id === "photobooth" && (
-                <PhotoboothPanel
-                  onCapture={addPhoto}
-                  onOpenPhotobook={() => openWindow("photobook")}
-                />
-              )}
-              {id === "photobook" && (
-                <PhotobookPanel
-                  photos={photos}
-                  loading={loadingPhotos}
-                  error={photoError}
-                  sharedEnabled={hasSupabaseConfig}
-                />
-              )}
-              {id === "music" && <MusicPlayerPanel library={MUSIC_LIBRARY} />}
-              {id === "browser" && <WebBrowserPanel />}
+              {id === "about" && <NewAboutPanel />}
+              {id === "projects" && <WorkPanel />}
+              {id === "contact" && <FindPanel />}
+              {id === "lab" && <LabStubPanel onNavigateLab={() => navigateToLab()} />}
+              <Suspense fallback={<div className="mac-panel-fallback" aria-hidden />}>
+                {id === "terminal" && (
+                  <MacTerminalApp
+                    onOpenWindow={(w) => openWindow(w)}
+                    onGlitch={wobbleIcons}
+                    onMatrixMode={() => {
+                      setMatrixMode(true);
+                      window.setTimeout(() => setMatrixMode(false), 10_000);
+                    }}
+                  />
+                )}
+                {id === "photobooth" && (
+                  <PhotoboothPanel
+                    onCapture={addPhoto}
+                    onOpenPhotobook={() => openWindow("photobook")}
+                  />
+                )}
+                {id === "photobook" && (
+                  <ScrapbookPanel
+                    photos={photos}
+                    loading={loadingPhotos}
+                    error={photoError}
+                    sharedEnabled={hasSupabaseConfig}
+                  />
+                )}
+                {id === "music" && <MusicPlayerPanel library={MUSIC_LIBRARY} />}
+                {id === "browser" && <WebBrowserPanel />}
+                {id === "controls" && <ControlPanelsPanel />}
+                {id === "minesweeper" && <MinesweeperPanel />}
+                {id === "clock" && <ClockPanel />}
+                {id === "typist" && (
+                  <TypistPanel
+                    onMagicWord={() => {
+                      openWindow("internals");
+                      window.setTimeout(() => hydraStage.pulse(), 80);
+                    }}
+                  />
+                )}
+                {id === "notepad" && <NotepadPanel />}
+                {id === "kaleidoscope" && <KaleidoscopePanel />}
+                {id === "slideshow" && <SlideshowPanel />}
+              </Suspense>
               {id === "aboutMac" && <AboutThisMacPanel />}
               {id === "secret" && <SecretPanel />}
               {id === "sticky" && <StickyNotePanel />}
-              {id === "minesweeper" && <MinesweeperPanel />}
               {id === "getinfo" && <GetInfoPanel target={getInfoTarget ?? "about"} />}
+              {id === "internals" && <InternalsPanel />}
+              {id === "finder" && (
+                <FinderPanel
+                  onOpen={(target) => openWindow(target as AnyWindowId)}
+                />
+              )}
             </DesktopWindow>
           );
         })}
 
-        <nav className="mac-dock" aria-label="Applications dock">
-          {DOCK_APPS.map((app) => (
-            <button
-              key={app.id}
-              type="button"
-              className={cn("mac-dock__item", open[app.id] && "mac-dock__item--open")}
-              onClick={(e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                playMacIconOpen();
-                openWindow(app.id, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
-              }}
-              title={`Open ${app.label}`}
-              aria-label={`Open ${app.label}`}
-            >
-              <span className="mac-dock__icon-shell" aria-hidden>
-                <img src={app.icon} alt="" className="mac-dock__icon" draggable={false} />
-              </span>
-              <span className="mac-dock__label">{app.label}</span>
-            </button>
-          ))}
-        </nav>
+        <TrashCan
+          count={trashedIcons.size}
+          onEmpty={() => {
+            setTrashedIcons(new Set());
+            hydraStage.invert();
+          }}
+        />
+
+        <MagneticDock
+          items={DOCK_APPS.map((app) => ({
+            id: app.id,
+            label: app.label,
+            icon: app.icon,
+            open: open[app.id],
+            onOpen: (rect) => {
+              playMacIconOpen();
+              openWindow(app.id, {
+                x: rect.left + rect.width / 2,
+                y: rect.top + rect.height / 2,
+              });
+            },
+          }))}
+        />
       </div>
 
       <MacNotifications />
+      <DefragScreensaver />
       <MobileAlert />
 
       {shutdownMode && (
@@ -709,6 +943,8 @@ export function MacintoshDesktop() {
           onRestart={() => {
             setShutdownMode(null);
             setBootKey((k) => k + 1);
+            /* The brief: the full POST runs ONLY on first visit, or after Restart. */
+            setShortBoot(false);
             setBooting(true);
             setOpen((o) => Object.fromEntries(Object.keys(o).map((k) => [k, false])) as never);
             setZOrder([]);
@@ -730,6 +966,8 @@ function DesktopFeltIcon({
   onSelect,
   onOpen,
   onDragEnd,
+  onGetInfo,
+  onMoveToTrash,
 }: {
   def: DesktopIconDef;
   index: number;
@@ -737,15 +975,21 @@ function DesktopFeltIcon({
   onSelect: () => void;
   onOpen: (anchor?: { x: number; y: number }) => void;
   onDragEnd: (xPct: number, yPct: number) => void;
+  onGetInfo?: () => void;
+  onMoveToTrash?: () => void;
 }) {
+  const contextMenu = useContextMenu();
   const frameSrc = def.frame === "blob1" ? FELT_FRAME.blob1 : FELT_FRAME.blob2;
   const rootRef = useRef<HTMLButtonElement>(null);
   const dragRef = useRef<{ pid: number; startX: number; startY: number; origLeft: number; origTop: number } | null>(null);
   const [dragXY, setDragXY] = useState<{ x: number; y: number } | null>(null);
   const [arrived, setArrived] = useState(false);
+  const [activating, setActivating] = useState(false);
 
+  /* Reading-order materialization: each icon expands from a 1px dot.
+     ~66ms per step × 12 icons ≈ 800ms total sequence. */
   useEffect(() => {
-    const id = window.setTimeout(() => setArrived(true), index * 80 + 120);
+    const id = window.setTimeout(() => setArrived(true), index * 66 + 60);
     return () => window.clearTimeout(id);
   }, [index]);
 
@@ -814,6 +1058,7 @@ function DesktopFeltIcon({
         selected && "mac-desktop-icon--selected",
         arrived && "mac-desktop-icon--arrived",
         dragXY && "mac-desktop-icon--dragging",
+        activating && "mac-desktop-icon--activating",
       )}
       style={posStyle}
       onPointerDown={onPointerDown}
@@ -832,13 +1077,33 @@ function DesktopFeltIcon({
         e.preventDefault();
         if (dragXY) return;
         const rect = e.currentTarget.getBoundingClientRect();
-        onOpen({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+        const anchor = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+        setActivating(true);
+        window.setTimeout(() => {
+          setActivating(false);
+          onOpen(anchor);
+        }, 320);
       }}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           onOpen();
         }
+      }}
+      onContextMenu={(e) => {
+        e.stopPropagation();
+        onSelect();
+        contextMenu.show(e, [
+          { kind: "header", label: def.label },
+          { label: "Open", onClick: () => onOpen() },
+          { label: "Get Info", onClick: () => onGetInfo?.() },
+          { kind: "divider" },
+          {
+            label: "Move to Trash",
+            onClick: () => onMoveToTrash?.(),
+            disabled: !onMoveToTrash,
+          },
+        ]);
       }}
       title={balloonText(def.windowId)}
       aria-label={`${def.label}. Double-click to open, or press Enter when focused.`}
@@ -877,18 +1142,7 @@ function balloonText(id: WindowId) {
 /* Panels                                                                    */
 /* ------------------------------------------------------------------------ */
 
-function AboutPanel() {
-  return <WindowScaffold title="Welcome — esnupi" intro={WINDOW_CONTENT.about.intro} sections={WINDOW_CONTENT.about.sections} />;
-}
-function ProjectsPanel() {
-  return <WindowScaffold title="Projects" intro={WINDOW_CONTENT.projects.intro} sections={WINDOW_CONTENT.projects.sections} />;
-}
-function ContactPanel() {
-  return <WindowScaffold title="Contact" intro={WINDOW_CONTENT.contact.intro} sections={WINDOW_CONTENT.contact.sections} links={WINDOW_CONTENT.contact.links} />;
-}
-function LabPanel() {
-  return <WindowScaffold title="Lab & writing" intro={WINDOW_CONTENT.lab.intro} sections={WINDOW_CONTENT.lab.sections} links={WINDOW_CONTENT.lab.links} />;
-}
+/* Content panels live in ./panels/ContentPanels.tsx */
 
 function GetInfoPanel({ target }: { target: AnyWindowId }) {
   const info = INITIAL[target];
@@ -910,55 +1164,6 @@ function GetInfoPanel({ target }: { target: AnyWindowId }) {
   );
 }
 
-function WindowScaffold({
-  title,
-  intro,
-  sections,
-  links,
-}: {
-  title: string;
-  intro: string;
-  sections: Array<{ heading: string; items: string[] }>;
-  links?: Array<{ label: string; href: string }>;
-}) {
-  return (
-    <section className="mac-content-grid" aria-label={title}>
-      <p>{intro}</p>
-      {sections.map((section) => (
-        <article key={section.heading} className="mac-content-card">
-          <h3>{section.heading}</h3>
-          <ul>
-            {section.items.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </article>
-      ))}
-      {links?.length ? (
-        <article className="mac-content-card">
-          <h3>Links</h3>
-          <ul>
-            {links.map((link) => (
-              <li key={link.label}>
-                <a className="text-blue-800 underline" href={link.href}>
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </article>
-      ) : null}
-      <article className="mac-content-card">
-        <h3>Working notes</h3>
-        <textarea
-          className="mac-content-notes"
-          placeholder="Paste rough copy, links, and ideas here while shaping this section..."
-          rows={5}
-        />
-      </article>
-    </section>
-  );
-}
 
 /* ------------------------------------------------------------------------ */
 /* FPS counter                                                               */

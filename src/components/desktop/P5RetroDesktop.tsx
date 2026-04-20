@@ -28,7 +28,7 @@ export function P5RetroDesktop() {
       p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.pixelDensity(1);
-        p.frameRate(18);
+        p.frameRate(12);
         grain = p.createGraphics(GW, GH);
       };
 

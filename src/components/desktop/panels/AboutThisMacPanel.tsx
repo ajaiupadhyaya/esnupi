@@ -1,8 +1,23 @@
+import { useMemo } from "react";
+
+import {
+  formatFirstBoot,
+  formatRelative,
+  formatUptime,
+  getVisitData,
+} from "@/lib/visitMemory";
+
 /**
  * A System 7-style "About This Mac" panel, repurposed as a personal manifesto.
- * Fake hardware specs with emotional entries.
+ * Blends fake hardware specs with actual, per-visitor telemetry: first boot
+ * timestamp, cumulative uptime across sessions, and last-active delta.
  */
 export function AboutThisMacPanel() {
+  const visit = useMemo(() => getVisitData(), []);
+  const firstBoot = formatFirstBoot(visit.firstVisit);
+  const uptime = formatUptime(visit.totalTimeMs, Math.max(1, visit.visitCount));
+  const lastActive = formatRelative(visit.lastVisit);
+
   return (
     <section className="mac-about">
       <header className="mac-about__header">
@@ -22,12 +37,20 @@ export function AboutThisMacPanel() {
       </header>
       <dl className="mac-about__specs">
         <div>
-          <dt>Built-in Memory</dt>
-          <dd>Full of unfinished ideas</dd>
+          <dt>First boot</dt>
+          <dd>{firstBoot}</dd>
         </div>
         <div>
-          <dt>Total Memory</dt>
-          <dd>Depends on who is asking</dd>
+          <dt>Uptime</dt>
+          <dd>{uptime}</dd>
+        </div>
+        <div>
+          <dt>Last active</dt>
+          <dd>{lastActive}</dd>
+        </div>
+        <div>
+          <dt>Built-in Memory</dt>
+          <dd>Full of unfinished ideas</dd>
         </div>
         <div>
           <dt>Thinking speed</dt>
@@ -36,10 +59,6 @@ export function AboutThisMacPanel() {
         <div>
           <dt>Largest Unused Block</dt>
           <dd>The one you were going to use later</dd>
-        </div>
-        <div>
-          <dt>Storage</dt>
-          <dd>Full of unfinished ideas</dd>
         </div>
         <div>
           <dt>Last backed up</dt>

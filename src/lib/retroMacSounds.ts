@@ -413,6 +413,57 @@ export function playPongBeep(hz = 640) {
 }
 
 /* -------------------------------------------------------- */
+/* Kaleidoscope ink drop — soft 300Hz pluck                 */
+/* -------------------------------------------------------- */
+
+export function playInkDrop() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(300, t);
+  osc.frequency.exponentialRampToValueAtTime(220, t + 0.06);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.05, t + 0.006);
+  g.gain.exponentialRampToValueAtTime(0.0008, t + 0.06);
+  osc.connect(g);
+  g.connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.08);
+}
+
+/* -------------------------------------------------------- */
+/* Soft page-turn — filtered noise burst                    */
+/* -------------------------------------------------------- */
+
+export function playPageTurn() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const bufferSize = Math.floor(ctx.sampleRate * 0.03);
+  const buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufferSize; i += 1) {
+    const env = 1 - i / bufferSize;
+    data[i] = (Math.random() * 2 - 1) * env;
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf;
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.frequency.value = 2000;
+  bp.Q.value = 3;
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.2, t);
+  g.gain.exponentialRampToValueAtTime(0.0005, t + 0.03);
+  src.connect(bp).connect(g).connect(ctx.destination);
+  src.start(t);
+  src.stop(t + 0.05);
+}
+
+/* -------------------------------------------------------- */
 /* Short "glitch" static burst                              */
 /* -------------------------------------------------------- */
 
@@ -423,4 +474,196 @@ export function playGlitchBurst() {
   noiseBurst(ctx, t, 0.25, 0.18);
   tone(ctx, 120, t, 0.1, "square", 0.09);
   tone(ctx, 1800, t + 0.06, 0.06, "square", 0.06);
+}
+
+/* -------------------------------------------------------- */
+/* Shutdown sequence — disk park click + fan decel + CRT    */
+/*                     bloom/collapse hiss.                  */
+/* -------------------------------------------------------- */
+
+/* -------------------------------------------------------- */
+/* Minesweeper — xylophone reveal, flag pin, explosion,     */
+/* victory chord.                                           */
+/* -------------------------------------------------------- */
+
+/** Pentatonic ladder used for cascade reveal (C5 E5 G5 A5 C6 D6). */
+const MINES_XYLO_HZ = [523.25, 659.25, 783.99, 880.0, 1046.5, 1174.66];
+
+/** Pleasant percussive bell for revealing one safe cell. */
+export function playMinesReveal(stepIndex = 0) {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const hz = MINES_XYLO_HZ[stepIndex % MINES_XYLO_HZ.length]!;
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(hz, t);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.1, t + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0008, t + 0.18);
+  osc.connect(g).connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.22);
+}
+
+/** Flood-reveal cascade: schedule several xylophone hits at 35 ms intervals. */
+export function playMinesCascade(count: number) {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const cap = Math.min(count, 12);
+  for (let i = 0; i < cap; i += 1) {
+    window.setTimeout(() => playMinesReveal(i), i * 32);
+  }
+}
+
+/** Sharp flag pin (woody staccato). */
+export function playMinesFlag() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = "square";
+  osc.frequency.setValueAtTime(1100, t);
+  osc.frequency.exponentialRampToValueAtTime(420, t + 0.04);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.12, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+  osc.connect(g).connect(ctx.destination);
+  osc.start(t);
+  osc.stop(t + 0.08);
+}
+
+/** Mine explosion — low rumble + noise burst + downward whistle. */
+export function playMinesExplosion() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  /* low boom */
+  {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(120, t);
+    osc.frequency.exponentialRampToValueAtTime(40, t + 0.5);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.4, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.6);
+  }
+  /* noise */
+  {
+    const dur = 0.4;
+    const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * dur), ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i += 1) {
+      const env = 1 - i / d.length;
+      d[i] = (Math.random() * 2 - 1) * env * env;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = 0.8;
+    bp.frequency.setValueAtTime(900, t);
+    bp.frequency.exponentialRampToValueAtTime(150, t + dur);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.22, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(t);
+    src.stop(t + dur + 0.02);
+  }
+}
+
+/** Victory chord (triad C–E–G, pleasant shimmer). */
+export function playMinesVictory() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  [523.25, 659.25, 783.99].forEach((hz, i) => {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(hz, t);
+    g.gain.setValueAtTime(0.0001, t + i * 0.06);
+    g.gain.exponentialRampToValueAtTime(0.08, t + i * 0.06 + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0005, t + 1.4);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(t + i * 0.06);
+    osc.stop(t + 1.5);
+  });
+}
+
+export function playShutdownSequence() {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const t0 = ctx.currentTime;
+
+  /* (1) Disk-park click: a short wood-dry tap at ~180 Hz with a
+         quick 0.04s ring. */
+  {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(220, t0);
+    osc.frequency.exponentialRampToValueAtTime(90, t0 + 0.04);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.22, t0 + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0005, t0 + 0.08);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.1);
+  }
+
+  /* (2) Fan decel: a low sine starting ~80 Hz, ramping to 20 Hz
+         over 1.8s, filtered through a lowpass. Acts as the "motor
+         winding down" layer. */
+  {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    const lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 300;
+    osc.type = "sawtooth";
+    osc.frequency.setValueAtTime(90, t0 + 0.05);
+    osc.frequency.exponentialRampToValueAtTime(22, t0 + 1.9);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.08, t0 + 0.3);
+    g.gain.exponentialRampToValueAtTime(0.0005, t0 + 2.0);
+    osc.connect(lp).connect(g).connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 2.1);
+  }
+
+  /* (3) CRT bloom + collapse hiss: short white-noise burst band-passed
+         at 4 kHz, with a slight pitch drop implemented via a second
+         resonant filter sweep 6 kHz → 800 Hz. */
+  {
+    const durS = 0.6;
+    const bufferSize = Math.floor(ctx.sampleRate * durS);
+    const buf = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < bufferSize; i += 1) {
+      const env = 1 - i / bufferSize;
+      data[i] = (Math.random() * 2 - 1) * env * env;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.Q.value = 1.6;
+    bp.frequency.setValueAtTime(6000, t0 + 0.7);
+    bp.frequency.exponentialRampToValueAtTime(800, t0 + 1.3);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0 + 0.7);
+    g.gain.exponentialRampToValueAtTime(0.12, t0 + 0.75);
+    g.gain.exponentialRampToValueAtTime(0.0005, t0 + 1.3);
+    src.connect(bp).connect(g).connect(ctx.destination);
+    src.start(t0 + 0.7);
+    src.stop(t0 + 1.4);
+  }
 }
