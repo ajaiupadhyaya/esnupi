@@ -6,10 +6,6 @@
 
 @layer base {
   :root {
-    /* Prefer Garamond Nova (local, Adobe, or files in /public/fonts); EB Garamond loads from Google */
-    --font-body:
-      "Garamond Nova", "EB Garamond", "Apple Garamond", "Palatino Linotype", Palatino, Georgia,
-      "Times New Roman", serif;
     --background: 240 6% 7%;
     --foreground: 40 20% 95%;
     --card: 240 5% 10%;
@@ -29,34 +25,27 @@
     --border: 240 5% 20%;
     --input: 240 5% 20%;
     --ring: 32 90% 55%;
-    --radius: 0.2rem;
+    --radius: 0.65rem;
   }
 
   html {
     scroll-behavior: auto;
   }
 
-  /* Garamond Nova: uses installed fonts, or drop GaramondNova.woff2 into public/fonts/ and extend src */
-  @font-face {
-    font-family: "Garamond Nova";
-    font-style: normal;
-    font-weight: 400 700;
-    font-display: swap;
-    src: local("Garamond Nova"), local("Garamond Nova Pro"), local("Garamond Nova Display");
-  }
-
   body {
-    @apply bg-background text-foreground antialiased font-sans;
+    @apply bg-background text-foreground antialiased;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      Segoe UI,
+      Roboto,
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
   }
 
   #root {
     min-height: 100dvh;
-  }
-}
-
-@layer components {
-  .brutalist-frame {
-    border: 2px solid hsl(var(--foreground));
-    box-shadow: 6px 6px 0 0 hsl(var(--foreground) / 0.85);
   }
 }

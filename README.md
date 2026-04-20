@@ -23,9 +23,20 @@ Portfolio playground: **Vite · React · TypeScript · Tailwind · MDX**. Live b
 
 Copy `.env.example` to `.env` and set optional variables.
 
+## Shared photobook setup (Supabase)
+
+For the `Photobooth`/`Photobook` desktop apps to store a truly shared museum collection:
+
+1. Create a Supabase project.
+2. Run `supabase/museum_photos.sql` in the SQL editor.
+3. Set these values in `.env`:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+
 ## Key paths
 
 - `src/components/HydraBackground.tsx` — Hydra canvas
 - `src/lib/randomHydraSketch.ts` — random Hydra programs
 - `src/pages/Home.tsx` — library showcase
 - `src/content/hello.mdx` — sample MDX
+- `src/music/` — drop local audio files for the desktop Music app

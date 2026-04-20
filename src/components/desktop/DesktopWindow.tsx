@@ -1,6 +1,12 @@
 import { playMacWindowClose } from "@/lib/retroMacSounds";
 import { type ReactNode, useCallback, useEffect, useRef } from "react";
 
+/** Must match `--mac-menu-h` and dock reserve used in `MacintoshDesktop` positioning. */
+const MENU_BAR_H = 28;
+const VIEW_MARGIN = 10;
+/** Space reserved above bottom edge so windows open above the dock. */
+const DOCK_RESERVE_PX = 150;
+
 export type DesktopWindowProps = {
   title: string;
   children: ReactNode;
@@ -28,47 +34,74 @@ export function DesktopWindow({
   onClose,
   onMove,
 }: DesktopWindowProps) {
+  const sizeRef = useRef({ width, height });
+  sizeRef.current = { width, height };
+
   const dragRef = useRef<{
+    pointerId: number;
     startX: number;
     startY: number;
     origX: number;
     origY: number;
   } | null>(null);
 
+  const clampToViewport = useCallback((nx: number, ny: number) => {
+    const { width: w, height: h } = sizeRef.current;
+    const maxX = Math.max(VIEW_MARGIN, window.innerWidth - w - VIEW_MARGIN);
+    const maxY = Math.max(
+      MENU_BAR_H + VIEW_MARGIN,
+      window.innerHeight - h - VIEW_MARGIN - DOCK_RESERVE_PX,
+    );
+    return {
+      x: Math.min(Math.max(VIEW_MARGIN, nx), maxX),
+      y: Math.min(Math.max(MENU_BAR_H + VIEW_MARGIN, ny), maxY),
+    };
+  }, []);
+
   const onPointerMove = useCallback(
     (e: PointerEvent) => {
       const d = dragRef.current;
-      if (!d) return;
+      if (!d || e.pointerId !== d.pointerId) return;
+      e.preventDefault();
       const nx = d.origX + (e.clientX - d.startX);
       const ny = d.origY + (e.clientY - d.startY);
-      const margin = 8;
-      const menuH = 24;
-      const maxX = Math.max(margin, window.innerWidth - width - margin);
-      const maxY = Math.max(menuH + margin, window.innerHeight - height - margin);
-      onMove(Math.min(Math.max(margin, nx), maxX), Math.min(Math.max(menuH + margin, ny), maxY));
+      const next = clampToViewport(nx, ny);
+      onMove(next.x, next.y);
     },
-    [height, onMove, width],
+    [clampToViewport, onMove],
   );
 
-  const endDrag = useCallback(() => {
+  const endDrag = useCallback((e?: PointerEvent) => {
+    const d = dragRef.current;
+    if (!d) return;
+    if (e && e.pointerId !== d.pointerId) return;
     dragRef.current = null;
-    window.removeEventListener("pointermove", onPointerMove);
-    window.removeEventListener("pointerup", endDrag);
-    window.removeEventListener("pointercancel", endDrag);
+    document.removeEventListener("pointermove", onPointerMove, true);
+    document.removeEventListener("pointerup", endDrag, true);
+    document.removeEventListener("pointercancel", endDrag, true);
   }, [onPointerMove]);
 
-  const onTitlePointerDown = (e: React.PointerEvent) => {
+  const onTitlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
     if ((e.target as HTMLElement).closest("button")) return;
+    e.preventDefault();
+    e.stopPropagation();
     onActivate();
     dragRef.current = {
+      pointerId: e.pointerId,
       startX: e.clientX,
       startY: e.clientY,
       origX: x,
       origY: y,
     };
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", endDrag);
-    window.addEventListener("pointercancel", endDrag);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+    document.addEventListener("pointermove", onPointerMove, true);
+    document.addEventListener("pointerup", endDrag, true);
+    document.addEventListener("pointercancel", endDrag, true);
   };
 
   useEffect(() => {
@@ -81,7 +114,10 @@ export function DesktopWindow({
       style={{ left: x, top: y, width, height, zIndex }}
       role="dialog"
       aria-label={title}
-      onPointerDown={onActivate}
+      onPointerDown={(ev) => {
+        onActivate();
+        ev.stopPropagation();
+      }}
     >
       <div className="mac-window__titlebar" onPointerDown={onTitlePointerDown}>
         <button

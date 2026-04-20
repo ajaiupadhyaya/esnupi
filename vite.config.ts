@@ -4,6 +4,7 @@ import mdx from "@mdx-js/rollup";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  envPrefix: ["VITE_", "NEXT_PUBLIC_"],
   // hydra-synth (via regl/streaming deps) references Node's `global`, which browsers don't define
   define: {
     global: "globalThis",

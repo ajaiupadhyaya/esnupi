@@ -4,18 +4,6 @@ module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
-      fontFamily: {
-        sans: [
-          '"Garamond Nova"',
-          '"EB Garamond"',
-          '"Apple Garamond"',
-          '"Palatino Linotype"',
-          "Palatino",
-          "Georgia",
-          '"Times New Roman"',
-          "serif",
-        ],
-      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
