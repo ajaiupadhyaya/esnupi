@@ -784,6 +784,8 @@ function MacintoshDesktopInner() {
             playMacDiskInsert();
           }}
         />
+        <CRTScreenGlass />
+        <CRTMonitorChassis />
       </div>
     );
   }
@@ -1018,6 +1020,9 @@ function MacintoshDesktopInner() {
           }))}
         />
       </div>
+
+      <CRTScreenGlass />
+      <CRTMonitorChassis />
 
       <MacNotifications />
       <DefragScreensaver />
@@ -1278,6 +1283,82 @@ function GetInfoPanel({ target }: { target: AnyWindowId }) {
   );
 }
 
+
+/* ------------------------------------------------------------------------ */
+/* CRT monitor chassis — Y2K Macintosh housing                              */
+/* ------------------------------------------------------------------------ */
+/**
+ * Decorative overlay that turns the viewport into a beige-plastic CRT.
+ * Four bezel panels + rounded inner corner covers + glass treatments
+ * (inner bevel rim, barrel vignette, diagonal glare). Sits behind the
+ * menu bar so the top of the UI reads as _inside_ the screen, above
+ * everything else so windows and the dock tuck beneath the plastic.
+ */
+function CRTMonitorChassis() {
+  return (
+    <div className="mac-crt-chassis" aria-hidden>
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--top">
+        <div className="mac-crt-chassis__grille" />
+      </div>
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--right" />
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--bottom">
+        <div className="mac-crt-chassis__brand">
+          <svg
+            className="mac-crt-chassis__apple"
+            viewBox="0 0 18 22"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden
+            focusable="false"
+          >
+            {/* Rainbow Apple (1977–1998): horizontal bands clipped to the
+                official silhouette from MacMenuBar. Unique clipPath id so
+                it can coexist with the menu-bar instance. */}
+            <defs>
+              <clipPath id="mac-crt-apple-clip">
+                <path d="M12.1 6.3c.9-.9 1.5-2.2 1.4-3.5-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.2 3.4 1.3.1 2.1-.7 3-1.6zM17 16.4c-.5 1.1-.8 1.6-1.4 2.5-.9 1.3-2.2 2.9-3.8 2.9-1.4 0-1.8-.9-3.7-.9-1.9 0-2.3.9-3.7.9-1.6 0-2.8-1.5-3.7-2.8C1 16.9 0 14 0 11.2c0-3.8 2.5-5.8 4.9-5.8 1.6 0 2.6.9 3.9.9 1.3 0 2.1-.9 3.9-.9 1.4 0 2.9.8 3.9 2.1-3.4 1.9-2.9 6.8.4 8.9z" />
+              </clipPath>
+            </defs>
+            <g clipPath="url(#mac-crt-apple-clip)">
+              <rect x="0" y="0" width="18" height="3.6" fill="#61BB46" />
+              <rect x="0" y="3.6" width="18" height="3.6" fill="#FDB827" />
+              <rect x="0" y="7.2" width="18" height="3.6" fill="#F5821F" />
+              <rect x="0" y="10.8" width="18" height="3.6" fill="#E03A3E" />
+              <rect x="0" y="14.4" width="18" height="3.6" fill="#963D97" />
+              <rect x="0" y="18.0" width="18" height="4.0" fill="#009DDC" />
+            </g>
+          </svg>
+          <span className="mac-crt-chassis__wordmark">Macintosh</span>
+        </div>
+        <div className="mac-crt-chassis__led-cluster">
+          <span className="mac-crt-chassis__led-label">Power</span>
+          <span className="mac-crt-chassis__led" />
+        </div>
+      </div>
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--left" />
+
+      <div className="mac-crt-chassis__corner mac-crt-chassis__corner--tl" />
+      <div className="mac-crt-chassis__corner mac-crt-chassis__corner--tr" />
+      <div className="mac-crt-chassis__corner mac-crt-chassis__corner--bl" />
+      <div className="mac-crt-chassis__corner mac-crt-chassis__corner--br" />
+
+      <div className="mac-crt-chassis__screen-rim" />
+    </div>
+  );
+}
+
+/**
+ * CRT "glass" layers. Rendered as siblings of the chassis (not children)
+ * so their mix-blend-mode can blend against the content behind them —
+ * fixed-position stacking contexts would otherwise isolate them.
+ */
+function CRTScreenGlass() {
+  return (
+    <>
+      <div className="mac-crt-glass mac-crt-glass--vignette" aria-hidden />
+      <div className="mac-crt-glass mac-crt-glass--glare" aria-hidden />
+    </>
+  );
+}
 
 /* ------------------------------------------------------------------------ */
 /* FPS counter                                                               */
