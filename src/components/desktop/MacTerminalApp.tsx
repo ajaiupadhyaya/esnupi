@@ -3,6 +3,7 @@ import { Terminal } from "@xterm/xterm";
 import { useEffect, useRef } from "react";
 import "@xterm/xterm/css/xterm.css";
 import { playMacTypeTick } from "@/lib/retroMacSounds";
+import { appendSystemLog, subscribeSystemLog } from "@/lib/systemLog";
 
 type FsNode = { type: "dir"; children: Record<string, FsNode> } | { type: "file"; content: string };
 
@@ -66,6 +67,21 @@ const ROOT: FsNode = {
         Object.entries(SECRET_FILES).map(([k, v]) => [k, { type: "file", content: v } as FsNode]),
       ),
     },
+    dev: {
+      type: "dir",
+      children: {
+        mind: {
+          type: "dir",
+          children: {
+            "leak.bin": {
+              type: "file",
+              content:
+                "0000000: dead be ef  ca fe ba be  — you should not map this page\n0000010: 00 00 00 00 00 00 00 00  (quiet)\n",
+            },
+          },
+        },
+      },
+    },
   },
 };
 
@@ -110,9 +126,11 @@ type MacTerminalAppProps = {
   onOpenWindow?: (id: "music") => void;
   onGlitch?: () => void;
   onMatrixMode?: () => void;
+  /** Reading /dev/mind/leak.bin triggers a desktop “memory leak” sequence. */
+  onMemoryLeak?: () => void;
 };
 
-export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode }: MacTerminalAppProps = {}) {
+export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryLeak }: MacTerminalAppProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -135,6 +153,10 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode }: MacTerm
     term.loadAddon(fit);
     term.open(el);
     fit.fit();
+
+    const unsubLog = subscribeSystemLog((line) => {
+      term.writeln(`\u001b[33m${line}\u001b[0m`);
+    });
 
     const fs = cloneFs(ROOT);
     let cwd = "/home/guest";
@@ -361,6 +383,7 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode }: MacTerm
       if (cmd === "help") {
         term.writeln("Commands: " + COMMANDS.join(" "));
         term.writeln("Try: neofetch, fortune, matrix, weather, snake, `man love`.");
+        term.writeln("Hidden paths exist under /dev (mind the leak).");
         return;
       }
       if (cmd === "pwd") return term.writeln(cwd);
@@ -447,6 +470,12 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode }: MacTerm
         const target = resolvePath(rest[0]);
         const node = getNode(target);
         if (!node || node.type !== "file") return term.writeln(`cat: ${rest[0]}: No such file`);
+        const fullPath = pathString(target);
+        if (fullPath === "/dev/mind/leak.bin") {
+          appendSystemLog("kernel: page fault on mapped device /dev/mind/leak.bin — initiating leak");
+          term.writeln("\u001b[31m-- MEMORY LEAK: userland mapped kernel phantom page\u001b[0m");
+          onMemoryLeak?.();
+        }
         node.content.split("\n").forEach((l) => term.writeln(l));
         return;
       }
@@ -588,10 +617,11 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode }: MacTerm
     ro.observe(el);
 
     return () => {
+      unsubLog();
       ro.disconnect();
       term.dispose();
     };
-  }, [onOpenWindow, onGlitch, onMatrixMode]);
+  }, [onOpenWindow, onGlitch, onMatrixMode, onMemoryLeak]);
 
   return <div ref={containerRef} className="mac-terminal-host" />;
 }

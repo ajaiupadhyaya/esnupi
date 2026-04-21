@@ -5,6 +5,12 @@ import { AUTHORED_HYDRA_SKETCHES, MATRIX_SKETCH, type HydraMoodId } from "../lib
 import { buildFallbackSketch } from "../lib/randomHydraSketch";
 import { incrementVisitCount, pickHydraMood } from "../lib/hydraMood";
 import { hydraStage, installHydraStage } from "../lib/hydraStage";
+import {
+  buildShaderLabSketch,
+  loadShaderLabState,
+  saveShaderLabState,
+  type ShaderLabParams,
+} from "../lib/shaderLab";
 
 import "./HydraBackground.css";
 
@@ -56,6 +62,10 @@ export function HydraBackground() {
     }
 
     let activeMood: HydraMoodId = initialMood;
+    const labState = loadShaderLabState();
+    let shaderLabEngaged = labState.engaged;
+    let shaderLabParams: ShaderLabParams = labState.params;
+
     const runSketch = (src: string) => {
       try {
         hydra?.eval(src);
@@ -63,7 +73,13 @@ export function HydraBackground() {
         hydra?.eval(buildFallbackSketch());
       }
     };
-    runSketch(AUTHORED_HYDRA_SKETCHES[activeMood]);
+
+    const activeBackdropSrc = () => {
+      if (shaderLabEngaged) return buildShaderLabSketch(activeMood, shaderLabParams);
+      return AUTHORED_HYDRA_SKETCHES[activeMood];
+    };
+
+    runSketch(activeBackdropSrc());
 
     const onResize = () => {
       const { w: nw, h: nh } = size();
@@ -165,19 +181,19 @@ export function HydraBackground() {
         paused = p;
         try {
           if (p) hydra?.hush();
-          else runSketch(matrixOn ? MATRIX_SKETCH : AUTHORED_HYDRA_SKETCHES[activeMood]);
+          else runSketch(matrixOn ? MATRIX_SKETCH : activeBackdropSrc());
         } catch {
           /* ignore */
         }
       },
       setMood: (mood) => {
         activeMood = mood;
-        if (!paused && !matrixOn) runSketch(AUTHORED_HYDRA_SKETCHES[mood]);
+        if (!paused && !matrixOn) runSketch(activeBackdropSrc());
       },
       setMatrix: (on) => {
         matrixOn = on;
         if (paused) return;
-        runSketch(on ? MATRIX_SKETCH : AUTHORED_HYDRA_SKETCHES[activeMood]);
+        runSketch(on ? MATRIX_SKETCH : activeBackdropSrc());
       },
       setBlur: (px) => {
         animFx({ blur: Math.max(0, px) }, 0.18);
@@ -198,6 +214,18 @@ export function HydraBackground() {
             });
           },
         });
+      },
+      setShaderLabEngaged: (engaged) => {
+        shaderLabEngaged = engaged;
+        saveShaderLabState({ engaged: shaderLabEngaged, params: shaderLabParams });
+        if (paused || matrixOn) return;
+        runSketch(activeBackdropSrc());
+      },
+      setShaderLabParams: (patch) => {
+        shaderLabParams = { ...shaderLabParams, ...patch };
+        saveShaderLabState({ engaged: shaderLabEngaged, params: shaderLabParams });
+        if (!shaderLabEngaged || paused || matrixOn) return;
+        runSketch(activeBackdropSrc());
       },
     });
 

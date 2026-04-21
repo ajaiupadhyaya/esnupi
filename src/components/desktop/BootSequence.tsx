@@ -158,7 +158,7 @@ export function BootSequence({
   });
 
   return (
-    <div className="mac-boot-root" role="presentation" onClick={finish}>
+    <div className="mac-boot-root mac-boot-vapor" role="presentation" onClick={finish}>
       {phase === "welcomeback" && (
         <div className="mac-boot-welcome">
           <div className="mac-boot-welcome__line">Welcome back.</div>

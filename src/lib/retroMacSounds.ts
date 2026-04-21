@@ -667,3 +667,31 @@ export function playShutdownSequence() {
     src.stop(t0 + 1.4);
   }
 }
+
+/**
+ * Low-volume mechanical “disk seek” chirps — randomized timing like a head stepping.
+ * Used when an app “loads” (open animation / Suspense).
+ */
+export function playDiskSeekChirps(opts?: { count?: number; spreadMs?: number }) {
+  const ctx = getCtx();
+  if (!ctx) return;
+  const count = Math.max(2, Math.min(12, opts?.count ?? 4 + Math.floor(Math.random() * 4)));
+  const spread = opts?.spreadMs ?? 520;
+  const t0 = ctx.currentTime;
+  for (let i = 0; i < count; i += 1) {
+    const start = t0 + (Math.random() * spread) / 1000;
+    const freq = 700 + Math.random() * 900;
+    const dur = 0.012 + Math.random() * 0.022;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = "square";
+    osc.frequency.setValueAtTime(freq, start);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.4, start + dur);
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.018 + Math.random() * 0.02, start + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+    osc.connect(g).connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + dur + 0.02);
+  }
+}

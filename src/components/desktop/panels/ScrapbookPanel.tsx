@@ -1,7 +1,13 @@
 import { DateTime } from "luxon";
 import gsap from "gsap";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { SharedPhoto } from "@/lib/photobookStore";
+import {
+  addTextClip,
+  loadClippings,
+  removeClip,
+  type ScrapClip,
+} from "@/lib/scrapbookClippings";
 import { playMacTypeTick } from "@/lib/retroMacSounds";
 
 type Props = {
@@ -54,6 +60,18 @@ function computeLayout(photos: SharedPhoto[], cols: number): { positions: Polaro
 }
 
 export function ScrapbookPanel({ photos, loading, error, sharedEnabled }: Props) {
+  const [clips, setClips] = useState<ScrapClip[]>(() => loadClippings());
+  const [clipDraft, setClipDraft] = useState("");
+
+  const pushClip = useCallback(() => {
+    const next = addTextClip(clipDraft);
+    if (next) {
+      setClips(next);
+      setClipDraft("");
+      playMacTypeTick();
+    }
+  }, [clipDraft]);
+
   const cols = 4;
   const { positions, height } = useMemo(() => computeLayout(photos, cols), [photos]);
   const posById = useMemo(
@@ -160,6 +178,48 @@ export function ScrapbookPanel({ photos, loading, error, sharedEnabled }: Props)
         </p>
       </header>
 
+      <div className="mac-scrapbook__clips">
+        <h4 className="mac-type-metadata">Clippings</h4>
+        <p className="mac-scrapbook__clips-hint">
+          Drag selections here from the Terminal, or paste text — stored locally in this browser.
+        </p>
+        <div className="mac-scrapbook__clips-row">
+          <textarea
+            className="mac-scrapbook__clips-input"
+            rows={2}
+            value={clipDraft}
+            placeholder="Paste or type a snippet…"
+            onChange={(e) => setClipDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                pushClip();
+              }
+            }}
+          />
+          <button type="button" className="mac-scrapbook__clips-add" onClick={pushClip}>
+            Pin
+          </button>
+        </div>
+        <ul className="mac-scrapbook__clips-list">
+          {clips.map((c) => (
+            <li key={c.id}>
+              <button
+                type="button"
+                className="mac-scrapbook__clip"
+                onClick={() => {
+                  setClips(removeClip(c.id));
+                }}
+                title="Click to remove"
+              >
+                <span className="mac-scrapbook__clip-kind">{c.kind}</span>
+                <span className="mac-scrapbook__clip-text">{c.text}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {!sharedEnabled && (
         <p className="mac-scrapbook__warning">Shared storage is not configured.</p>
       )}
@@ -171,7 +231,23 @@ export function ScrapbookPanel({ photos, loading, error, sharedEnabled }: Props)
           No portraits yet. Open Photobooth to add the first visitor photo.
         </p>
       ) : (
-        <div ref={corkRef} className="mac-scrapbook__cork" style={{ height }}>
+        <div
+          ref={corkRef}
+          className="mac-scrapbook__cork mac-cursor-magnify"
+          style={{ height }}
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "copy";
+          }}
+          onDrop={(e) => {
+            e.preventDefault();
+            const t = e.dataTransfer.getData("text/plain") || e.dataTransfer.getData("text/uri-list");
+            if (t) {
+              const next = addTextClip(t);
+              if (next) setClips(next);
+            }
+          }}
+        >
           {photos.map((photo) => {
             const p = posById[photo.id];
             if (!p) return null;

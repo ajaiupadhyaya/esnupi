@@ -3,7 +3,8 @@ import { Outlet, useLocation } from "react-router-dom";
 
 export function SiteLayout() {
   const { pathname } = useLocation();
-  const desktopHome = pathname === "/";
+  const desktopHome =
+    pathname === "/" || pathname.startsWith("/gallery") || pathname.startsWith("/archive");
 
   return (
     <div className="relative min-h-dvh text-foreground">

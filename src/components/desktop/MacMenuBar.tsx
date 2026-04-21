@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { playMacErrorBeep, playMacMenuClick, playMacTrashEmpty } from "@/lib/retroMacSounds";
 import type { WindowId } from "./desktopIconConfig";
@@ -57,6 +57,8 @@ type MenuBarProps = {
   balloonHelp: boolean;
   sound: boolean;
   appleClicksDispatch: () => void;
+  /** Optional menu-bar “pet” or mascot slot (right side, before the clock). */
+  pet?: ReactNode;
 };
 
 export function MacMenuBar({
@@ -67,6 +69,7 @@ export function MacMenuBar({
   balloonHelp,
   sound,
   appleClicksDispatch,
+  pet,
 }: MenuBarProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [clock, setClock] = useState(() => DateTime.now().toLocaleString(DateTime.TIME_SIMPLE));
@@ -225,6 +228,7 @@ export function MacMenuBar({
       </MenuBarItem>
 
       <span className="mac-menu-bar__spacer" aria-hidden />
+      {pet ? <div className="mac-menu-bar__pet-host">{pet}</div> : null}
       <span className="mac-menu-bar__clock">
         {sleepNag ? "you should sleep" : clock}
       </span>

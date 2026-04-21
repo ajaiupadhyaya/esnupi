@@ -5,3 +5,4 @@ dist
 .env
 .venv
 images/
+.vercel

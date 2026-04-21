@@ -5,6 +5,7 @@
  */
 
 import type { HydraMoodId } from "./authoredHydraSketches";
+import type { ShaderLabParams } from "./shaderLab";
 
 export type HydraSetMode = "matrix" | "konami-off" | null;
 
@@ -27,6 +28,9 @@ type HydraStageImpl = {
   setBlur: (px: number) => void;
   /** Transient hue-rotate spin (minesweeper win celebration). */
   spinHue: (durationMs?: number) => void;
+  /** When true, Hydra uses Shader Lab parametric sketch instead of authored mood. */
+  setShaderLabEngaged: (engaged: boolean) => void;
+  setShaderLabParams: (patch: Partial<ShaderLabParams>) => void;
 };
 
 const NOOP: HydraStageImpl = {
@@ -39,6 +43,8 @@ const NOOP: HydraStageImpl = {
   setMatrix: () => {},
   setBlur: () => {},
   spinHue: () => {},
+  setShaderLabEngaged: () => {},
+  setShaderLabParams: () => {},
 };
 
 let current: HydraStageImpl = NOOP;
@@ -53,6 +59,8 @@ export const hydraStage: HydraStageImpl = {
   setMatrix: (on) => current.setMatrix(on),
   setBlur: (px) => current.setBlur(px),
   spinHue: (ms) => current.spinHue(ms),
+  setShaderLabEngaged: (e) => current.setShaderLabEngaged(e),
+  setShaderLabParams: (p) => current.setShaderLabParams(p),
 };
 
 export function installHydraStage(impl: HydraStageImpl) {

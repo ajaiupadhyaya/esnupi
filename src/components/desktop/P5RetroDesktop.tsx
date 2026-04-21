@@ -33,6 +33,10 @@ export function P5RetroDesktop() {
       };
 
       p.draw = () => {
+        const busy =
+          typeof document !== "undefined" &&
+          Number.parseInt(document.body?.dataset.macWindows ?? "0", 10) > 4;
+        p.frameRate(busy ? 8 : 12);
         p.clear();
         grain.loadPixels();
         const t = p.frameCount * 0.014;

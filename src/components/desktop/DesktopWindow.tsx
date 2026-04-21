@@ -1,10 +1,12 @@
 import gsap from "gsap";
 import {
+  playMacErrorBeep,
   playMacMaximize,
   playMacMinimize,
   playMacWindowClose,
 } from "@/lib/retroMacSounds";
-import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { appendSystemLog } from "@/lib/systemLog";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { hydraStage } from "@/lib/hydraStage";
 
@@ -45,6 +47,9 @@ export type DesktopWindowProps = {
   windowId?: string;
   /** Right-click on the title bar opens the caller's context menu. */
   onTitleContextMenu?: (e: React.MouseEvent) => void;
+  /** Normalized light source (e.g. cursor) for resolution-aware drop shadows. */
+  lightX?: number;
+  lightY?: number;
 };
 
 export function DesktopWindow({
@@ -64,6 +69,8 @@ export function DesktopWindow({
   onMove,
   windowId,
   onTitleContextMenu,
+  lightX = 0.5,
+  lightY = 0.5,
 }: DesktopWindowProps) {
   const sizeRef = useRef({ width, height });
   sizeRef.current = { width, height };
@@ -73,6 +80,19 @@ export function DesktopWindow({
   const [contentVisible, setContentVisible] = useState(false);
   const [rectVisible, setRectVisible] = useState(true);
   const [dragShadow, setDragShadow] = useState(false);
+
+  const lightAwareShadow = useMemo(() => {
+    if (typeof window === "undefined") return undefined;
+    const cx = (x + width / 2) / window.innerWidth;
+    const cy = (y + height / 2) / window.innerHeight;
+    const dx = lightX - cx;
+    const dy = lightY - cy;
+    const len = Math.hypot(dx, dy) + 0.0001;
+    const sh = 5.5;
+    const ox = (-dx / len) * sh;
+    const oy = (-dy / len) * sh;
+    return `${ox}px ${oy}px 0 rgba(0,0,0,0.36), ${ox * 0.45}px ${oy * 0.45}px 10px rgba(0,0,0,0.12), inset 0 1px 0 rgba(255,255,255,0.65)`;
+  }, [x, y, width, height, lightX, lightY]);
 
   /* ---- Two-phase zoom rect on open ------------------------------------ */
   useEffect(() => {
@@ -271,6 +291,7 @@ export function DesktopWindow({
           transition: `opacity ${OPEN_FADE_MS}ms ease`,
           width: "100%",
           height: "100%",
+          boxShadow: dragShadow ? undefined : lightAwareShadow,
         }}
       >
         <div
@@ -290,6 +311,12 @@ export function DesktopWindow({
             aria-label={`Close ${title}`}
             onClick={(e) => {
               e.stopPropagation();
+              if (e.altKey) {
+                appendSystemLog(`PANIC: force-quit "${title}" (user held ⌥)`);
+                playMacErrorBeep();
+                runCloseAnim();
+                return;
+              }
               playMacWindowClose();
               runCloseAnim();
             }}

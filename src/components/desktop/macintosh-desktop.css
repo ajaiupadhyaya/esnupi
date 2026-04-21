@@ -927,6 +927,187 @@ body.mac-matrix-mode .mac-desktop-surface {
 }
 .mac-work-panel__blurb .mac-type-metadata { margin-left: 8px; color: #888; }
 
+.mac-profiler__head { margin-bottom: 12px; }
+.mac-profiler__sub {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #555;
+}
+.mac-profiler__layout {
+  display: grid;
+  grid-template-columns: minmax(160px, 38%) 1fr;
+  gap: 14px;
+  min-height: 280px;
+}
+@media (max-width: 520px) {
+  .mac-profiler__layout { grid-template-columns: 1fr; }
+}
+.mac-profiler__group-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #777;
+  margin: 10px 0 4px;
+}
+.mac-profiler__group-label:first-child { margin-top: 0; }
+.mac-profiler__list {
+  border: 1px solid #b8b8b8;
+  background: #f4f4f4;
+  padding: 6px;
+  max-height: 360px;
+  overflow: auto;
+}
+.mac-profiler__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 6px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  background: transparent;
+  font: inherit;
+  cursor: inherit;
+}
+.mac-profiler__item:hover {
+  background: #e8e8e8;
+}
+.mac-profiler__item--on {
+  border-color: #000;
+  background: #dcdcdc;
+}
+.mac-profiler__vol {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: #666;
+}
+.mac-profiler__name {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.mac-profiler__detail {
+  border: 1px solid #b8b8b8;
+  background: #fafafa;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.mac-profiler__hex {
+  margin: 0 0 14px;
+  padding: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #2a5;
+  background: #0a0f07;
+  border: 1px solid #000;
+  font-family: ui-monospace, monospace;
+  white-space: pre-wrap;
+  animation: mac-profiler-hex-fade 1.4s ease forwards;
+}
+@keyframes mac-profiler-hex-fade {
+  0% { opacity: 1; filter: blur(0); }
+  55% { opacity: 0.88; filter: blur(0.5px); }
+  100% { opacity: 0.35; filter: blur(1px); }
+}
+.mac-profiler__case {
+  animation: mac-profiler-case-in 0.9s ease 0.35s both;
+}
+@keyframes mac-profiler-case-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.mac-profiler__case-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+.mac-profiler__case-blurb {
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.mac-profiler__placeholder {
+  margin: 0;
+  color: #888;
+  font-size: 14px;
+}
+.mac-profiler__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 10px 0 12px;
+}
+.mac-profiler__tag {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid #b8b8b8;
+  background: #f0f0f0;
+  color: #555;
+}
+.mac-profiler__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 7px 12px;
+  border: 1px solid #000;
+  background: #f4f4f4;
+  color: #000;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+.mac-profiler__cta:hover {
+  background: #000;
+  color: #fff;
+  transform: translate(0, -1px);
+}
+.mac-profiler__cta-arrow {
+  font-family: var(--mac-font-rupture);
+  font-size: 14px;
+  transition: transform 180ms ease;
+}
+.mac-profiler__cta:hover .mac-profiler__cta-arrow {
+  transform: translate(2px, -2px);
+}
+.mac-profiler__archive-link {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 10px;
+  border: 1px dashed #777;
+  background: transparent;
+  color: #333;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.mac-profiler__archive-link:hover { border-color: #000; color: #000; background: #f0f0f0; }
+.mac-profiler__case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 10px 0 6px;
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+}
+.mac-profiler__case-meta strong { color: #111; font-weight: 600; }
+
 .mac-find-panel { display: flex; flex-direction: column; min-height: 100%; }
 .mac-find-panel__spacer { min-height: 40px; }
 .mac-find-panel__row {
@@ -2186,12 +2367,99 @@ body.mac-konami-unlocked .hydra-backdrop {
 }
 .mac-controls__state--on { color: var(--mac-text); }
 
+.mac-controls__shader-hint {
+  margin: 0 0 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #555;
+}
+.mac-controls__slider-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 12px;
+}
+.mac-controls__slider-row input[type="range"] {
+  width: 100%;
+}
+.mac-controls__slider-val {
+  font-variant-numeric: tabular-nums;
+  color: #444;
+  text-align: right;
+}
+
 /* =========================================================== */
 /* Scrapbook — cork wall with polaroids                        */
 /* =========================================================== */
 
 .mac-scrapbook { display: grid; gap: 14px; color: var(--mac-text); }
 .mac-scrapbook__header { display: grid; gap: 4px; }
+.mac-scrapbook__clips {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #b8b8b8;
+  background: #f6f4ef;
+}
+.mac-scrapbook__clips-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #555;
+}
+.mac-scrapbook__clips-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.mac-scrapbook__clips-input {
+  flex: 1;
+  min-height: 48px;
+  padding: 6px 8px;
+  font: inherit;
+  border: 1px solid #888;
+  background: #fff;
+  resize: vertical;
+}
+.mac-scrapbook__clips-add {
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #000;
+  background: var(--mac-platinum);
+  cursor: inherit;
+}
+.mac-scrapbook__clips-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 140px;
+  overflow: auto;
+}
+.mac-scrapbook__clip {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+  border: 1px dashed #aaa;
+  background: #fff;
+  font-size: 12px;
+  cursor: inherit;
+}
+.mac-scrapbook__clip-kind {
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #777;
+}
+.mac-scrapbook__clip-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 .mac-scrapbook__note {
   margin: 0;
   font-family: var(--mac-font-content);
@@ -2661,3 +2929,85 @@ body.mac-opt-eight-bit .mac-desktop-surface {
 /* Welcome back boot (used by BootSequence shortForm)           */
 /* =========================================================== */
 /* declared earlier but re-assert for portability in this block */
+
+/* =========================================================== */
+/* Hyper-Tactile expansion — vapor boot, jitter, pet, memory leak */
+/* =========================================================== */
+
+.mac-boot-vapor {
+  animation: mac-boot-vapor-warm 5s ease forwards;
+}
+@keyframes mac-boot-vapor-warm {
+  0% {
+    filter: blur(14px) grayscale(1) saturate(0);
+  }
+  100% {
+    filter: blur(0) grayscale(0) saturate(1);
+  }
+}
+
+.mac-loading-jitter {
+  animation: mac-loading-jitter-k 0.42s steps(2, end) infinite;
+}
+@keyframes mac-loading-jitter-k {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(1px, 0);
+  }
+}
+
+.mac-menu-bar__pet-host {
+  position: relative;
+  width: min(140px, 18vw);
+  height: var(--mac-menu-h);
+  flex: 0 0 auto;
+  pointer-events: none;
+}
+.mac-desktop-pet {
+  position: absolute;
+  bottom: 2px;
+  left: 8px;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  user-select: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.25));
+}
+
+.mac-memory-leak {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  pointer-events: none;
+  overflow: hidden;
+}
+.mac-memory-leak__ghost {
+  position: absolute;
+  width: 200px;
+  height: 130px;
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  background: linear-gradient(180deg, rgba(230, 230, 230, 0.92), rgba(180, 180, 180, 0.75));
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.35);
+  animation: mac-memory-leak-cascade 10s ease-in forwards;
+  animation-delay: calc(var(--i, 0) * 0.14s);
+  left: calc(8% + var(--i, 0) * 4.2%);
+  top: calc(12% + var(--i, 0) * 3.1%);
+  transform: rotate(calc(var(--i, 0) * 1.2deg));
+}
+@keyframes mac-memory-leak-cascade {
+  0% {
+    opacity: 0;
+    transform: translate(0, 40vh) rotate(0deg) scale(0.9);
+  }
+  12% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0.88;
+    transform: translate(6vw, -4vh) rotate(4deg) scale(1.02);
+  }
+}

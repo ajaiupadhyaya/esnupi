@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { hydraStage } from "@/lib/hydraStage";
+import { PROJECTS_BY_KIND, type Project } from "@/lib/projectsData";
 import { ScaffoldReveal } from "./ScaffoldReveal";
 
 /* -------------------------------------------------------------------------- */
@@ -42,38 +43,134 @@ export function AboutPanel() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Work                                                                        */
+/* Work — System Profiler                                                      */
+/*                                                                             */
+/*   Pulls from the canonical list in @/lib/projectsData so every entry on     */
+/*   the /archive page is discoverable here too. Clicking a row surfaces a     */
+/*   short wall-label; a prominent CTA deep-links the user into the full       */
+/*   case study on the new /archive route.                                     */
 /* -------------------------------------------------------------------------- */
 
-const WORK_ITEMS: Array<{ n: string; title: string; blurb: string; year: string }> = [
-  { n: "01", title: "Quiet Machines", blurb: "A series of small devices that only run when unobserved.", year: "2025" },
-  { n: "02", title: "Felt Cursor", blurb: "A pointing device made entirely of fabric and intent.", year: "2024" },
-  { n: "03", title: "Room with a Window", blurb: "Browser installation for a gallery that refused to open.", year: "2024" },
-  { n: "04", title: "Echo Index", blurb: "A search engine that can only find things you already know.", year: "2023" },
-  { n: "05", title: "Late Night Channel", blurb: "Generative broadcast for the hour no one is watching.", year: "2022" },
-];
+/** DISK0, DISK1, … for drives; KEXT.A, KEXT.B, … for kernel extensions. */
+function volumeLabel(p: Project, indexWithinKind: number) {
+  if (p.kind === "drive") return `DISK${indexWithinKind}`;
+  return `KEXT.${String.fromCharCode(65 + indexWithinKind)}`;
+}
 
-export function WorkPanel() {
+export function WorkPanel({
+  onOpenArchive,
+}: {
+  onOpenArchive?: (projectId?: string) => void;
+}) {
+  const [sel, setSel] = useState<Project | null>(null);
+
+  const drives = PROJECTS_BY_KIND.drive;
+  const kexts = PROJECTS_BY_KIND.kext;
+  const labeled = useMemo(
+    () =>
+      new Map<string, string>([
+        ...drives.map((p, i) => [p.id, volumeLabel(p, i)] as const),
+        ...kexts.map((p, i) => [p.id, volumeLabel(p, i)] as const),
+      ]),
+    [drives, kexts],
+  );
+
+  const renderItem = (p: Project) => (
+    <button
+      key={p.id}
+      type="button"
+      className={`mac-profiler__item${sel?.id === p.id ? " mac-profiler__item--on" : ""}`}
+      onClick={() => setSel(p)}
+      onMouseEnter={() => hydraStage.setHueRotation(12)}
+      onMouseLeave={() => hydraStage.setHueRotation(null)}
+    >
+      <span className="mac-profiler__vol">{labeled.get(p.id)}</span>
+      <span className="mac-profiler__name">{p.title}</span>
+    </button>
+  );
+
   return (
-    <article className="mac-work-panel" aria-label="Work">
-      <ScaffoldReveal stagger={30}>
-        {WORK_ITEMS.map((w) => (
-          <div
-            key={w.n}
-            className="mac-work-panel__row"
-            onMouseEnter={() => hydraStage.setHueRotation(15)}
-            onMouseLeave={() => hydraStage.setHueRotation(null)}
-          >
-            <span className="mac-work-panel__num">{w.n}</span>
-            <div className="mac-work-panel__body">
-              <h3 className="mac-work-panel__title">{w.title}</h3>
-              <p className="mac-work-panel__blurb">
-                {w.blurb} <span className="mac-type-metadata">{w.year}</span>
-              </p>
-            </div>
-          </div>
-        ))}
-      </ScaffoldReveal>
+    <article className="mac-profiler mac-work-panel" aria-label="System Profiler">
+      <header className="mac-profiler__head">
+        <h3 className="mac-type-metadata">System Profiler</h3>
+        <p className="mac-profiler__sub">
+          Volumes mount as drives; experiments load as kernel extensions. Pick one — the hex
+          dissolves into the wall label. Open the full case study in the archive.
+        </p>
+      </header>
+      <div className="mac-profiler__layout">
+        <div className="mac-profiler__list">
+          <div className="mac-profiler__group-label">Drives</div>
+          {drives.map(renderItem)}
+          <div className="mac-profiler__group-label">Kernel extensions</div>
+          {kexts.map(renderItem)}
+          {onOpenArchive ? (
+            <button
+              type="button"
+              className="mac-profiler__archive-link"
+              onClick={() => onOpenArchive()}
+            >
+              Open full archive ↗
+            </button>
+          ) : null}
+        </div>
+        <div className="mac-profiler__detail">
+          {sel ? (
+            <>
+              <pre className="mac-profiler__hex" aria-hidden>
+                {sel.hex ?? "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"}
+                {"\n"}
+                {sel.hex ?? "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"}
+                {"\n"}
+                {sel.hex ?? "00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"}
+              </pre>
+              <div className="mac-profiler__case">
+                <h4 className="mac-profiler__case-title">{sel.title}</h4>
+                <div className="mac-profiler__case-meta">
+                  <span><strong>{sel.year}</strong></span>
+                  <span>{sel.role}</span>
+                  <span>{sel.accession}</span>
+                </div>
+                <p className="mac-profiler__case-blurb">{sel.blurb}</p>
+                <div className="mac-profiler__tags">
+                  {sel.tags.slice(0, 6).map((t) => (
+                    <span key={t} className="mac-profiler__tag">#{t}</span>
+                  ))}
+                </div>
+                {onOpenArchive ? (
+                  <button
+                    type="button"
+                    className="mac-profiler__cta"
+                    onClick={() => onOpenArchive(sel.id)}
+                  >
+                    <span>Open full case study</span>
+                    <span className="mac-profiler__cta-arrow" aria-hidden>
+                      &#8599;
+                    </span>
+                  </button>
+                ) : null}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="mac-profiler__placeholder">Select a volume or extension.</p>
+              {onOpenArchive ? (
+                <button
+                  type="button"
+                  className="mac-profiler__cta"
+                  onClick={() => onOpenArchive()}
+                  style={{ marginTop: 16 }}
+                >
+                  <span>Browse full archive</span>
+                  <span className="mac-profiler__cta-arrow" aria-hidden>
+                    &#8599;
+                  </span>
+                </button>
+              ) : null}
+            </>
+          )}
+        </div>
+      </div>
     </article>
   );
 }
@@ -88,29 +185,44 @@ const LINKS: Array<{ label: string; href: string }> = [
   { label: "are.na / esnupi", href: "https://www.are.na/" },
 ];
 
-export function FindPanel() {
+export function FindPanel({ onOpenStudy }: { onOpenStudy?: () => void }) {
+  const lines = [
+    <div key="spacer" className="mac-find-panel__spacer" />,
+    ...(onOpenStudy
+      ? [
+          <button
+            key="study"
+            type="button"
+            className="mac-find-panel__row mac-find-panel__row--button"
+            onClick={() => onOpenStudy()}
+          >
+            <span>Study — light, surface, sequence</span>
+            <span className="mac-find-panel__arrow" aria-hidden>
+              &#8599;
+            </span>
+          </button>,
+        ]
+      : []),
+    ...LINKS.map((l) => (
+      <a key={l.label} href={l.href} className="mac-find-panel__row">
+        <span>{l.label}</span>
+        <span className="mac-find-panel__arrow" aria-hidden>
+          &#8599;
+        </span>
+      </a>
+    )),
+    <div key="foot" className="mac-find-panel__foot">
+      <h4 className="mac-type-metadata">Available for</h4>
+      <p>
+        Commissions, residencies, and conversations that do not begin
+        with the words &quot;quick call.&quot;
+      </p>
+    </div>,
+  ];
+
   return (
     <article className="mac-find-panel" aria-label="Find">
-      <ScaffoldReveal stagger={40}>
-        {[
-          <div key="spacer" className="mac-find-panel__spacer" />,
-          ...LINKS.map((l) => (
-            <a key={l.label} href={l.href} className="mac-find-panel__row">
-              <span>{l.label}</span>
-              <span className="mac-find-panel__arrow" aria-hidden>
-                &#8599;
-              </span>
-            </a>
-          )),
-          <div key="foot" className="mac-find-panel__foot">
-            <h4 className="mac-type-metadata">Available for</h4>
-            <p>
-              Commissions, residencies, and conversations that do not begin
-              with the words &quot;quick call.&quot;
-            </p>
-          </div>,
-        ]}
-      </ScaffoldReveal>
+      <ScaffoldReveal stagger={40}>{lines}</ScaffoldReveal>
     </article>
   );
 }

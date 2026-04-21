@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import gsap from "gsap";
 import { cn } from "@/lib/utils";
 import {
   addSharedPhoto,
@@ -24,6 +25,7 @@ import {
   playMacDiskInsert,
   playMacIconOpen,
   playMacIconSelect,
+  playDiskSeekChirps,
   playMacTrashEmpty,
   setMacSoundsMuted,
 } from "@/lib/retroMacSounds";
@@ -74,6 +76,8 @@ import {
 } from "./panels/ContentPanels";
 import type { MusicTrack } from "./panels/MusicPlayerPanel";
 import { DefragScreensaver } from "./overlays/DefragScreensaver";
+import { DesktopPet } from "./overlays/DesktopPet";
+import { MemoryLeakOverlay } from "./overlays/MemoryLeakOverlay";
 
 /* Heavy / app-like panels load on demand so the desktop boots fast. */
 const MacTerminalApp = lazy(() =>
@@ -172,7 +176,7 @@ const MUSIC_LIBRARY: MusicTrack[] = Object.entries(musicModules)
 
 const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
   { id: "about", label: "Home", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "projects", label: "Projects", icon: PLACEHOLDER_DOCK_ICON },
+  { id: "projects", label: "Profiler", icon: PLACEHOLDER_DOCK_ICON },
   { id: "contact", label: "Contact", icon: PLACEHOLDER_DOCK_ICON },
   { id: "lab", label: "Lab", icon: PLACEHOLDER_DOCK_ICON },
   { id: "terminal", label: "Terminal", icon: PLACEHOLDER_DOCK_ICON },
@@ -184,7 +188,7 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
 
 const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
   about: { title: "About", w: 520, h: 440 },
-  projects: { title: "Work", w: 560, h: 460 },
+  projects: { title: "System Profiler", w: 620, h: 500 },
   contact: { title: "Find", w: 520, h: 420 },
   lab: { title: "Lab", w: 560, h: 420 },
   terminal: { title: "Terminal", w: 820, h: 520 },
@@ -283,6 +287,10 @@ function MacintoshDesktopInner() {
   const [beachBall, setBeachBall] = useState(false);
   const [corruptedActive, setCorruptedActive] = useState(false);
   const [getInfoTarget, setGetInfoTarget] = useState<AnyWindowId | null>(null);
+  const [lightNorm, setLightNorm] = useState({ x: 0.5, y: 0.5 });
+  const [memoryLeakActive, setMemoryLeakActive] = useState(false);
+  const [midnightDrift, setMidnightDrift] = useState(false);
+  const lastActiveRef = useRef(Date.now());
 
   const [open, setOpen] = useState<Record<AnyWindowId, boolean>>({
     about: false, projects: false, contact: false, lab: false,
@@ -309,10 +317,53 @@ function MacintoshDesktopInner() {
     routeTransition.goto("/lab");
   }, [routeTransition]);
 
+  const navigateToGallery = useCallback(() => {
+    routeTransition.goto("/gallery");
+  }, [routeTransition]);
+
+  const navigateToArchive = useCallback(
+    (projectId?: string) => {
+      routeTransition.goto(projectId ? `/archive#project-${projectId}` : "/archive");
+    },
+    [routeTransition],
+  );
+
   /* --- Persist icon positions ------------------------------------------- */
   useEffect(() => {
     localStorage.setItem(ICON_STORAGE_KEY, JSON.stringify(iconPositions));
   }, [iconPositions]);
+
+  /* --- Cursor / “light source” for window shadows ----------------------- */
+  useEffect(() => {
+    const bump = () => {
+      lastActiveRef.current = Date.now();
+    };
+    const onMove = (e: MouseEvent) => {
+      bump();
+      setLightNorm({
+        x: e.clientX / Math.max(1, window.innerWidth),
+        y: e.clientY / Math.max(1, window.innerHeight),
+      });
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    window.addEventListener("pointerdown", bump, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("pointerdown", bump);
+    };
+  }, []);
+
+  /* --- Midnight drift: rare idle “gravity” on desktop icons ------------- */
+  useEffect(() => {
+    const tick = window.setInterval(() => {
+      if (Date.now() - lastActiveRef.current < 120_000) return;
+      if (Math.random() >= 0.01) return;
+      setMidnightDrift(true);
+      window.clearInterval(tick);
+      window.setTimeout(() => setMidnightDrift(false), 100_000);
+    }, 5000);
+    return () => window.clearInterval(tick);
+  }, []);
 
   /* --- Set sounds muted mirror ------------------------------------------ */
   useEffect(() => {
@@ -454,6 +505,7 @@ function MacintoshDesktopInner() {
   const openWindow = useCallback(
     (id: AnyWindowId, anchor?: { x: number; y: number }) => {
       const initial = INITIAL[id];
+      const wasAlreadyOpen = open[id];
       setGeom((g) => {
         if (open[id]) return g;
         const cur = g[id];
@@ -473,6 +525,11 @@ function MacintoshDesktopInner() {
       });
       setMinimized((m) => ({ ...m, [id]: false }));
       bringToFront(id);
+      if (!wasAlreadyOpen) {
+        playDiskSeekChirps({ count: 5 + Math.floor(Math.random() * 4), spreadMs: 480 });
+        document.body.classList.add("mac-loading-jitter");
+        window.setTimeout(() => document.body.classList.remove("mac-loading-jitter"), 720);
+      }
       hydraStage.pulse();
       if (id === "secret") markSecretFound();
       setSessionOpenCount((c) => {
@@ -648,6 +705,10 @@ function MacintoshDesktopInner() {
     hydraStage.setPaused(visibleWindows.length > 4);
   }, [visibleWindows.length]);
 
+  useEffect(() => {
+    document.body.dataset.macWindows = String(visibleWindows.length);
+  }, [visibleWindows.length]);
+
   const openWindowsInfo: OpenWindowInfo[] = useMemo(
     () =>
       visibleWindows.map((id) => ({
@@ -721,8 +782,10 @@ function MacintoshDesktopInner() {
         beachBall && "mac-beachball",
         corruptedActive && "mac-corrupted",
         activeId === null && "mac-desktop-root--defocused",
+        midnightDrift && "mac-desktop-root--midnight-drift",
       )}
-      onMouseDown={(e) => {
+      onPointerDown={(e) => {
+        lastActiveRef.current = Date.now();
         /* Clicks that land on the desktop root itself (not a window or icon)
            remove focus so open windows desaturate per the v4 brief. */
         if (e.target === e.currentTarget) setActiveId(null);
@@ -754,6 +817,7 @@ function MacintoshDesktopInner() {
         balloonHelp={balloonHelp}
         sound={sound}
         appleClicksDispatch={handleAppleClicks}
+        pet={<DesktopPet />}
       />
 
       <div className="mac-crt-overlay" aria-hidden />
@@ -783,6 +847,7 @@ function MacintoshDesktopInner() {
               def={def}
               index={iconSequence[def.id] ?? 0}
               selected={selectedIconId === def.id}
+              midnightDrift={midnightDrift}
               onSelect={() => setSelectedIconId(def.id)}
               onDragEnd={(xPct, yPct) => handleIconDragEnd(def.id, xPct, yPct)}
               onMoveToTrash={() => {
@@ -828,6 +893,8 @@ function MacintoshDesktopInner() {
               active={activeId === id}
               minimized={minimized[id]}
               spawnAnchor={spawnAnchors.current[id]}
+              lightX={lightNorm.x}
+              lightY={lightNorm.y}
               onActivate={() => bringToFront(id)}
               onClose={() => closeWindow(id)}
               onMinimizeToggle={() => toggleMinimize(id)}
@@ -848,8 +915,8 @@ function MacintoshDesktopInner() {
               }
             >
               {id === "about" && <NewAboutPanel />}
-              {id === "projects" && <WorkPanel />}
-              {id === "contact" && <FindPanel />}
+              {id === "projects" && <WorkPanel onOpenArchive={navigateToArchive} />}
+              {id === "contact" && <FindPanel onOpenStudy={navigateToGallery} />}
               {id === "lab" && <LabStubPanel onNavigateLab={() => navigateToLab()} />}
               <Suspense fallback={<div className="mac-panel-fallback" aria-hidden />}>
                 {id === "terminal" && (
@@ -859,6 +926,10 @@ function MacintoshDesktopInner() {
                     onMatrixMode={() => {
                       setMatrixMode(true);
                       window.setTimeout(() => setMatrixMode(false), 10_000);
+                    }}
+                    onMemoryLeak={() => {
+                      setMemoryLeakActive(true);
+                      window.setTimeout(() => setMemoryLeakActive(false), 10_000);
                     }}
                   />
                 )}
@@ -935,6 +1006,7 @@ function MacintoshDesktopInner() {
       <MacNotifications />
       <DefragScreensaver />
       <MobileAlert />
+      <MemoryLeakOverlay active={memoryLeakActive} />
 
       {shutdownMode && (
         <ShutdownScreen
@@ -963,6 +1035,7 @@ function DesktopFeltIcon({
   def,
   index,
   selected,
+  midnightDrift,
   onSelect,
   onOpen,
   onDragEnd,
@@ -972,6 +1045,7 @@ function DesktopFeltIcon({
   def: DesktopIconDef;
   index: number;
   selected: boolean;
+  midnightDrift?: boolean;
   onSelect: () => void;
   onOpen: (anchor?: { x: number; y: number }) => void;
   onDragEnd: (xPct: number, yPct: number) => void;
@@ -1040,14 +1114,37 @@ function DesktopFeltIcon({
       const xPct = (dragXY.x / layerRect.width) * 100;
       const yPct = (dragXY.y / layerRect.height) * 100;
       onDragEnd(xPct, yPct);
+      const frame = rootRef.current.querySelector(".mac-felt-frame");
+      if (frame) {
+        gsap.fromTo(
+          frame,
+          { scaleX: 1, scaleY: 1 },
+          {
+            scaleX: 1.08,
+            scaleY: 0.86,
+            duration: 0.12,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.out",
+          },
+        );
+      }
     }
     setDragXY(null);
     dragRef.current = null;
   };
 
+  const driftStyle: React.CSSProperties | undefined =
+    midnightDrift && !dragXY
+      ? {
+          transition: "transform 100s linear",
+          transform: `translate(${(50 - def.xPct) * 0.12}vw, ${(40 - def.yPct) * 0.1}vh)`,
+        }
+      : undefined;
+
   const posStyle: React.CSSProperties = dragXY
     ? { left: dragXY.x, top: dragXY.y }
-    : { left: `${def.xPct}%`, top: `${def.yPct}%` };
+    : { left: `${def.xPct}%`, top: `${def.yPct}%`, ...driftStyle };
 
   return (
     <button
@@ -1126,7 +1223,7 @@ function DesktopFeltIcon({
 function balloonText(id: WindowId) {
   switch (id) {
     case "about": return "Who lives here. Click to find out.";
-    case "projects": return "A wall of things made.";
+    case "projects": return "Drives and kernel extensions — portfolio as hardware.";
     case "contact": return "Say hi. The machine will pass it on.";
     case "lab": return "Essays, notes, long thoughts.";
     case "terminal": return "Try `matrix`, `neofetch`, `fortune`.";
