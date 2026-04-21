@@ -28,7 +28,11 @@ export function P5RetroDesktop() {
       p.setup = () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.pixelDensity(1);
-        p.frameRate(12);
+        /* Run the composite loop at 30fps so it composes cleanly with the
+           rest of the 60fps UI — divisor of 60 avoids visible beat/strobe.
+           The noise tile is only regenerated every few frames (below), so
+           the "film grain" still feels chunky without flickering. */
+        p.frameRate(30);
         grain = p.createGraphics(GW, GH);
       };
 
@@ -36,24 +40,28 @@ export function P5RetroDesktop() {
         const busy =
           typeof document !== "undefined" &&
           Number.parseInt(document.body?.dataset.macWindows ?? "0", 10) > 4;
-        p.frameRate(busy ? 8 : 12);
+        p.frameRate(busy ? 20 : 30);
         p.clear();
-        grain.loadPixels();
-        const t = p.frameCount * 0.014;
-        const w = GW;
-        const h = GH;
-        for (let y = 0; y < h; y++) {
-          for (let x = 0; x < w; x++) {
-            const i = 4 * (y * w + x);
-            const n = p.noise(x * 0.14 + t * 0.4, y * 0.14 - t * 0.2);
-            const v = 175 + n * 80;
-            grain.pixels[i] = v;
-            grain.pixels[i + 1] = v;
-            grain.pixels[i + 2] = v;
-            grain.pixels[i + 3] = 14;
+        // Refresh the noise tile every 3rd frame (~10 Hz on busy, 10 Hz on idle)
+        // so the grain breathes without strobing against 60fps content.
+        if (p.frameCount % 3 === 0) {
+          grain.loadPixels();
+          const t = p.frameCount * 0.014;
+          const w = GW;
+          const h = GH;
+          for (let y = 0; y < h; y++) {
+            for (let x = 0; x < w; x++) {
+              const i = 4 * (y * w + x);
+              const n = p.noise(x * 0.14 + t * 0.4, y * 0.14 - t * 0.2);
+              const v = 175 + n * 80;
+              grain.pixels[i] = v;
+              grain.pixels[i + 1] = v;
+              grain.pixels[i + 2] = v;
+              grain.pixels[i + 3] = 14;
+            }
           }
+          grain.updatePixels();
         }
-        grain.updatePixels();
         p.image(grain, 0, 0, p.width, p.height);
       };
 

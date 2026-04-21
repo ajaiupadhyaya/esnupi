@@ -50,10 +50,10 @@ export function MagneticDock({
     let rafId = 0;
     let pending: { x: number; y: number } | null = null;
 
-    const SIGMA = 60;
-    const PEAK = 0.4;
-    const RANGE = 200;
-    const APPROACH = 80;
+    const SIGMA = 78;
+    const PEAK = 0.45;
+    const RANGE = 260;
+    const APPROACH = 96;
 
     const apply = () => {
       rafId = 0;
@@ -84,7 +84,7 @@ export function MagneticDock({
         }
         const scale = 1 + PEAK * Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
         /* Anchor the transform to the bottom so items grow upward, like OS X. */
-        el.style.transform = `translateY(${((1 - scale) * 28).toFixed(2)}px) scale(${scale.toFixed(3)})`;
+        el.style.transform = `translateY(${((1 - scale) * 44).toFixed(2)}px) scale(${scale.toFixed(3)})`;
       });
     };
 

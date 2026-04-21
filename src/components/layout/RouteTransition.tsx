@@ -43,7 +43,10 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
   const goto = useCallback(
     (path: string) => {
       const isSecondaryRoom =
-        path.startsWith("/lab") || path.startsWith("/gallery") || path.startsWith("/archive");
+        path.startsWith("/lab") ||
+        path.startsWith("/gallery") ||
+        path.startsWith("/archive") ||
+        path.startsWith("/feltmoon");
       const current = window.location.pathname;
       if (current === path) return;
       const nextKind: TransitionKind = isSecondaryRoom && current === "/" ? "crt-collapse" : "boot";

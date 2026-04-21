@@ -73,6 +73,7 @@ import {
   WorkPanel,
   FindPanel,
   LabStubPanel,
+  FeltMoonPanel,
 } from "./panels/ContentPanels";
 import type { MusicTrack } from "./panels/MusicPlayerPanel";
 import { DefragScreensaver } from "./overlays/DefragScreensaver";
@@ -126,6 +127,13 @@ const FinderPanel = lazy(() =>
 
 import "./macintosh-desktop.css";
 
+import homefeltImg from "../../../images/homefelt.png";
+import feltfolderImg from "../../../images/feltfolder.png";
+import emailfeltImg from "../../../images/emailfelt.png";
+import framefeltImg from "../../../images/framefelt.png";
+import photoboothfeltImg from "../../../images/photoboothfelt.png";
+import photobookfeltImg from "../../../images/photobookfelt.png";
+
 const P5RetroDesktop = lazy(() =>
   import("./P5RetroDesktop").then((m) => ({ default: m.P5RetroDesktop })),
 );
@@ -139,7 +147,7 @@ const BROWSER_DOCK_ICON =
 const WINDOW_STACK_OFFSET = 32;
 const CHROME_MENU_H = 28;
 const CHROME_MARGIN = 10;
-const CHROME_DOCK_RESERVE = 150;
+const CHROME_DOCK_RESERVE = 196;
 
 type AnyWindowId =
   | WindowId
@@ -175,13 +183,13 @@ const MUSIC_LIBRARY: MusicTrack[] = Object.entries(musicModules)
   .sort((a, b) => a.title.localeCompare(b.title));
 
 const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
-  { id: "about", label: "Home", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "projects", label: "Profiler", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "contact", label: "Contact", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "lab", label: "Lab", icon: PLACEHOLDER_DOCK_ICON },
+  { id: "about", label: "Home", icon: homefeltImg },
+  { id: "projects", label: "Profiler", icon: feltfolderImg },
+  { id: "contact", label: "Contact", icon: emailfeltImg },
+  { id: "lab", label: "Lab", icon: framefeltImg },
   { id: "terminal", label: "Terminal", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "photobooth", label: "Photobooth", icon: PLACEHOLDER_DOCK_ICON },
-  { id: "photobook", label: "Photobook", icon: PLACEHOLDER_DOCK_ICON },
+  { id: "photobooth", label: "Photobooth", icon: photoboothfeltImg },
+  { id: "photobook", label: "Photobook", icon: photobookfeltImg },
   { id: "music", label: "Music", icon: MUSIC_DOCK_ICON },
   { id: "browser", label: "Browser", icon: BROWSER_DOCK_ICON },
 ];
@@ -196,6 +204,7 @@ const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
   photobook: { title: "Scrapbook", w: 960, h: 640 },
   music: { title: "Jukebox", w: 620, h: 520 },
   browser: { title: "Browser", w: 1020, h: 680 },
+  feltmoon: { title: "Moon, at rest", w: 520, h: 560 },
   aboutMac: { title: "About this Mac", w: 480, h: 440 },
   secret: { title: "— private collection —", w: 640, h: 520 },
   sticky: { title: "Note", w: 260, h: 220 },
@@ -295,8 +304,8 @@ function MacintoshDesktopInner() {
   const [open, setOpen] = useState<Record<AnyWindowId, boolean>>({
     about: false, projects: false, contact: false, lab: false,
     terminal: false, photobooth: false, photobook: false, music: false,
-    browser: false, aboutMac: false, secret: false, sticky: false,
-    minesweeper: false, getinfo: false, controls: false,
+    browser: false, feltmoon: false, aboutMac: false, secret: false,
+    sticky: false, minesweeper: false, getinfo: false, controls: false,
     clock: false, typist: false, notepad: false, kaleidoscope: false,
     slideshow: false, internals: false, finder: false,
   });
@@ -319,6 +328,10 @@ function MacintoshDesktopInner() {
 
   const navigateToGallery = useCallback(() => {
     routeTransition.goto("/gallery");
+  }, [routeTransition]);
+
+  const navigateToFeltMoon = useCallback(() => {
+    routeTransition.goto("/feltmoon");
   }, [routeTransition]);
 
   const navigateToArchive = useCallback(
@@ -918,6 +931,9 @@ function MacintoshDesktopInner() {
               {id === "projects" && <WorkPanel onOpenArchive={navigateToArchive} />}
               {id === "contact" && <FindPanel onOpenStudy={navigateToGallery} />}
               {id === "lab" && <LabStubPanel onNavigateLab={() => navigateToLab()} />}
+              {id === "feltmoon" && (
+                <FeltMoonPanel onOpenGallery={navigateToFeltMoon} />
+              )}
               <Suspense fallback={<div className="mac-panel-fallback" aria-hidden />}>
                 {id === "terminal" && (
                   <MacTerminalApp
@@ -1231,6 +1247,7 @@ function balloonText(id: WindowId) {
     case "photobook": return "Visitors who came before you.";
     case "music": return "A small jukebox. Volume: yours.";
     case "browser": return "An old internet, slightly haunted.";
+    case "feltmoon": return "A small room, a long horizontal scroll.";
     default: return "Double-click to open";
   }
 }

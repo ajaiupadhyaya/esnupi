@@ -231,6 +231,66 @@ export function FindPanel({ onOpenStudy }: { onOpenStudy?: () => void }) {
 /* Lab stub — opens /lab via CRT transition                                    */
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/* Felt Moon — a small museum label that opens the /feltmoon gallery room     */
+/* -------------------------------------------------------------------------- */
+
+export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void }) {
+  return (
+    <article className="mac-about-panel mac-feltmoon-panel" aria-label="Moon, at rest">
+      <ScaffoldReveal>
+        {[
+          <header className="mac-feltmoon-panel__head" key="head">
+            <p className="mac-type-metadata">Accession · MOON.01</p>
+            <h3 className="mac-feltmoon-panel__title">Moon, at rest</h3>
+            <p className="mac-feltmoon-panel__sub">
+              felt on linen · 2025
+            </p>
+          </header>,
+          <hr className="mac-about-panel__rule" key="r1" />,
+          <section className="mac-about-panel__block" key="blurb">
+            <h4 className="mac-type-metadata">Wall text</h4>
+            <p>
+              A piece that kept asking to be a door. Click through to an
+              adjacent room — a horizontal scroll of film photographs you
+              can deface, curate, and walk out of.
+            </p>
+          </section>,
+          <section className="mac-about-panel__block" key="meta">
+            <h4 className="mac-type-metadata">Details</h4>
+            <dl className="mac-feltmoon-panel__dl">
+              <div><dt>Title</dt><dd>Moon, at rest</dd></div>
+              <div><dt>Year</dt><dd>2025</dd></div>
+              <div><dt>Medium</dt><dd>felt on linen</dd></div>
+              <div><dt>Room</dt><dd>/feltmoon — digital annex</dd></div>
+            </dl>
+          </section>,
+          <hr className="mac-about-panel__rule" key="r2" />,
+          <button
+            key="open"
+            type="button"
+            className="mac-feltmoon-panel__cta"
+            onClick={() => onOpenGallery?.()}
+          >
+            <span className="mac-feltmoon-panel__cta-label">
+              <span className="mac-feltmoon-panel__cta-kicker">open the room</span>
+              <span className="mac-feltmoon-panel__cta-title">
+                Light, material, film — an exhibition
+              </span>
+            </span>
+            <span className="mac-feltmoon-panel__cta-arrow" aria-hidden>
+              &#8599;
+            </span>
+          </button>,
+          <p className="mac-type-metadata mac-feltmoon-panel__foot" key="foot">
+            The desktop dims. A different screen takes over.
+          </p>,
+        ]}
+      </ScaffoldReveal>
+    </article>
+  );
+}
+
 export function LabStubPanel({ onNavigateLab }: { onNavigateLab?: () => void }) {
   return (
     <article className="mac-find-panel" aria-label="Lab">

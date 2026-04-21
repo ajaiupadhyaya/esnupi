@@ -22,7 +22,8 @@ export type WindowId =
   | "photobooth"
   | "photobook"
   | "music"
-  | "browser";
+  | "browser"
+  | "feltmoon";
 
 export type DesktopIconDef = {
   id: string;
@@ -52,7 +53,7 @@ export const DESKTOP_ICONS: DesktopIconDef[] = [
   { id: "home", label: "Home", src: homefelt, windowId: "about", frame: "blob1", xPct: 16, yPct: 8 },
   { id: "folder", label: "Profiler", src: feltfolder, windowId: "projects", frame: "blob2", xPct: 44, yPct: 22 },
   { id: "frame", label: "MDX Lab", src: framefelt, windowId: "lab", frame: "blob1", xPct: 81, yPct: 38 },
-  { id: "moon", label: "Moon", src: feltmoon, windowId: "about", frame: "blob2", xPct: 9, yPct: 48 },
+  { id: "moon", label: "Moon", src: feltmoon, windowId: "feltmoon", frame: "blob2", xPct: 9, yPct: 48 },
   { id: "heart1", label: "Heart 1", src: feltheart1, windowId: "projects", frame: "blob1", xPct: 31, yPct: 58 },
   { id: "heart2", label: "Heart 2", src: feltheart2, windowId: "about", frame: "blob2", xPct: 63, yPct: 52 },
   { id: "heart3", label: "Heart 3", src: feltheart3, windowId: "contact", frame: "blob1", xPct: 19, yPct: 74 },
