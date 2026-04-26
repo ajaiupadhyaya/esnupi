@@ -288,7 +288,7 @@ export function DesktopWindow({
         )}
         style={{
           opacity: contentVisible ? 1 : 0,
-          transition: `opacity ${OPEN_FADE_MS}ms ease`,
+          transition: `opacity ${OPEN_FADE_MS}ms cubic-bezier(0.25, 0, 0, 1)`,
           width: "100%",
           height: "100%",
           boxShadow: dragShadow ? undefined : lightAwareShadow,
@@ -340,7 +340,7 @@ export function DesktopWindow({
             </button>
           )}
         </div>
-        {!minimized && <div className="mac-window__body">{children}</div>}
+        {!minimized && <div className="mac-window__body mac-surface">{children}</div>}
       </div>
     </div>
   );

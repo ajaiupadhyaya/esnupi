@@ -12,10 +12,10 @@
   --fm-muted: #6b6b6b;
   --fm-rule: #111;
   --fm-frame: #222;
-  --fm-mono: "IBM Plex Mono", ui-monospace, "Söhne Mono", monospace;
-  --fm-serif: "Source Serif Pro", "Source Serif 4", "Iowan Old Style",
+  --fm-mono: "IBM Plex Mono", "Courier", ui-monospace, "Söhne Mono", monospace;
+  --fm-serif: "Playfair Display", "Playfair", "Source Serif Pro", "Iowan Old Style",
     Georgia, serif;
-  --fm-sans: "Neue Haas Grotesk", "Helvetica Neue", Inter, system-ui,
+  --fm-sans: "Public Sans", "Helvetica", "Arial Narrow", "Helvetica Neue", Inter, system-ui,
     sans-serif;
 
   position: relative;
@@ -31,17 +31,37 @@
   box-sizing: border-box;
 }
 
-/* Painted plaster: layered subtle gradients + fine noise */
+/* Painted plaster: subtle radial washes laid *over* the Entropy field
+   to preserve the gallery tonality. The opaque base gradient has been
+   removed so the particle field is visible — the wall colour is now
+   provided by `.fm-root` itself. These radials are semi-transparent
+   and blended so they modulate light + shadow across the canvas
+   without hiding it. */
 .fm-root::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
   background:
-    radial-gradient(1400px 900px at 20% 10%, rgba(255, 255, 255, 0.7), transparent 60%),
-    radial-gradient(1200px 800px at 80% 90%, rgba(0, 0, 0, 0.035), transparent 60%),
-    linear-gradient(180deg, var(--fm-wall) 0%, var(--fm-wall-2) 100%);
+    radial-gradient(1400px 900px at 20% 10%, rgba(255, 255, 255, 0.4), transparent 65%),
+    radial-gradient(1200px 800px at 80% 90%, rgba(0, 0, 0, 0.04), transparent 60%);
+  mix-blend-mode: soft-light;
+}
+
+/* Layer order (bottom → top):
+     0  Entropy particle field (fixed bg, cursor-reactive)
+     1  Plaster radial wash (soft-light overlay)
+     2  Gallery content — wall, sticky strip, photos, intro, colophon
+    25  Museum label
+    29  Scroll progress rule
+    30  Top bar
+    33  Graffiti canvas
+    40  Bottom rail
+    50  Tools panel
+*/
+.fm-bg-entropy {
+  z-index: 0 !important;
 }
 
 /* ---------- Top bar ---------------------------------------------------- */
@@ -69,11 +89,11 @@
 .fm-bar__accession { justify-self: start; color: var(--fm-ink); }
 .fm-bar__title {
   justify-self: center;
-  font-family: var(--fm-serif);
+  font-family: "La Belle Aurore", "Winky Show Script", var(--fm-serif);
   font-size: 13px;
   letter-spacing: 0.01em;
   text-transform: none;
-  font-style: italic;
+  font-style: normal;
   color: var(--fm-ink);
 }
 .fm-bar__back {
@@ -108,6 +128,8 @@
 
 .fm-wall {
   position: relative;
+  /* Stack above the Entropy bg (z:0) and plaster wash (z:1). */
+  z-index: 2;
   /* height is set dynamically by JS: viewportH + horizontal scrollLen */
   min-height: 100dvh;
 }

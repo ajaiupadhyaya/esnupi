@@ -80,7 +80,8 @@ function floodReveal(board: Cell[][], r: number, c: number) {
   }
 }
 
-const ADJ_COLORS = ["", "#0000ff", "#007f00", "#ff0000", "#000080", "#7f0000", "#008080", "#000000", "#808080"];
+// Authentic Windows 95 Minesweeper number palette.
+const ADJ_COLORS = ["", "#0000ff", "#008000", "#ff0000", "#000080", "#800000", "#008080", "#000000", "#808080"];
 
 export function MinesweeperPanel() {
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
@@ -197,7 +198,7 @@ export function MinesweeperPanel() {
       <div
         className="mac-mines__grid"
         style={{
-          gridTemplateColumns: `repeat(${cfg.cols}, 22px)`,
+          gridTemplateColumns: `repeat(${cfg.cols}, 16px)`,
         }}
         onMouseDown={() => setScared(true)}
         onMouseUp={() => setScared(false)}

@@ -22,7 +22,6 @@ import {
   isMacSoundsMuted,
   playGlitchBurst,
   playKonamiFanfare,
-  playMacDiskInsert,
   playMacIconOpen,
   playMacIconSelect,
   playDiskSeekChirps,
@@ -40,7 +39,6 @@ import { DesktopWindow } from "./DesktopWindow";
 import { ContextMenuProvider, useContextMenu } from "./ContextMenu";
 import { TrashCan } from "./TrashCan";
 import { MagneticDock } from "./MagneticDock";
-import { BootSequence } from "./BootSequence";
 import { ShutdownScreen } from "./ShutdownScreen";
 import { MobileAlert } from "./MobileAlert";
 import { MacMenuBar, type MenuAction, type OpenWindowInfo } from "./MacMenuBar";
@@ -63,7 +61,6 @@ import {
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CursorTrails } from "./overlays/CursorTrails";
 import { DustMotes } from "./overlays/DustMotes";
-import { ScreenFlicker } from "./overlays/ScreenFlicker";
 import { MacNotifications } from "./overlays/Notifications";
 import { AboutThisMacPanel } from "./panels/AboutThisMacPanel";
 import { SecretPanel } from "./panels/SecretPanel";
@@ -133,10 +130,6 @@ import emailfeltImg from "../../../images/emailfelt.png";
 import framefeltImg from "../../../images/framefelt.png";
 import photoboothfeltImg from "../../../images/photoboothfelt.png";
 import photobookfeltImg from "../../../images/photobookfelt.png";
-
-const P5RetroDesktop = lazy(() =>
-  import("./P5RetroDesktop").then((m) => ({ default: m.P5RetroDesktop })),
-);
 
 const PLACEHOLDER_DOCK_ICON =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='11' fill='%23dfdfdf' stroke='%23686868' stroke-width='2'/%3E%3Crect x='11' y='13' width='42' height='30' rx='5' fill='%23f6f6f6' stroke='%23929292'/%3E%3Crect x='17' y='21' width='30' height='4' fill='%23bdbdbd'/%3E%3Crect x='17' y='28' width='21' height='4' fill='%23c8c8c8'/%3E%3Crect x='16' y='48' width='32' height='5' rx='2' fill='%23a7a7a7'/%3E%3C/svg%3E";
@@ -274,14 +267,12 @@ export function MacintoshDesktop() {
 }
 
 function MacintoshDesktopInner() {
-  const [bootKey, setBootKey] = useState(0);
+  const [bootKey] = useState(0);
   const contextMenu = useContextMenu();
   const [trashedIcons, setTrashedIcons] = useState<Set<string>>(new Set());
-  const [booting, setBooting] = useState(true);
-  /* shortForm boot after the very first visit — the machine remembers you. */
-  const [shortBoot, setShortBoot] = useState(
-    (initialVisit?.visitCount ?? 1) > 1,
-  );
+  // Loading / boot sequence is disabled: the desktop arrives immediately.
+  void initialVisit;
+  void bootKey;
   const [shutdownMode, setShutdownMode] = useState<null | "shutdown" | "restart">(null);
   const [balloonHelp, setBalloonHelp] = useState(false);
   const [sound, setSound] = useState(!isMacSoundsMuted());
@@ -773,23 +764,6 @@ function MacintoshDesktopInner() {
     window.setTimeout(() => setIconsWobble(false), 2000);
   }, []);
 
-  if (booting) {
-    return (
-      <div className="mac-desktop-root mac-desktop-root--booting">
-        <BootSequence
-          key={bootKey}
-          shortForm={shortBoot}
-          onDone={() => {
-            setBooting(false);
-            playMacDiskInsert();
-          }}
-        />
-        <CRTScreenGlass />
-        <CRTMonitorChassis />
-      </div>
-    );
-  }
-
   return (
     <div
       className={cn(
@@ -837,13 +811,8 @@ function MacintoshDesktopInner() {
 
       <div className="mac-crt-overlay" aria-hidden />
       <div className="hydra-breathing-overlay" aria-hidden />
-      <div className="mac-desktop-dither" aria-hidden />
       <div className="mac-vignette-scanlines" aria-hidden />
-      <Suspense fallback={null}>
-        <P5RetroDesktop />
-      </Suspense>
-      <DustMotes count={10} />
-      <ScreenFlicker />
+      <DustMotes count={6} />
       <CursorTrails />
 
       {showFps && <FpsCounter />}
@@ -1035,10 +1004,7 @@ function MacintoshDesktopInner() {
           onDismiss={() => setShutdownMode(null)}
           onRestart={() => {
             setShutdownMode(null);
-            setBootKey((k) => k + 1);
-            /* The brief: the full POST runs ONLY on first visit, or after Restart. */
-            setShortBoot(false);
-            setBooting(true);
+            /* Loading screen is disabled — just close everything and return to the bare desktop. */
             setOpen((o) => Object.fromEntries(Object.keys(o).map((k) => [k, false])) as never);
             setZOrder([]);
             setActiveId(null);
@@ -1297,43 +1263,9 @@ function GetInfoPanel({ target }: { target: AnyWindowId }) {
 function CRTMonitorChassis() {
   return (
     <div className="mac-crt-chassis" aria-hidden>
-      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--top">
-        <div className="mac-crt-chassis__grille" />
-      </div>
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--top" />
       <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--right" />
-      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--bottom">
-        <div className="mac-crt-chassis__brand">
-          <svg
-            className="mac-crt-chassis__apple"
-            viewBox="0 0 18 22"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-            focusable="false"
-          >
-            {/* Rainbow Apple (1977–1998): horizontal bands clipped to the
-                official silhouette from MacMenuBar. Unique clipPath id so
-                it can coexist with the menu-bar instance. */}
-            <defs>
-              <clipPath id="mac-crt-apple-clip">
-                <path d="M12.1 6.3c.9-.9 1.5-2.2 1.4-3.5-1.2.1-2.5.8-3.2 1.7-.7.8-1.3 2.1-1.2 3.4 1.3.1 2.1-.7 3-1.6zM17 16.4c-.5 1.1-.8 1.6-1.4 2.5-.9 1.3-2.2 2.9-3.8 2.9-1.4 0-1.8-.9-3.7-.9-1.9 0-2.3.9-3.7.9-1.6 0-2.8-1.5-3.7-2.8C1 16.9 0 14 0 11.2c0-3.8 2.5-5.8 4.9-5.8 1.6 0 2.6.9 3.9.9 1.3 0 2.1-.9 3.9-.9 1.4 0 2.9.8 3.9 2.1-3.4 1.9-2.9 6.8.4 8.9z" />
-              </clipPath>
-            </defs>
-            <g clipPath="url(#mac-crt-apple-clip)">
-              <rect x="0" y="0" width="18" height="3.6" fill="#61BB46" />
-              <rect x="0" y="3.6" width="18" height="3.6" fill="#FDB827" />
-              <rect x="0" y="7.2" width="18" height="3.6" fill="#F5821F" />
-              <rect x="0" y="10.8" width="18" height="3.6" fill="#E03A3E" />
-              <rect x="0" y="14.4" width="18" height="3.6" fill="#963D97" />
-              <rect x="0" y="18.0" width="18" height="4.0" fill="#009DDC" />
-            </g>
-          </svg>
-          <span className="mac-crt-chassis__wordmark">Macintosh</span>
-        </div>
-        <div className="mac-crt-chassis__led-cluster">
-          <span className="mac-crt-chassis__led-label">Power</span>
-          <span className="mac-crt-chassis__led" />
-        </div>
-      </div>
+      <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--bottom" />
       <div className="mac-crt-chassis__bezel mac-crt-chassis__bezel--left" />
 
       <div className="mac-crt-chassis__corner mac-crt-chassis__corner--tl" />

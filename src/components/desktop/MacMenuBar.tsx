@@ -117,7 +117,7 @@ export function MacMenuBar({
   };
 
   return (
-    <header className="mac-menu-bar" ref={ref}>
+    <header className="mac-menu-bar mac-surface" ref={ref}>
       <div className="mac-menu-bar__group">
         <button
           type="button"

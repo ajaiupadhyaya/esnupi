@@ -17,6 +17,7 @@
 
 import feltmoonImg from "../../images/feltmoon.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
+import { Entropy } from "@/components/ui/entropy";
 import gsap from "gsap";
 import {
   useCallback,
@@ -251,6 +252,16 @@ export default function FeltMoon() {
 
   return (
     <main className={`fm-root${curatorMode ? " fm-root--curator" : ""}`}>
+      {/* Living plaster: particle field, split order / chaos, reacts to
+          the cursor. Sits behind everything at z-index 0. */}
+      <Entropy
+        fullscreen
+        particleColor="#0a0a0a"
+        background="var(--fm-wall)"
+        dividerAlpha={0.12}
+        className="fm-bg-entropy"
+      />
+
       <FmGrain />
 
       <header className="fm-bar">
@@ -317,8 +328,9 @@ export default function FeltMoon() {
               <div className="fm-colophon">
                 <p className="fm-colophon__kicker">Colophon</p>
                 <p className="fm-colophon__body">
-                  Set in Söhne Mono &amp; Source Serif. Photographs printed as
-                  archival pigment. Wall, plaster. Scroll, felt.
+                  Set in IBM Plex Mono, Playfair Display, Public Sans, and La
+                  Belle Aurore. Photographs printed as archival pigment. Wall,
+                  plaster. Scroll, felt.
                 </p>
                 <button
                   type="button"

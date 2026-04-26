@@ -137,16 +137,27 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryL
     const el = containerRef.current;
     if (!el) return;
 
+    // Nord-informed terminal palette (green output, soft blue prompt,
+    // muted blue paths, near-white input), warmer than a pure #000 screen.
+    // The block cursor is rupture red — a single dramatic choice that
+    // makes this terminal unmistakably esnupi's.
     const term = new Terminal({
       cursorBlink: true,
       cursorStyle: "block",
       fontSize: 13,
       lineHeight: 1.2,
-      fontFamily: 'VT323, Menlo, Monaco, Consolas, ui-monospace, monospace',
+      fontFamily: 'IBM Plex Mono, Menlo, Monaco, Consolas, ui-monospace, monospace',
       theme: {
-        background: "#0a0f07",
-        foreground: "#9af88f",
-        cursor: "#9af88f",
+        background: "#0d1117",
+        foreground: "#a3be8c",
+        cursor: "#ff3b00",
+        cursorAccent: "#0d1117",
+        selectionBackground: "#0000cc",
+        selectionForeground: "#ffffff",
+        brightBlue: "#88c0d0",
+        blue: "#81a1c1",
+        white: "#d8dee9",
+        brightWhite: "#eceff4",
       },
     });
     const fit = new FitAddon();

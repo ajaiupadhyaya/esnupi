@@ -2,8 +2,9 @@ import Hydra from "hydra-synth";
 import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { AUTHORED_HYDRA_SKETCHES, MATRIX_SKETCH, type HydraMoodId } from "../lib/authoredHydraSketches";
-import { buildFallbackSketch } from "../lib/randomHydraSketch";
-import { incrementVisitCount, pickHydraMood } from "../lib/hydraMood";
+import { buildFallbackSketch, buildRandomHydraSketch } from "../lib/randomHydraSketch";
+import { incrementVisitCount } from "../lib/hydraMood";
+import { getVisitSeed } from "../lib/random";
 import { hydraStage, installHydraStage } from "../lib/hydraStage";
 import {
   buildShaderLabSketch,
@@ -11,6 +12,8 @@ import {
   saveShaderLabState,
   type ShaderLabParams,
 } from "../lib/shaderLab";
+
+type ActiveMood = HydraMoodId | "RANDOM";
 
 import "./HydraBackground.css";
 
@@ -24,9 +27,12 @@ export function HydraBackground() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [useFallback, setUseFallback] = useState(false);
 
-  const initialMood = useMemo<HydraMoodId>(() => {
-    const count = incrementVisitCount();
-    return pickHydraMood({ visitCount: count });
+  /* Fresh random Hydra sketch for every page load. Visit count is still
+     bumped so About This Mac / memory features see it, but we intentionally
+     ignore the time-of-day mood picker — randomness is the point. */
+  const randomSketch = useMemo<string>(() => {
+    incrementVisitCount();
+    return buildRandomHydraSketch(getVisitSeed());
   }, []);
 
   useEffect(() => {
@@ -61,7 +67,9 @@ export function HydraBackground() {
       return;
     }
 
-    let activeMood: HydraMoodId = initialMood;
+    /* Start in "RANDOM" — the authored moods are only engaged when something
+       (Konami, terminal command, etc.) explicitly calls setMood. */
+    let activeMood: ActiveMood = "RANDOM";
     const labState = loadShaderLabState();
     let shaderLabEngaged = labState.engaged;
     let shaderLabParams: ShaderLabParams = labState.params;
@@ -75,7 +83,11 @@ export function HydraBackground() {
     };
 
     const activeBackdropSrc = () => {
-      if (shaderLabEngaged) return buildShaderLabSketch(activeMood, shaderLabParams);
+      /* Shader Lab needs a mood id; pick one that reads well if we're random. */
+      const moodForLab: HydraMoodId =
+        activeMood === "RANDOM" ? "DEAD_CHANNEL" : activeMood;
+      if (shaderLabEngaged) return buildShaderLabSketch(moodForLab, shaderLabParams);
+      if (activeMood === "RANDOM") return randomSketch;
       return AUTHORED_HYDRA_SKETCHES[activeMood];
     };
 
@@ -251,7 +263,7 @@ export function HydraBackground() {
         /* ignore */
       }
     };
-  }, [initialMood, useFallback]);
+  }, [randomSketch, useFallback]);
 
   /* ---- surface mouse position to the stage ---- */
   useEffect(() => {

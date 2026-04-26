@@ -1,6 +1,7 @@
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
 import { SiteLayout } from "@/components/layout/SiteLayout";
+import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
 import Archive from "@/pages/Archive";
 import FeltMoon from "@/pages/FeltMoon";
 import Gallery from "@/pages/Gallery";
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
           <Route element={<SiteLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/desktop" element={<MacintoshDesktop />} />
             <Route path="/lab" element={<MdxLab />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/feltmoon" element={<FeltMoon />} />

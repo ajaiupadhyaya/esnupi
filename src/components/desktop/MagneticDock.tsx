@@ -110,7 +110,7 @@ export function MagneticDock({
   return (
     <nav
       ref={navRef}
-      className={cn("mac-dock", active && "mac-dock--active")}
+      className={cn("mac-dock mac-surface", active && "mac-dock--active")}
       aria-label={ariaLabel}
     >
       {items.map((app, index) => {

@@ -1,4 +1,5 @@
 @import "normalize.css/normalize.css";
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:opsz,wght@8..144,200;8..144,300;8..144,400;8..144,500;8..144,700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500;600&family=La+Belle+Aurore&family=Alfa+Slab+One&family=UnifrakturCook:wght@700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -26,6 +27,33 @@
     --input: 240 5% 20%;
     --ring: 32 90% 55%;
     --radius: 0.65rem;
+    --font-sans-site:
+      "Public Sans",
+      "Helvetica",
+      "Arial Narrow",
+      "Arial",
+      ui-sans-serif,
+      system-ui,
+      sans-serif;
+    --font-serif-site:
+      "Playfair Display",
+      "Playfair",
+      "Times New Roman",
+      Georgia,
+      serif;
+    --font-mono-site:
+      "IBM Plex Mono",
+      "Courier",
+      ui-monospace,
+      "SFMono-Regular",
+      Menlo,
+      monospace;
+    --font-script-site:
+      "La Belle Aurore",
+      "Winky Show Script",
+      "Claire Palmer",
+      "Dandelion",
+      cursive;
   }
 
   html {
@@ -34,19 +62,77 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family:
-      ui-sans-serif,
-      system-ui,
-      -apple-system,
-      Segoe UI,
-      Roboto,
-      "Helvetica Neue",
-      Arial,
-      sans-serif;
+    font-family: var(--font-sans-site);
   }
 
   #root {
     min-height: 100dvh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif-site);
+  }
+
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: var(--font-mono-site);
+  }
+}
+
+.site-film-grain,
+.site-film-vignette,
+.site-fusion-topo,
+.site-fusion-jpeg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.site-fusion-shell {
+  cursor: crosshair;
+}
+
+.site-film-grain {
+  z-index: 2;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
+}
+
+.site-film-vignette {
+  z-index: 1;
+  box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.08);
+}
+
+.site-fusion-topo {
+  z-index: 1;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+  background:
+    repeating-radial-gradient(circle at 18% 22%, rgba(95, 103, 67, 0.16) 0 1px, transparent 1px 13px),
+    repeating-radial-gradient(circle at 82% 72%, rgba(95, 103, 67, 0.14) 0 1px, transparent 1px 15px);
+}
+
+.site-fusion-jpeg {
+  z-index: 3;
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+  background:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.08) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(217, 107, 30, 0.1) 0 1px, transparent 1px 4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-film-grain {
+    opacity: 0.04;
   }
 }
 
@@ -60,11 +146,11 @@
  * platinum blue because that's what the machine expects.
  */
 ::selection {
-  background: #0000aa;
+  background: #0000cc;
   color: #ffffff;
 }
 ::-moz-selection {
-  background: #0000aa;
+  background: #0000cc;
   color: #ffffff;
 }
 textarea,
@@ -123,12 +209,14 @@ input,
 }
 
 /*
- * Authentic Mac OS 8 focus ring: dotted black, 1px, with 1px offset.
+ * Authentic Mac OS 8 focus ring: dotted Mac-selection-blue, 1px, with 1px offset.
  * Scoped to :focus-visible so it only appears for keyboard users.
+ * The ring uses the selection blue (not pure black) so focus reads as
+ * "this is selectable" — same visual language as the selection highlight.
  */
 .mac-desktop-root :focus-visible,
 .mac-desktop-root *:focus-visible {
-  outline: 1px dotted #000000;
+  outline: 1px dotted #0000cc;
   outline-offset: 1px;
 }
 .mac-desktop-root :focus:not(:focus-visible) {
@@ -200,14 +288,14 @@ input,
   bottom: 0;
   left: 0;
   width: 40%;
-  background: #0000aa;
-  animation: mac-loading-line-slide 1.2s ease-in-out infinite;
+  background: #0000cc;
+  animation: mac-loading-line-slide 1.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 .mac-loading-line--done::after {
   animation: none;
   width: 100%;
   opacity: 0;
-  transition: opacity 200ms ease;
+  transition: opacity 200ms cubic-bezier(0.25, 0, 0, 1);
 }
 @keyframes mac-loading-line-slide {
   0% {
