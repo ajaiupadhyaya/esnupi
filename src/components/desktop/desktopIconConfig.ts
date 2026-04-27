@@ -8,7 +8,7 @@ import photoboothfelt from "../../../images/photoboothfelt.png";
 import framefelt from "../../../images/framefelt.png";
 import homefelt from "../../../images/homefelt.png";
 import phonefelt from "../../../images/phonefelt.png";
-import visitorlogPlaceholder from "../../../images/visitorlog-placeholder.svg";
+import feltlog from "../../../images/feltlog.png";
 
 import filmblob from "../../../images/filmblob.png";
 
@@ -62,7 +62,7 @@ export const DESKTOP_ICONS: DesktopIconDef[] = [
   {
     id: "visitorlog",
     label: "Guest Log",
-    src: visitorlogPlaceholder,
+    src: feltlog,
     windowId: "visitorlog",
     frame: "blob1",
     xPct: 58,

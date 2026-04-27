@@ -31,7 +31,7 @@ export function AboutThisMacPanel() {
         <div>
           <h3>About this Mac</h3>
           <p className="mac-about__tagline">
-            System 8.1 · esnupi build · <span>painted by hand</span>
+            System 8.1 · esnupi build · <span>made by ajai upadhyaya</span>
           </p>
         </div>
       </header>
@@ -66,17 +66,16 @@ export function AboutThisMacPanel() {
         </div>
         <div>
           <dt>Startup Disk</dt>
-          <dd>esnupi · system · softly</dd>
+          <dd>esnupi</dd>
         </div>
         <div>
           <dt>System Voice</dt>
-          <dd>a stranger who loves you</dd>
+          <dd>what does this even mean</dd>
         </div>
       </dl>
       <footer className="mac-about__colophon">
         <p>
-          This site is a small museum for things I made with my hands on a keyboard.
-          Nothing in it is ironic. I was serious when I was fourteen, and I am still serious.
+          thank you for poking around my site!! it was very fun to build
         </p>
       </footer>
     </section>

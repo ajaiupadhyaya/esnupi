@@ -4060,16 +4060,17 @@ body.mac-opt-eight-bit .mac-desktop-surface {
 }
 .mac-trash__art {
   display: block;
+  width: 48px;
+  height: auto;
+  max-height: 56px;
+  object-fit: contain;
   filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4));
   transition: transform 180ms var(--ease-crisp);
 }
-.mac-trash__lid {
-  transform-origin: 42px 13px;
-  transition: transform 160ms var(--ease-crisp);
+.mac-trash--hot .mac-trash__art,
+.mac-trash--full:hover .mac-trash__art {
+  transform: scale(1.08);
 }
-.mac-trash--hot .mac-trash__lid,
-.mac-trash--full:hover .mac-trash__lid { transform: rotate(-28deg) translate(-2px, -4px); }
-.mac-trash--hot .mac-trash__art { transform: scale(1.08); }
 .mac-trash__label {
   margin-top: 4px;
   font-size: 11px;

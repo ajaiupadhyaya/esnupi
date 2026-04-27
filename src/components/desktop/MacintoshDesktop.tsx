@@ -141,13 +141,11 @@ import photobookfeltImg from "../../../images/photobookfelt.png";
 import feltterminalImg from "../../../images/feltterminal.png";
 import musicplayerfeltImg from "../../../images/musicplayerfelt.png";
 import feltphotosappImg from "../../../images/feltphotosapp.png";
+import feltbrowserImg from "../../../images/feltbrowser.png";
 
 import { buildFilmPhotoLibrary } from "@/photography/library";
 
 const FILM_PHOTO_ITEMS = buildFilmPhotoLibrary();
-
-const BROWSER_DOCK_ICON =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='6' width='54' height='52' rx='6' fill='%23d8d8d8' stroke='%23000'/%3E%3Crect x='10' y='12' width='44' height='7' fill='%23eeeeee' stroke='%23707070'/%3E%3Ccircle cx='14' cy='15.5' r='1.2' fill='%23000'/%3E%3Ccircle cx='18' cy='15.5' r='1.2' fill='%23000'/%3E%3Crect x='11' y='22' width='42' height='30' fill='%23ffffff' stroke='%23545454'/%3E%3Cpath d='M14 48l11-12 8 7 7-8 10 13' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E";
 const WINDOW_STACK_OFFSET = 32;
 const CHROME_MENU_H = 28;
 const CHROME_MARGIN = 10;
@@ -196,7 +194,7 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
   { id: "photobook", label: "Photobook", icon: photobookfeltImg },
   { id: "music", label: "iTunes", icon: musicplayerfeltImg },
   { id: "photos", label: "Photos", icon: feltphotosappImg },
-  { id: "browser", label: "Browser", icon: BROWSER_DOCK_ICON },
+  { id: "browser", label: "Browser", icon: feltbrowserImg },
 ];
 
 /** Default geometry when a window first opens — intentionally large; users can resize. */

@@ -174,14 +174,14 @@ export function ScrapbookPanel({ photos, loading, error, sharedEnabled }: Props)
       <header className="mac-scrapbook__header">
         <h3 className="mac-type-metadata">Scrapbook</h3>
         <p className="mac-scrapbook__note">
-          {photos.length} portraits pinned to cork. Some catch the light.
+          if you visit the site, pls take a photo!! we can all be one big community
         </p>
       </header>
 
       <div className="mac-scrapbook__clips">
-        <h4 className="mac-type-metadata">Clippings</h4>
+        <h4 className="mac-type-metadata">blurbs</h4>
         <p className="mac-scrapbook__clips-hint">
-          Drag selections here from the Terminal, or paste text — stored locally in this browser.
+          Write a lil blurb, your name, or anything else you want
         </p>
         <div className="mac-scrapbook__clips-row">
           <textarea

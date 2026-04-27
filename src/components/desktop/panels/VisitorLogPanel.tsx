@@ -34,9 +34,9 @@ export function VisitorLogPanel() {
   return (
     <section className="mac-visitorlog" aria-label="Visitor log">
       <header className="mac-visitorlog__header">
-        <h3 className="mac-type-metadata">Guest log</h3>
+        <h3 className="mac-type-metadata">esnupi visitors</h3>
         <p className="mac-visitorlog__lede">
-          Names left at the gate. Updates while the desktop stays open.
+          maybe you'll recognize someone on this list
         </p>
       </header>
 

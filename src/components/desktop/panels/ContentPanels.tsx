@@ -15,26 +15,26 @@ export function AboutPanel() {
       <ScaffoldReveal>
         {[
           <p className="mac-about-panel__statement" key="stmt">
-            An artist whose work lives between two rooms: the one you remember and
-            the one you were never allowed in. Objects, interfaces, and small
-            broken machines.
+            Ajai Upadhyaya is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, and Private Credit or find my thoughts on Substack! (click the red heart button)
           </p>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="cur">
             <h4 className="mac-type-metadata">Currently</h4>
-            <p>Shaders, felt sculpture, a long-form essay about cursors.</p>
+            <p>Thoroughly excited to learn a lot this Fall as I will be starting a Masters Program in Financial Engineering at VCU</p>
           </section>,
           <section className="mac-about-panel__block" key="prev">
             <h4 className="mac-type-metadata">Previously</h4>
             <ul className="mac-about-panel__list">
-              <li>Studio residency, Somewhere, 2023.</li>
-              <li>Creative technologist, unnamed agency, 2019–2022.</li>
-              <li>Group show, an old gallery on an old street.</li>
+              <li>B.S in CS and Economics from University of Virginia, 2023 - 2026</li>
+              <li>University of Virginia Investment Management, (UVIMCO) Intern, 2025 - 2026</li>
+              <li>University of Virginia Digital Media Intern, 2023 - 2026</li>
+              <li>VITA Financial Accounting and Operations Intern, 2024 - 2025</li>
+              <li>Software Engineering Intern at Specialized, 2023 - 2024</li>
             </ul>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
           <p className="mac-type-metadata mac-about-panel__foot" key="foot">
-            Brooklyn, {year}
+            Ajai Upadhyaya, {year}
           </p>,
         ]}
       </ScaffoldReveal>
