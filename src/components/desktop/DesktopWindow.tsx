@@ -14,7 +14,7 @@ import { hydraStage } from "@/lib/hydraStage";
 const MENU_BAR_H = 28;
 const VIEW_MARGIN = 10;
 /** Space reserved above bottom edge so windows open above the dock. */
-const DOCK_RESERVE_PX = 150;
+const DOCK_RESERVE_PX = 166;
 
 /** Zoom-rect phase durations — match Mac OS's "draw outline, then fill". */
 const OPEN_RECT_MS = 120;
@@ -40,6 +40,7 @@ export type DesktopWindowProps = {
   onClose: () => void;
   onMinimizeToggle?: () => void;
   onMove: (x: number, y: number) => void;
+  onResize?: (width: number, height: number) => void;
   /** Signal from parent that this window is about to unmount (close with animation). */
   closing?: boolean;
   onClosed?: () => void;
@@ -67,6 +68,7 @@ export function DesktopWindow({
   onClose,
   onMinimizeToggle,
   onMove,
+  onResize,
   windowId,
   onTitleContextMenu,
   lightX = 0.5,
@@ -74,6 +76,8 @@ export function DesktopWindow({
 }: DesktopWindowProps) {
   const sizeRef = useRef({ width, height });
   sizeRef.current = { width, height };
+  const posRef = useRef({ x, y });
+  posRef.current = { x, y };
 
   const rectRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -142,6 +146,14 @@ export function DesktopWindow({
     origY: number;
   } | null>(null);
 
+  const resizeRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    origW: number;
+    origH: number;
+  } | null>(null);
+
   const clampToViewport = useCallback((nx: number, ny: number) => {
     const { width: w, height: h } = sizeRef.current;
     const maxX = Math.max(VIEW_MARGIN, window.innerWidth - w - VIEW_MARGIN);
@@ -176,9 +188,9 @@ export function DesktopWindow({
       dragRef.current = null;
       setDragShadow(false);
       hydraStage.setBlur(0);
-      document.removeEventListener("pointermove", onPointerMove, true);
-      document.removeEventListener("pointerup", endDrag, true);
-      document.removeEventListener("pointercancel", endDrag, true);
+      document.removeEventListener("pointermove", onPointerMove, { capture: true });
+      document.removeEventListener("pointerup", endDrag, { capture: true });
+      document.removeEventListener("pointercancel", endDrag, { capture: true });
     },
     [onPointerMove],
   );
@@ -195,22 +207,77 @@ export function DesktopWindow({
       pointerId: e.pointerId,
       startX: e.clientX,
       startY: e.clientY,
-      origX: x,
-      origY: y,
+      origX: posRef.current.x,
+      origY: posRef.current.y,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
     } catch {
       /* ignore */
     }
-    document.addEventListener("pointermove", onPointerMove, true);
-    document.addEventListener("pointerup", endDrag, true);
-    document.addEventListener("pointercancel", endDrag, true);
+    document.addEventListener("pointermove", onPointerMove, { capture: true, passive: false });
+    document.addEventListener("pointerup", endDrag, { capture: true });
+    document.addEventListener("pointercancel", endDrag, { capture: true });
   };
 
   useEffect(() => {
     return () => endDrag();
   }, [endDrag]);
+
+  const onResizePointerMove = useCallback(
+    (e: PointerEvent) => {
+      const r = resizeRef.current;
+      if (!r || e.pointerId !== r.pointerId || !onResize) return;
+      e.preventDefault();
+      const dw = e.clientX - r.startX;
+      const dh = e.clientY - r.startY;
+      onResize(r.origW + dw, r.origH + dh);
+    },
+    [onResize],
+  );
+
+  const endResize = useCallback(
+    (e?: PointerEvent) => {
+      const r = resizeRef.current;
+      if (!r) return;
+      if (e && e.pointerId !== r.pointerId) return;
+      resizeRef.current = null;
+      setDragShadow(false);
+      hydraStage.setBlur(0);
+      document.removeEventListener("pointermove", onResizePointerMove, { capture: true });
+      document.removeEventListener("pointerup", endResize, { capture: true });
+      document.removeEventListener("pointercancel", endResize, { capture: true });
+    },
+    [onResizePointerMove],
+  );
+
+  const onResizePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!onResize || e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    onActivate();
+    setDragShadow(true);
+    hydraStage.setBlur(2);
+    resizeRef.current = {
+      pointerId: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      origW: sizeRef.current.width,
+      origH: sizeRef.current.height,
+    };
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      /* ignore */
+    }
+    document.addEventListener("pointermove", onResizePointerMove, { capture: true, passive: false });
+    document.addEventListener("pointerup", endResize, { capture: true });
+    document.addEventListener("pointercancel", endResize, { capture: true });
+  };
+
+  useEffect(() => {
+    return () => endResize();
+  }, [endResize]);
 
   /* ---- Close: content fade 60ms, then border collapse 100ms ---------- */
   const runCloseAnim = useCallback(() => {
@@ -341,6 +408,13 @@ export function DesktopWindow({
           )}
         </div>
         {!minimized && <div className="mac-window__body mac-surface">{children}</div>}
+        {!minimized && onResize ? (
+          <div
+            className="mac-window__resize-grip"
+            aria-hidden
+            onPointerDown={onResizePointerDown}
+          />
+        ) : null}
       </div>
     </div>
   );

@@ -84,7 +84,7 @@ export function MagneticDock({
         }
         const scale = 1 + PEAK * Math.exp(-(dist * dist) / (2 * SIGMA * SIGMA));
         /* Anchor the transform to the bottom so items grow upward, like OS X. */
-        el.style.transform = `translateY(${((1 - scale) * 44).toFixed(2)}px) scale(${scale.toFixed(3)})`;
+        el.style.transform = `translateY(${((1 - scale) * 52).toFixed(2)}px) scale(${scale.toFixed(3)})`;
       });
     };
 

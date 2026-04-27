@@ -1,8 +1,6 @@
 import emailfelt from "../../../images/emailfelt.png";
 import feltheart1 from "../../../images/feltheart1.png";
-import feltheart2 from "../../../images/feltheart2.png";
 import feltheart3 from "../../../images/feltheart3.webp";
-import feltheart4 from "../../../images/feltheart4.webp";
 import feltfolder from "../../../images/feltfolder.png";
 import feltmoon from "../../../images/feltmoon.png";
 import photobookfelt from "../../../images/photobookfelt.png";
@@ -10,6 +8,7 @@ import photoboothfelt from "../../../images/photoboothfelt.png";
 import framefelt from "../../../images/framefelt.png";
 import homefelt from "../../../images/homefelt.png";
 import phonefelt from "../../../images/phonefelt.png";
+import visitorlogPlaceholder from "../../../images/visitorlog-placeholder.svg";
 
 import filmblob from "../../../images/filmblob.png";
 
@@ -21,7 +20,9 @@ export type WindowId =
   | "terminal"
   | "photobooth"
   | "photobook"
+  | "visitorlog"
   | "music"
+  | "photos"
   | "browser"
   | "feltmoon";
 
@@ -54,10 +55,17 @@ export const DESKTOP_ICONS: DesktopIconDef[] = [
   { id: "folder", label: "Profiler", src: feltfolder, windowId: "projects", frame: "blob2", xPct: 44, yPct: 22 },
   { id: "frame", label: "MDX Lab", src: framefelt, windowId: "lab", frame: "blob1", xPct: 81, yPct: 38 },
   { id: "moon", label: "Moon", src: feltmoon, windowId: "feltmoon", frame: "blob2", xPct: 9, yPct: 48 },
-  { id: "heart1", label: "Heart 1", src: feltheart1, windowId: "projects", frame: "blob1", xPct: 31, yPct: 58 },
-  { id: "heart2", label: "Heart 2", src: feltheart2, windowId: "about", frame: "blob2", xPct: 63, yPct: 52 },
-  { id: "heart3", label: "Heart 3", src: feltheart3, windowId: "contact", frame: "blob1", xPct: 19, yPct: 74 },
-  { id: "heart4", label: "Heart 4", src: feltheart4, windowId: "lab", frame: "blob2", xPct: 86, yPct: 68 },
+  { id: "heart1", label: "Heart 1", src: feltheart3, windowId: "projects", frame: "blob1", xPct: 31, yPct: 58 },
+  { id: "heart3", label: "Heart 3", src: feltheart1, windowId: "contact", frame: "blob1", xPct: 19, yPct: 74 },
   { id: "photobooth", label: "Photobooth", src: photoboothfelt, windowId: "photobooth", frame: "blob1", xPct: 48, yPct: 74 },
   { id: "photobook", label: "Photobook", src: photobookfelt, windowId: "photobook", frame: "blob2", xPct: 72, yPct: 80 },
+  {
+    id: "visitorlog",
+    label: "Guest Log",
+    src: visitorlogPlaceholder,
+    windowId: "visitorlog",
+    frame: "blob1",
+    xPct: 58,
+    yPct: 14,
+  },
 ];

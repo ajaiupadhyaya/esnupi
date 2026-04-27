@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { useLocation, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
 import {
@@ -58,6 +59,7 @@ import {
   markKonamiUsed,
   markSecretFound,
 } from "@/lib/visitMemory";
+import { hasCompletedVisitorGate } from "@/lib/visitorIdentity";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CursorTrails } from "./overlays/CursorTrails";
 import { DustMotes } from "./overlays/DustMotes";
@@ -114,11 +116,17 @@ const KaleidoscopePanel = lazy(() =>
 const SlideshowPanel = lazy(() =>
   import("./programs/SlideshowPanel").then((m) => ({ default: m.SlideshowPanel })),
 );
+const FilmPhotosPanel = lazy(() =>
+  import("./panels/FilmPhotosPanel").then((m) => ({ default: m.FilmPhotosPanel })),
+);
 const InternalsPanel = lazy(() =>
   import("./panels/InternalsPanel").then((m) => ({ default: m.InternalsPanel })),
 );
 const FinderPanel = lazy(() =>
   import("./panels/FinderPanel").then((m) => ({ default: m.FinderPanel })),
+);
+const VisitorLogPanel = lazy(() =>
+  import("./panels/VisitorLogPanel").then((m) => ({ default: m.VisitorLogPanel })),
 );
 
 
@@ -130,17 +138,20 @@ import emailfeltImg from "../../../images/emailfelt.png";
 import framefeltImg from "../../../images/framefelt.png";
 import photoboothfeltImg from "../../../images/photoboothfelt.png";
 import photobookfeltImg from "../../../images/photobookfelt.png";
+import feltterminalImg from "../../../images/feltterminal.png";
+import musicplayerfeltImg from "../../../images/musicplayerfelt.png";
+import feltphotosappImg from "../../../images/feltphotosapp.png";
 
-const PLACEHOLDER_DOCK_ICON =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='11' fill='%23dfdfdf' stroke='%23686868' stroke-width='2'/%3E%3Crect x='11' y='13' width='42' height='30' rx='5' fill='%23f6f6f6' stroke='%23929292'/%3E%3Crect x='17' y='21' width='30' height='4' fill='%23bdbdbd'/%3E%3Crect x='17' y='28' width='21' height='4' fill='%23c8c8c8'/%3E%3Crect x='16' y='48' width='32' height='5' rx='2' fill='%23a7a7a7'/%3E%3C/svg%3E";
-const MUSIC_DOCK_ICON =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='5' width='54' height='54' rx='8' fill='%23d7d7d7' stroke='%23000'/%3E%3Crect x='13' y='12' width='38' height='18' fill='%23f8f8f8' stroke='%23555'/%3E%3Crect x='16' y='15' width='32' height='3' fill='%238a8a8a'/%3E%3Ccircle cx='22' cy='43' r='8' fill='%23fbfbfb' stroke='%23000'/%3E%3Ccircle cx='42' cy='43' r='8' fill='%23fbfbfb' stroke='%23000'/%3E%3Ccircle cx='22' cy='43' r='2' fill='%23000'/%3E%3Ccircle cx='42' cy='43' r='2' fill='%23000'/%3E%3C/svg%3E";
+import { buildFilmPhotoLibrary } from "@/photography/library";
+
+const FILM_PHOTO_ITEMS = buildFilmPhotoLibrary();
+
 const BROWSER_DOCK_ICON =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='5' y='6' width='54' height='52' rx='6' fill='%23d8d8d8' stroke='%23000'/%3E%3Crect x='10' y='12' width='44' height='7' fill='%23eeeeee' stroke='%23707070'/%3E%3Ccircle cx='14' cy='15.5' r='1.2' fill='%23000'/%3E%3Ccircle cx='18' cy='15.5' r='1.2' fill='%23000'/%3E%3Crect x='11' y='22' width='42' height='30' fill='%23ffffff' stroke='%23545454'/%3E%3Cpath d='M14 48l11-12 8 7 7-8 10 13' stroke='%23000' stroke-width='1.6' fill='none'/%3E%3C/svg%3E";
 const WINDOW_STACK_OFFSET = 32;
 const CHROME_MENU_H = 28;
 const CHROME_MARGIN = 10;
-const CHROME_DOCK_RESERVE = 196;
+const CHROME_DOCK_RESERVE = 212;
 
 type AnyWindowId =
   | WindowId
@@ -180,37 +191,41 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
   { id: "projects", label: "Profiler", icon: feltfolderImg },
   { id: "contact", label: "Contact", icon: emailfeltImg },
   { id: "lab", label: "Lab", icon: framefeltImg },
-  { id: "terminal", label: "Terminal", icon: PLACEHOLDER_DOCK_ICON },
+  { id: "terminal", label: "Terminal", icon: feltterminalImg },
   { id: "photobooth", label: "Photobooth", icon: photoboothfeltImg },
   { id: "photobook", label: "Photobook", icon: photobookfeltImg },
-  { id: "music", label: "Music", icon: MUSIC_DOCK_ICON },
+  { id: "music", label: "iTunes", icon: musicplayerfeltImg },
+  { id: "photos", label: "Photos", icon: feltphotosappImg },
   { id: "browser", label: "Browser", icon: BROWSER_DOCK_ICON },
 ];
 
+/** Default geometry when a window first opens — intentionally large; users can resize. */
 const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
-  about: { title: "About", w: 520, h: 440 },
-  projects: { title: "System Profiler", w: 620, h: 500 },
-  contact: { title: "Find", w: 520, h: 420 },
-  lab: { title: "Lab", w: 560, h: 420 },
-  terminal: { title: "Terminal", w: 820, h: 520 },
-  photobooth: { title: "Photobooth", w: 720, h: 620 },
-  photobook: { title: "Scrapbook", w: 960, h: 640 },
-  music: { title: "Jukebox", w: 620, h: 520 },
-  browser: { title: "Browser", w: 1020, h: 680 },
-  feltmoon: { title: "Moon, at rest", w: 520, h: 560 },
-  aboutMac: { title: "About this Mac", w: 480, h: 440 },
-  secret: { title: "— private collection —", w: 640, h: 520 },
-  sticky: { title: "Note", w: 260, h: 220 },
-  minesweeper: { title: "Minefield", w: 560, h: 520 },
-  getinfo: { title: "Get Info", w: 360, h: 300 },
-  controls: { title: "Control Panels", w: 520, h: 520 },
-  clock: { title: "Clock", w: 280, h: 360 },
-  typist: { title: "Typist", w: 640, h: 520 },
-  notepad: { title: "Notepad", w: 560, h: 480 },
-  kaleidoscope: { title: "Kaleidoscope", w: 620, h: 560 },
-  slideshow: { title: "Slideshow", w: 880, h: 620 },
-  internals: { title: "INTERNALS", w: 720, h: 560 },
-  finder: { title: "Desktop", w: 620, h: 440 },
+  about: { title: "About", w: 700, h: 580 },
+  projects: { title: "System Profiler", w: 820, h: 640 },
+  contact: { title: "Find", w: 700, h: 560 },
+  lab: { title: "Lab", w: 760, h: 580 },
+  terminal: { title: "Terminal", w: 1000, h: 680 },
+  photobooth: { title: "Photobooth", w: 880, h: 760 },
+  photobook: { title: "Scrapbook", w: 1120, h: 780 },
+  visitorlog: { title: "Guest Log", w: 520, h: 560 },
+  music: { title: "iTunes", w: 780, h: 640 },
+  photos: { title: "Photos", w: 1140, h: 780 },
+  browser: { title: "Browser", w: 1200, h: 840 },
+  feltmoon: { title: "Moon, at rest", w: 660, h: 680 },
+  aboutMac: { title: "About this Mac", w: 560, h: 540 },
+  secret: { title: "— private collection —", w: 780, h: 640 },
+  sticky: { title: "Note", w: 320, h: 300 },
+  minesweeper: { title: "Minefield", w: 680, h: 620 },
+  getinfo: { title: "Get Info", w: 440, h: 380 },
+  controls: { title: "Control Panels", w: 640, h: 600 },
+  clock: { title: "Clock", w: 340, h: 420 },
+  typist: { title: "Typist", w: 780, h: 640 },
+  notepad: { title: "Notepad", w: 720, h: 580 },
+  kaleidoscope: { title: "Kaleidoscope", w: 800, h: 700 },
+  slideshow: { title: "Slideshow", w: 1040, h: 760 },
+  internals: { title: "INTERNALS", w: 880, h: 680 },
+  finder: { title: "Desktop", w: 760, h: 580 },
 };
 
 function clampWindowPosition(anchorX: number, anchorY: number, width: number, height: number) {
@@ -294,7 +309,8 @@ function MacintoshDesktopInner() {
 
   const [open, setOpen] = useState<Record<AnyWindowId, boolean>>({
     about: false, projects: false, contact: false, lab: false,
-    terminal: false, photobooth: false, photobook: false, music: false,
+    terminal: false, photobooth: false, photobook: false, visitorlog: false, music: false,
+    photos: false,
     browser: false, feltmoon: false, aboutMac: false, secret: false,
     sticky: false, minesweeper: false, getinfo: false, controls: false,
     clock: false, typist: false, notepad: false, kaleidoscope: false,
@@ -313,6 +329,16 @@ function MacintoshDesktopInner() {
   const spawnAnchors = useRef<Record<string, { x: number; y: number }>>({});
 
   const routeTransition = useRouteTransition();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!hasCompletedVisitorGate()) {
+      const next = encodeURIComponent(`${location.pathname}${location.search}`);
+      navigate(`/visit-classic?next=${next}`, { replace: true });
+    }
+  }, [navigate, location.pathname, location.search]);
+
   const navigateToLab = useCallback(() => {
     routeTransition.goto("/lab");
   }, [routeTransition]);
@@ -572,6 +598,35 @@ function MacintoshDesktopInner() {
     setGeom((g) => ({ ...g, [id]: { ...g[id], x, y } }));
   }, []);
 
+  /** Must stay aligned with `DesktopWindow` viewport clamps. */
+  const resizeWindow = useCallback((id: AnyWindowId, w: number, h: number) => {
+    const MENU_BAR_H = 28;
+    const VIEW_MARGIN = 10;
+    const DOCK_RESERVE_PX = 166;
+    const MIN_W = 220;
+    const MIN_H = 120;
+    const maxW = Math.max(MIN_W, window.innerWidth - VIEW_MARGIN * 2);
+    const maxH = Math.max(
+      MIN_H,
+      window.innerHeight - MENU_BAR_H - VIEW_MARGIN * 2 - DOCK_RESERVE_PX,
+    );
+    const nw = Math.round(Math.min(Math.max(MIN_W, w), maxW));
+    const nh = Math.round(Math.min(Math.max(MIN_H, h), maxH));
+    setGeom((g) => {
+      const cur = g[id];
+      let nx = cur.x;
+      let ny = cur.y;
+      const maxX = Math.max(VIEW_MARGIN, window.innerWidth - nw - VIEW_MARGIN);
+      const maxY = Math.max(
+        MENU_BAR_H + VIEW_MARGIN,
+        window.innerHeight - nh - VIEW_MARGIN - DOCK_RESERVE_PX,
+      );
+      nx = Math.min(Math.max(VIEW_MARGIN, nx), maxX);
+      ny = Math.min(Math.max(MENU_BAR_H + VIEW_MARGIN, ny), maxY);
+      return { ...g, [id]: { ...cur, w: nw, h: nh, x: nx, y: ny } };
+    });
+  }, []);
+
   /* Global Escape — closes the frontmost window unless focus is inside a
      text input/textarea (so typing Esc there doesn't kill the window). */
   useEffect(() => {
@@ -628,6 +683,9 @@ function MacintoshDesktopInner() {
           break;
         case "open-music":
           openWindow("music");
+          break;
+        case "open-photos":
+          openWindow("photos");
           break;
         case "open-controls":
           openWindow("controls");
@@ -848,8 +906,8 @@ function MacintoshDesktopInner() {
               }}
               onOpen={(anchor) => {
                 playMacIconOpen();
-                if (def.id === "heart4" && def.windowId === "lab") {
-                  // "corrupted" easter egg: one heart opens secret
+                if (def.id === "frame" && def.windowId === "lab") {
+                  // "corrupted" easter egg: MDX Lab icon sometimes glitches open
                   if (Math.random() < 0.25) {
                     triggerCorruption();
                     return;
@@ -883,6 +941,7 @@ function MacintoshDesktopInner() {
               onClose={() => closeWindow(id)}
               onMinimizeToggle={() => toggleMinimize(id)}
               onMove={(nx, ny) => moveWindow(id, nx, ny)}
+              onResize={(nw, nh) => resizeWindow(id, nw, nh)}
               onTitleContextMenu={(e) =>
                 contextMenu.show(e, [
                   { label: "Close", onClick: () => closeWindow(id) },
@@ -908,6 +967,7 @@ function MacintoshDesktopInner() {
               <Suspense fallback={<div className="mac-panel-fallback" aria-hidden />}>
                 {id === "terminal" && (
                   <MacTerminalApp
+                    windowActive={activeId === id}
                     onOpenWindow={(w) => openWindow(w)}
                     onGlitch={wobbleIcons}
                     onMatrixMode={() => {
@@ -934,7 +994,9 @@ function MacintoshDesktopInner() {
                     sharedEnabled={hasSupabaseConfig}
                   />
                 )}
+                {id === "visitorlog" && <VisitorLogPanel />}
                 {id === "music" && <MusicPlayerPanel library={MUSIC_LIBRARY} />}
+                {id === "photos" && <FilmPhotosPanel items={FILM_PHOTO_ITEMS} />}
                 {id === "browser" && <WebBrowserPanel />}
                 {id === "controls" && <ControlPanelsPanel />}
                 {id === "minesweeper" && <MinesweeperPanel />}
@@ -1198,7 +1260,7 @@ function DesktopFeltIcon({
         aria-hidden
       >
         <img src={def.src} alt="" className="mac-felt-frame__icon" draggable={false} />
-        {def.id === "moon" || def.id === "heart2" ? (
+        {def.id === "moon" ? (
           <span className="mac-felt-frame__alias" aria-hidden>↗</span>
         ) : null}
       </span>
@@ -1216,7 +1278,9 @@ function balloonText(id: WindowId) {
     case "terminal": return "Try `matrix`, `neofetch`, `fortune`.";
     case "photobooth": return "Become part of the museum wall.";
     case "photobook": return "Visitors who came before you.";
-    case "music": return "A small jukebox. Volume: yours.";
+    case "visitorlog": return "Everyone who signed the desk.";
+    case "music": return "iTunes — playlists, visuals, volume: yours.";
+    case "photos": return "Film scans — library, captions, locations.";
     case "browser": return "An old internet, slightly haunted.";
     case "feltmoon": return "A small room, a long horizontal scroll.";
     default: return "Double-click to open";

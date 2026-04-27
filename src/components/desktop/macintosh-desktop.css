@@ -74,9 +74,9 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
 
   /* ---------- MODULAR TYPE SCALE (ratio ~1.25) ---------- */
   --text-2xs:  9px;
-  --text-xs:   11px;
-  --text-sm:   13px;
-  --text-base: 15px;
+  --text-xs:   12px;
+  --text-sm:   14px;
+  --text-base: 16px;
   --text-md:   17px;
   --text-lg:   20px;
   --text-xl:   25px;
@@ -148,6 +148,9 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
   /* Dual-register typography stacks */
   --mac-font-system: "Public Sans", "Arial Narrow", "Helvetica", "IBM Plex Mono",
     "Charcoal", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, system-ui, sans-serif;
+  /* Condensed sans — closer to OS 8 Geneva/Chicago folder & dock chip labels */
+  --mac-font-chrome-label: "Barlow Condensed", "Geneva", "Arial Narrow", "Helvetica Neue",
+    Helvetica, "Lucida Grande", ui-sans-serif, system-ui, sans-serif;
   --mac-font-terminal: "IBM Plex Mono", "Courier", "VT323", "Chicago", "Courier New", monospace;
   --mac-font-content: "Playfair Display", "Playfair", "Lora", "Freight Text Pro",
     Georgia, "Times New Roman", serif;
@@ -234,8 +237,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
     ui-sans-serif,
     system-ui,
     sans-serif;
-  font-size: 14px;
-  line-height: 1.25;
+  font-size: 15px;
+  line-height: 1.4;
   color: var(--mac-text);
   min-height: 100dvh;
   background: transparent;
@@ -280,7 +283,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
   top: var(--mac-crt-bezel-top);
   left: var(--mac-crt-bezel-side);
   right: var(--mac-crt-bezel-side);
-  z-index: 70;
+  /* Above mac-desktop-surface + CRT bezels — must stay highest among chrome */
+  z-index: 110;
   height: var(--mac-menu-h);
   display: flex;
   align-items: center;
@@ -498,7 +502,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
 .mac-desktop-surface {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  /* Above CRT glass/chassis (92–95) so windows/icons receive hits; below menu bar + dock */
+  z-index: 100;
   isolation: isolate;
   padding-top: var(--mac-menu-h);
   pointer-events: none;
@@ -530,7 +535,7 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
   inset:
     calc(14px + var(--mac-crt-bezel-top))
     calc(14px + var(--mac-crt-bezel-side))
-    calc(184px + var(--mac-crt-bezel-bottom))
+    calc(200px + var(--mac-crt-bezel-bottom))
     calc(14px + var(--mac-crt-bezel-side));
   z-index: 15;
 }
@@ -543,8 +548,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  min-width: 228px;
-  max-width: 256px;
+  min-width: 260px;
+  max-width: 284px;
   padding: 12px 12px 14px;
   border: 1px solid transparent;
   border-radius: 2px;
@@ -609,8 +614,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
 
 .mac-felt-frame {
   position: relative;
-  width: 228px;
-  height: 172px;
+  width: 260px;
+  height: 196px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
@@ -631,8 +636,8 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
 }
 
 .mac-felt-frame--landscape {
-  width: 228px;
-  height: 172px;
+  width: 260px;
+  height: 196px;
 }
 
 .mac-felt-frame__icon {
@@ -663,40 +668,40 @@ body.mac-opt-no-chassis .mac-crt-glass { display: none; }
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* Classic Mac OS 8 icon labels: flat text on desktop, inverted when selected.
-   Three-layer text-shadow (a tight drop, a wide glow, a slight offset) keeps
-   labels legible over ANY Hydra wallpaper mood without changing color. */
+/* Desktop icon labels — frosted pill so names stay readable on busy wallpapers. */
 .mac-desktop-icon__label {
-  font-family: var(--mac-font-system);
-  font-weight: 400;
-  font-size: var(--text-xs);
+  font-family: var(--mac-font-chrome-label);
+  font-weight: 600;
+  font-size: var(--text-sm);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-normal);
   text-transform: none;
-  color: #ffffff;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  padding: var(--space-1) var(--space-2);
-  padding-bottom: var(--space-3);
-  border-radius: 2px;
-  text-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.9),
-    0 0 8px rgba(0, 0, 0, 0.6),
-    1px 1px 0 rgba(0, 0, 0, 0.8);
+  color: rgba(245, 242, 237, 0.94);
+  background: rgba(12, 11, 10, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 6px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
   word-break: break-word;
-  max-width: 72px;
+  max-width: 112px;
   text-align: center;
 }
 
 /* Authentic Mac OS 8 selection: dotted Mac-blue border, translucent blue fill */
 .mac-desktop-icon--selected .mac-desktop-icon__label {
-  color: #ffffff;
-  background: rgba(0, 0, 170, 0.55);
-  border: 1px dotted var(--accent-select);
-  box-shadow: none;
-  padding: var(--space-1) var(--space-2);
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
+  color: rgba(252, 250, 247, 0.98);
+  background: rgba(0, 0, 170, 0.78);
+  border: 1px dotted rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 2px 12px rgba(0, 0, 20, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  padding: var(--space-2) var(--space-3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
 }
 
 /* sudo rm -rf / wobble */
@@ -741,30 +746,32 @@ body.mac-matrix-mode .mac-desktop-surface {
   bottom: calc(var(--space-5) + var(--mac-crt-bezel-bottom));
   /* The X translate positions the dock; Y translate is animated on hover for the lift. */
   transform: translate(-50%, 0);
+  /* Below desktop windows (see z-for in MacintoshDesktop, base ~42+) so draggable
+     chrome and resize grips receive pointer events instead of the frosted tray. */
   z-index: 35;
   display: flex;
   align-items: flex-end;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-6);
-  /* Frosted glass tray — the Hydra shows through as if through etched plastic. */
-  background: rgba(208, 204, 196, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  /* Frosted tray — readable labels; slightly lighter than the previous near-black */
+  background: rgba(86, 82, 76, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 0;
   box-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.12),
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 4px 14px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: transform 160ms var(--ease-settle);
 }
 .mac-dock--active {
   transform: translate(-50%, -4px);
   box-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.12),
-    0 6px 16px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 10px 28px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
 .mac-dock__item {
@@ -773,7 +780,7 @@ body.mac-matrix-mode .mac-desktop-surface {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  min-width: 108px;
+  min-width: 120px;
   border: 1px solid transparent;
   background: transparent;
   padding: 4px 6px 2px;
@@ -796,16 +803,16 @@ body.mac-matrix-mode .mac-desktop-surface {
 .mac-dock__item:hover,
 .mac-dock__item:focus-visible {
   outline: none;
-  border-color: rgba(0, 0, 0, 0.45);
-  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.1);
 }
 /* Open indicator: a single 3px dot below the icon. NOT a badge or border change. */
 .mac-dock__item--open::after {
   content: "";
-  width: 3px;
-  height: 3px;
+  width: 4px;
+  height: 4px;
   border-radius: 999px;
-  background: var(--text-primary);
+  background: rgba(250, 246, 238, 0.95);
   position: absolute;
   bottom: -6px;
   left: 50%;
@@ -815,8 +822,8 @@ body.mac-matrix-mode .mac-desktop-surface {
 
 /* Flat-felt dock: no platinum tile, icon sits directly on the dock with a soft drop-shadow. */
 .mac-dock__icon-shell {
-  width: 88px;
-  height: 88px;
+  width: 104px;
+  height: 104px;
   border: 0;
   background: transparent;
   box-shadow: none;
@@ -826,23 +833,24 @@ body.mac-matrix-mode .mac-desktop-surface {
 }
 
 .mac-dock__icon {
-  width: 84px;
-  height: 84px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   image-rendering: auto;
 }
 
-/* Dock label — floats as a chip above the icon on hover, NOT a tooltip. */
+/* Dock label — rests on tray; lifts as a chip on hover. */
 .mac-dock__label {
-  font-family: var(--mac-font-system);
-  font-weight: 500;
-  font-size: var(--text-2xs);
+  font-family: var(--mac-font-chrome-label);
+  font-weight: 600;
+  font-size: var(--text-sm);
   line-height: var(--leading-tight);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-wide);
-  color: var(--text-primary);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
-  /* Chip treatment — activates when parent .mac-dock__item is hovered */
+  letter-spacing: 0.09em;
+  color: rgba(244, 240, 233, 0.94);
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.85),
+    0 0 1px rgba(0, 0, 0, 0.9);
 }
 .mac-dock__item:hover .mac-dock__label,
 .mac-dock__item:focus-visible .mac-dock__label {
@@ -850,12 +858,13 @@ body.mac-matrix-mode .mac-desktop-surface {
   bottom: calc(100% + var(--space-2));
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.78);
-  color: #ffffff;
-  padding: var(--space-1) var(--space-3);
-  padding-top: calc(var(--space-1) + 1px);
-  border-radius: 4px;
-  font-size: var(--text-xs);
+  background: rgba(8, 8, 10, 0.94);
+  color: rgba(250, 247, 242, 0.98);
+  padding: var(--space-2) var(--space-4);
+  padding-top: calc(var(--space-2) + 1px);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: var(--text-sm);
   white-space: nowrap;
   text-shadow: none;
   animation: mac-dock-label-in 80ms var(--ease-crisp) 100ms backwards;
@@ -875,14 +884,17 @@ body.mac-matrix-mode .mac-desktop-surface {
   will-change: transform, opacity, height;
 }
 
-/* Phase A of the zoom-rect open animation (and close collapse). */
+/* Zoom-rect outline during open/close — must paint *behind* chrome so OS-level
+   hit-testing never prefers an empty layer above the title bar / resize grip. */
 .mac-window__rect {
   border: 1px solid var(--mac-frame);
   background: transparent;
-  z-index: 2;
+  z-index: 0;
 }
 
 .mac-window {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   min-width: 200px;
@@ -896,6 +908,35 @@ body.mac-matrix-mode .mac-desktop-surface {
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
   transform-origin: 50% 50%;
   transition: filter 80ms var(--ease-crisp), box-shadow 200ms var(--ease-crisp);
+}
+
+/* Bottom-right grow box — resize (cursor + triangle cue, OS 8–9 style) */
+.mac-window__resize-grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  /* Above scrollable body content so the grow box stays grabbable. */
+  z-index: 30;
+  cursor: nwse-resize;
+  touch-action: none;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 52%,
+    rgba(0, 0, 0, 0.15) 52%,
+    rgba(0, 0, 0, 0.28) 100%
+  );
+}
+.mac-window__resize-grip:active {
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 52%,
+    rgba(0, 0, 0, 0.22) 52%,
+    rgba(0, 0, 0, 0.38) 100%
+  );
 }
 .mac-window:not(.mac-window--inactive) {
   box-shadow:
@@ -944,6 +985,7 @@ body.mac-matrix-mode .mac-desktop-surface {
 
 .mac-window__titlebar {
   position: relative;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -1766,23 +1808,86 @@ body.mac-matrix-mode .mac-desktop-surface {
 /* Music player                                                */
 /* =========================================================== */
 
-/* ---------- Music Player — "the object": a physical deck ---------- */
-.mac-music-player { display: grid; gap: var(--space-4); }
-.mac-music-player__header h3 {
+/* ---------- Music Player — iTunes / Platinum CD-player chrome ---------- */
+.mac-music-player {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Horizontal rainbow stripe — evokes Mac OS 8 About / Apple Installer */
+.mac-music-player__titlebar {
+  margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-6)) var(--space-4);
+  height: 10px;
+  overflow: hidden;
+  border-bottom: var(--border-dark);
+}
+.mac-music-player__stripe {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    #c41e3a 0%,
+    #f5a623 14%,
+    #f8e71c 28%,
+    #8bc34a 42%,
+    #0091ea 56%,
+    #6200ea 72%,
+    #aa00ff 88%,
+    #c41e3a 100%
+  );
+  background-size: 120% 100%;
+  opacity: 0.85;
+}
+
+.mac-music-player__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid rgba(168, 164, 156, 0.55);
+}
+
+/* CD jewel case icon — QuickTime / iTunes packaging */
+.mac-music-player__jewel {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-raised), var(--shadow-window);
+  background: linear-gradient(145deg, #eef0f4 0%, #c8ccd4 45%, #989ca8 100%);
+  display: grid;
+  place-items: center;
+}
+.mac-music-player__jewel-disc {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid #4a4e58;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 42%),
+    conic-gradient(from 40deg, #2a6adb 0deg, #6ec8ff 90deg, #2a6adb 180deg, #1a4a9c 270deg, #2a6adb 360deg);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.mac-music-player__app-name {
   margin: 0 0 var(--space-1);
-  font-size: var(--text-lg);
-  font-weight: 400;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  color: var(--text-secondary);
+  font-family: var(--mac-font-system);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
   line-height: var(--leading-tight);
 }
-.mac-music-player__header p {
+.mac-music-player__tagline {
   margin: 0;
-  font-size: var(--text-xs);
+  font-size: var(--text-2xs);
   color: var(--text-secondary);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
+  font-family: var(--mac-font-system);
 }
 .mac-music-player__empty {
   margin: 0;
@@ -1795,31 +1900,42 @@ body.mac-matrix-mode .mac-desktop-surface {
   letter-spacing: var(--tracking-wide);
 }
 
-/* The waveform visualizer sits above the deck — an illuminated strip */
+.mac-music-player__lcd-assembly {
+  border: var(--border-dark);
+  box-shadow: var(--shadow-window);
+  background: linear-gradient(180deg, #7a7880 0%, #a8a4a0 6%, #55524c 100%);
+  padding: var(--space-3);
+  padding-top: var(--space-2);
+}
+
+/* Equalizer glass — recessed into plastic housing */
 .mac-music-player__visualizer-wrap {
   border: var(--border-dark);
   background: #000000;
   box-shadow: var(--shadow-inset);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2);
+  min-height: 142px;
 }
 .mac-music-player__visualizer {
   width: 100%;
-  height: 64px;
+  height: 132px;
   display: block;
   image-rendering: pixelated;
 }
 
-/* LCD-area: black background with green monospace readout */
+/* Scrolling title on green LCD */
 .mac-music-player__marquee-wrap {
   position: relative;
-  height: 20px;
-  margin-top: var(--space-1);
+  height: 22px;
+  margin-top: var(--space-2);
   overflow: hidden;
-  color: #7fc97f;
+  color: #9ae89a;
   font-family: "IBM Plex Mono", "VT323", monospace;
   font-size: var(--text-sm);
-  background: #000000;
-  padding: 0 var(--space-2);
+  background: #010806;
+  padding: 2px var(--space-2);
+  border: 1px solid #1a3324;
+  box-shadow: inset 0 2px 8px rgba(0, 40, 20, 0.85);
 }
 .mac-music-player__marquee {
   position: absolute;
@@ -1842,28 +1958,148 @@ body.mac-matrix-mode .mac-desktop-surface {
   gap: var(--space-3);
 }
 
-/* The "now playing" LCD strip */
+.mac-music-player__now-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-3);
+  align-items: stretch;
+}
+
 .mac-music-player__now {
   margin: 0;
+  display: grid;
+  gap: var(--space-1);
   font-size: var(--text-sm);
   font-family: "IBM Plex Mono", monospace;
   background: #000000;
-  color: #7fc97f;
+  color: #8cff8c;
   padding: var(--space-2) var(--space-3);
   letter-spacing: var(--tracking-normal);
   text-transform: none;
+  border: 1px solid #1a3324;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
+.mac-music-player__now-label {
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: rgba(154, 248, 143, 0.55);
+}
+.mac-music-player__now-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .mac-music-player__time {
   margin: 0;
   font-family: "IBM Plex Mono", monospace;
   font-size: var(--text-sm);
   background: #000000;
-  color: #7fc97f;
+  color: #8cff8c;
   padding: var(--space-2) var(--space-3);
+  align-self: center;
+  white-space: nowrap;
+  border: 1px solid #1a3324;
 }
 
-/* Transport buttons — Platinum bevel, press-to-inset */
-.mac-music-player__controls { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.mac-music-player__seek-label {
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+  font-family: var(--mac-font-system);
+}
+
+/* Transport — round play, square edge nav (iTunes / SoundJam cues) */
+.mac-music-player__controls {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mac-music-player__btn-icon {
+  border: 1px solid var(--chrome-dark);
+  background: var(--chrome-mid);
+  box-shadow: var(--shadow-raised);
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: box-shadow 40ms var(--ease-snap), background 40ms var(--ease-snap);
+}
+.mac-music-player__btn-icon:hover {
+  background: var(--chrome-light);
+}
+.mac-music-player__btn-icon:active {
+  box-shadow: var(--shadow-inset);
+  background: var(--chrome-shadow);
+}
+
+.mac-music-player__btn-icon--glyph {
+  font-family: var(--mac-font-terminal);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.12em;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.mac-music-player__btn-play {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--chrome-dark);
+  background: radial-gradient(circle at 35% 30%, #fdfaf5 0%, var(--chrome-mid) 55%, #98948c 100%);
+  box-shadow:
+    var(--shadow-raised),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: box-shadow 40ms var(--ease-snap), transform 40ms var(--ease-snap);
+}
+.mac-music-player__btn-play::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-38%, -50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 10px 16px;
+  border-color: transparent transparent transparent var(--text-primary);
+}
+.mac-music-player__btn-play--pause::after {
+  width: 6px;
+  height: 18px;
+  border: 0;
+  background: linear-gradient(
+    90deg,
+    var(--text-primary) 0,
+    var(--text-primary) 38%,
+    transparent 38%,
+    transparent 62%,
+    var(--text-primary) 62%,
+    var(--text-primary) 100%
+  );
+  transform: translate(-50%, -50%);
+}
+.mac-music-player__btn-play:hover {
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #e8e4dc 55%, #a8a49c 100%);
+}
+.mac-music-player__btn-play:active {
+  box-shadow: var(--shadow-inset);
+  transform: scale(0.97);
+}
+
 .mac-music-player__button {
   border: 1px solid var(--chrome-dark);
   background: var(--chrome-light);
@@ -2008,10 +2244,312 @@ body.mac-matrix-mode .mac-desktop-surface {
   margin-right: var(--space-2);
   font-size: var(--text-xs);
 }
+.mac-music-player__track--active .mac-music-player__note {
+  visibility: hidden;
+  width: 0;
+  margin: 0;
+  overflow: hidden;
+}
+.mac-music-player__track-main {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.mac-music-player__note {
+  flex-shrink: 0;
+  opacity: 0.45;
+  font-size: var(--text-xs);
+}
 .mac-music-player__track-dur {
   font-family: "IBM Plex Mono", monospace;
   color: var(--text-tertiary);
   opacity: 1;
+}
+
+/* =========================================================== */
+/* Photos (film library)                                       */
+/* =========================================================== */
+
+.mac-photos-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 380px;
+  margin: calc(-1 * var(--space-6));
+  outline: none;
+}
+.mac-photos-app:focus-visible {
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 204, 0.35);
+}
+
+.mac-photos-app__toolbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: var(--border-dark);
+  background: linear-gradient(180deg, var(--chrome-light) 0%, var(--chrome-mid) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+}
+.mac-photos-app__toolbar-title {
+  font-family: var(--mac-font-system);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+.mac-photos-app__toolbar-meta {
+  font-family: var(--mac-font-system);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-secondary);
+}
+
+.mac-photos-app__split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) 1fr;
+  min-height: 0;
+  gap: 0;
+}
+
+.mac-photos-app__sidebar {
+  border-right: var(--border-dark);
+  background: #eceae6;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.mac-photos-app__sidebar-head {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-dark);
+  background: rgba(255, 255, 255, 0.35);
+}
+.mac-photos-app__sidebar-label {
+  font-family: var(--mac-font-system);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.mac-photos-app__sidebar-list {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.mac-photos-app__sidebar-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  text-align: left;
+  padding: var(--space-2);
+  border: var(--border-light);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow-inset);
+  cursor: pointer;
+  font-family: var(--mac-font-system);
+  font-size: var(--text-xs);
+  color: var(--text-primary);
+  transition: background 80ms var(--ease-crisp), border-color 80ms var(--ease-crisp), box-shadow 80ms var(--ease-crisp);
+}
+.mac-photos-app__sidebar-row:hover {
+  background: #ffffff;
+}
+.mac-photos-app__sidebar-row:focus-visible {
+  outline: none;
+  border-color: rgba(0, 0, 204, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 0 2px rgba(0, 0, 204, 0.25);
+}
+.mac-photos-app__sidebar-row--active {
+  border-color: rgba(0, 0, 204, 0.85);
+  background: linear-gradient(
+    135deg,
+    rgba(214, 225, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.92) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(0, 0, 136, 0.08),
+    var(--shadow-window);
+}
+
+.mac-photos-app__sidebar-thumb-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(80, 78, 72, 0.35);
+  background: #222;
+}
+.mac-photos-app__sidebar-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mac-photos-app__sidebar-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.mac-photos-app__sidebar-empty {
+  margin: 0 var(--space-4) var(--space-4);
+  font-family: var(--mac-font-system);
+  font-size: var(--text-2xs);
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.mac-photos-app__main {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: linear-gradient(180deg, #fbfbfa 0%, var(--window-body) 70%);
+}
+
+.mac-photos-app__canvas {
+  flex: 2;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  border-bottom: var(--border-dark);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+.mac-photos-app__hero {
+  max-width: 100%;
+  max-height: min(52vh, 520px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 3px;
+  border: var(--border-dark);
+  box-shadow:
+    var(--shadow-float),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.mac-photos-app__detail {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-6);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(255, 255, 255, 0.85);
+}
+.mac-photos-app__detail-title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--mac-font-system);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.mac-photos-app__detail-loc {
+  margin: 0 0 var(--space-4);
+  font-family: var(--mac-font-system);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.mac-photos-app__detail-loc--muted {
+  font-style: italic;
+  opacity: 0.75;
+}
+.mac-photos-app__pin {
+  margin-right: var(--space-2);
+}
+.mac-photos-app__detail-blurb {
+  margin: 0;
+  font-family: var(--mac-font-content);
+  font-size: var(--text-base);
+  line-height: var(--leading-loose);
+  color: var(--text-primary);
+}
+.mac-photos-app__detail-blurb p {
+  margin: 0;
+}
+.mac-photos-app__detail-placeholder {
+  color: var(--text-secondary);
+}
+.mac-photos-app__detail-placeholder strong {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.mac-photos-app__empty {
+  flex: 1;
+  display: grid;
+  place-content: center;
+  gap: var(--space-4);
+  padding: var(--space-10);
+  text-align: center;
+}
+.mac-photos-app__empty-title {
+  margin: 0;
+  font-family: var(--mac-font-system);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.mac-photos-app__empty-copy {
+  margin: 0 auto;
+  max-width: 36rem;
+  font-family: var(--mac-font-system);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.mac-photos-app__footer {
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-5);
+  border-top: var(--border-dark);
+  background: rgba(236, 234, 230, 0.95);
+  font-size: var(--text-2xs);
+  color: var(--text-tertiary);
+  letter-spacing: var(--tracking-wide);
+}
+
+.mac-photos-app__code {
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-2xs);
+  padding: 1px 6px;
+  border: 1px solid rgba(168, 164, 156, 0.85);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+@media (max-width: 620px) {
+  .mac-photos-app__split {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .mac-photos-app__sidebar-list {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+  }
+  .mac-photos-app__sidebar-row {
+    min-width: 160px;
+  }
 }
 
 /* =========================================================== */
@@ -2795,6 +3333,12 @@ body.mac-konami-unlocked .hydra-backdrop {
   z-index: 95;
 }
 
+/* Descendants default to pointer-events: auto — bezels would steal clicks above windows.
+   Keep the plastic purely decorative (still visible; hit-testing passes through). */
+.mac-crt-chassis * {
+  pointer-events: none !important;
+}
+
 .mac-crt-chassis__bezel {
   position: absolute;
   background: var(--mac-crt-chassis);
@@ -3051,7 +3595,7 @@ body.mac-konami-unlocked .hydra-backdrop {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  z-index: 75;
+  z-index: 108;
 }
 .mac-notification {
   display: flex;
@@ -3303,6 +3847,82 @@ body.mac-konami-unlocked .hydra-backdrop {
 }
 
 /* =========================================================== */
+/* Visitor log (gate names)                                    */
+/* =========================================================== */
+
+.mac-visitorlog {
+  display: grid;
+  gap: 12px;
+  color: var(--mac-text);
+  font-family: var(--mac-font-body);
+}
+.mac-visitorlog__header {
+  display: grid;
+  gap: 4px;
+}
+.mac-visitorlog__lede {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+.mac-visitorlog__meta {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+.mac-visitorlog__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+  border: 1px solid #000;
+  max-height: min(420px, 52vh);
+  overflow: auto;
+  background: #fdfaf3;
+}
+.mac-visitorlog__row {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-bottom: 1px solid #000;
+  font-size: 12px;
+}
+.mac-visitorlog__row:last-child {
+  border-bottom: none;
+}
+.mac-visitorlog__idx {
+  font-family: var(--mac-font-terminal);
+  font-size: 11px;
+  opacity: 0.55;
+}
+.mac-visitorlog__name {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mac-visitorlog__time {
+  font-family: var(--mac-font-terminal);
+  font-size: 11px;
+  opacity: 0.65;
+  white-space: nowrap;
+}
+.mac-visitorlog__hint {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #6b5218;
+}
+.mac-visitorlog__code {
+  font-family: var(--mac-font-terminal);
+  font-size: 10px;
+}
+
+/* =========================================================== */
 /* Defrag screensaver                                          */
 /* =========================================================== */
 
@@ -3402,7 +4022,7 @@ body.mac-opt-eight-bit .mac-desktop-surface {
   position: fixed;
   top: calc(var(--mac-menu-h) + 4px + var(--mac-crt-bezel-top));
   left: calc(10px + var(--mac-crt-bezel-side));
-  z-index: 75;
+  z-index: 109;
   background: #000;
   color: #9af88f;
   font-family: "VT323", monospace;
@@ -3424,7 +4044,8 @@ body.mac-opt-eight-bit .mac-desktop-surface {
   position: fixed;
   right: calc(20px + var(--mac-crt-bezel-side));
   bottom: calc(140px + var(--mac-crt-bezel-bottom));
-  z-index: 10;
+  /* Below windows so overlapping window frames stay interactive (matches dock z-index story). */
+  z-index: 34;
   width: 64px;
   padding: 6px 4px 4px;
   background: transparent;

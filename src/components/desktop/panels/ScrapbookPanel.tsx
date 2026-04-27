@@ -267,7 +267,9 @@ export function ScrapbookPanel({ photos, loading, error, sharedEnabled }: Props)
               >
                 <img src={photo.image_url} alt="" loading="lazy" />
                 <figcaption className="mac-scrapbook__stamp">
-                  {DateTime.fromISO(photo.created_at).toFormat("dd LLL yyyy")}
+                  {photo.visitor_name?.trim()
+                    ? `${photo.visitor_name.trim()} · ${DateTime.fromISO(photo.created_at).toFormat("dd LLL yyyy")}`
+                    : DateTime.fromISO(photo.created_at).toFormat("dd LLL yyyy")}
                 </figcaption>
               </button>
             );

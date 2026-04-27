@@ -20,6 +20,7 @@ export type MenuAction =
   | "toggle-sound"
   | "open-minesweeper"
   | "open-music"
+  | "open-photos"
   | "open-about"
   | "open-controls"
   | "open-lab"
@@ -43,6 +44,7 @@ export type OpenWindowInfo = {
     | "notepad"
     | "kaleidoscope"
     | "slideshow"
+    | "photos"
     | "internals"
     | "finder";
   title: string;
@@ -143,6 +145,7 @@ export function MacMenuBar({
               <MenuItem onClick={() => run("open-notepad")}>Notepad</MenuItem>
               <MenuItem onClick={() => run("open-kaleidoscope")}>Kaleidoscope</MenuItem>
               <MenuItem onClick={() => run("open-slideshow")}>Slideshow</MenuItem>
+              <MenuItem onClick={() => run("open-photos")}>Photos</MenuItem>
             </Submenu>
             <MenuItem onClick={() => run("open-music")}>Jukebox</MenuItem>
             <MenuItem onClick={() => run("open-about")}>About</MenuItem>

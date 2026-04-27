@@ -123,6 +123,8 @@ const NEOFETCH = `                   esnupi@retroterm
 `;
 
 type MacTerminalAppProps = {
+  /** When true, keeps xterm’s textarea focused so typing reaches the shell. */
+  windowActive?: boolean;
   onOpenWindow?: (id: "music") => void;
   onGlitch?: () => void;
   onMatrixMode?: () => void;
@@ -130,8 +132,20 @@ type MacTerminalAppProps = {
   onMemoryLeak?: () => void;
 };
 
-export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryLeak }: MacTerminalAppProps = {}) {
+export function MacTerminalApp({
+  windowActive,
+  onOpenWindow,
+  onGlitch,
+  onMatrixMode,
+  onMemoryLeak,
+}: MacTerminalAppProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const termRef = useRef<Terminal | null>(null);
+
+  useEffect(() => {
+    if (!windowActive) return;
+    termRef.current?.focus();
+  }, [windowActive]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -164,6 +178,10 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryL
     term.loadAddon(fit);
     term.open(el);
     fit.fit();
+    termRef.current = term;
+
+    const focusTerm = () => term.focus();
+    el.addEventListener("pointerdown", focusTerm, { capture: true });
 
     const unsubLog = subscribeSystemLog((line) => {
       term.writeln(`\u001b[33m${line}\u001b[0m`);
@@ -223,11 +241,14 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryL
 
     const writelnSlow = async (lines: string[], delay = 18) => {
       busy = true;
-      for (const l of lines) {
-        term.writeln(l);
-        await new Promise((r) => setTimeout(r, delay));
+      try {
+        for (const l of lines) {
+          term.writeln(l);
+          await new Promise((r) => setTimeout(r, delay));
+        }
+      } finally {
+        busy = false;
       }
-      busy = false;
     };
 
     const runMatrix = async () => {
@@ -534,11 +555,15 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryL
       term.writeln(`${cmd}: command not found`);
     };
 
-    void writelnSlow([
-      "esnupi terminal 1.0  (you may try `help`, `neofetch`, `matrix`, `snake`)",
-      `motd — ${MOTD}`,
-    ], 16).then(() => {
+    void writelnSlow(
+      [
+        "esnupi terminal 1.0  (you may try `help`, `neofetch`, `matrix`, `snake`)",
+        `motd — ${MOTD}`,
+      ],
+      16,
+    ).then(() => {
       term.write("\r\nguest@esnupi:/home/guest$ ");
+      term.focus();
     });
 
     term.onData(async (data) => {
@@ -628,9 +653,11 @@ export function MacTerminalApp({ onOpenWindow, onGlitch, onMatrixMode, onMemoryL
     ro.observe(el);
 
     return () => {
+      el.removeEventListener("pointerdown", focusTerm, { capture: true });
       unsubLog();
       ro.disconnect();
       term.dispose();
+      termRef.current = null;
     };
   }, [onOpenWindow, onGlitch, onMatrixMode, onMemoryLeak]);
 

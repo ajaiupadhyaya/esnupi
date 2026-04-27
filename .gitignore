@@ -6,4 +6,5 @@ dist
 .venv
 images/
 .vercel
+music/
 

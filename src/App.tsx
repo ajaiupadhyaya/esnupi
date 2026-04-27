@@ -7,6 +7,7 @@ import FeltMoon from "@/pages/FeltMoon";
 import Gallery from "@/pages/Gallery";
 import Home from "@/pages/Home";
 import MdxLab from "@/pages/MdxLab";
+import VisitClassic from "@/pages/VisitClassic";
 import { Route, Routes } from "react-router-dom";
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
         <Routes>
           <Route element={<SiteLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/visit-classic" element={<VisitClassic />} />
             <Route path="/desktop" element={<MacintoshDesktop />} />
             <Route path="/lab" element={<MdxLab />} />
             <Route path="/gallery" element={<Gallery />} />

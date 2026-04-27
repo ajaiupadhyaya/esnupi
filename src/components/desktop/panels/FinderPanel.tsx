@@ -17,11 +17,10 @@ const DATE_MODIFIED: Record<string, string> = {
   frame: "last Tuesday",
   moon: "a very quiet afternoon",
   heart1: "today, 3:40 AM",
-  heart2: "just now",
   heart3: "yesterday",
-  heart4: "the version that almost shipped",
   photobooth: "this morning",
   photobook: "2 days ago",
+  visitorlog: "continuous",
 };
 
 type SortKey = "name" | "kind" | "date";

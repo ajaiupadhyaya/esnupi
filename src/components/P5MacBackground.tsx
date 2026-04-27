@@ -5,20 +5,25 @@ import { hydraStage, installHydraStage } from "../lib/hydraStage";
 import { p5collageSketch } from "../p5mac/p5collageSketch";
 import { p5dominoesSketch } from "../p5mac/p5dominoesSketch";
 import { p5earthBandsSketch } from "../p5mac/p5earthBandsSketch";
+import { p5flowersSketch } from "../p5mac/p5flowersSketch";
+import { p5itoWeaveSketch } from "../p5mac/p5itoWeaveSketch";
+import { p5starCollageSketch } from "../p5mac/p5starCollageSketch";
 import { pickP5MacVariant, type P5MacVariant } from "../p5mac/pickP5MacVariant";
 
 import "./P5MacBackground.css";
 
-/* 0 = macbackground3 (dominoes), 1 = macbackground (earth), 2 = macbackground2 (collage) */
+/* 0 dominoes, 1 earth bands, 2 collage, 3 flowers, 4 stars + photo, 5 ITO weave */
 const SKETCH: Record<P5MacVariant, (p: p5) => void> = {
   0: p5dominoesSketch,
   1: p5earthBandsSketch,
   2: p5collageSketch,
+  3: p5flowersSketch,
+  4: p5starCollageSketch,
+  5: p5itoWeaveSketch,
 };
 
 /**
- * p5.js wallpaper for the classic Mac desktop. One of three sketches
- * (from macbackground.md · macbackground2.md · macbackground3.md) is chosen at random per visit.
+ * p5.js wallpaper for the classic Mac desktop. One of six sketches is chosen uniformly at random per visit.
  * Exposes the same `hydraStage` hooks as HydraBackground, driving CSS filters and loop/pause on the p5 instance.
  */
 export function P5MacBackground() {

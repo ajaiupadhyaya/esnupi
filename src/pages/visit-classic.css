@@ -1,0 +1,147 @@
+/* Brutalist name gate before the Mac desktop — no Mac chrome, raw type. */
+
+.vc-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem 3rem;
+  box-sizing: border-box;
+  background: #f0f0ed;
+  color: #0a0a0a;
+  font-family: ui-monospace, "Cascadia Code", "IBM Plex Mono", Menlo, monospace;
+  --vc-acid: #c40a0a;
+  --vc-ink: #0a0a0a;
+}
+
+.vc-border {
+  width: min(32rem, 100%);
+  border: 3px solid var(--vc-ink);
+  background: #fff;
+  box-shadow: 8px 8px 0 var(--vc-ink);
+}
+
+.vc-kicker {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--vc-ink);
+  background: #0a0a0a;
+  color: #f0f0ed;
+}
+
+.vc-body {
+  padding: 1.5rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.vc-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.vc-rule {
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--vc-ink) 0,
+    var(--vc-ink) 6px,
+    transparent 6px,
+    transparent 10px
+  );
+}
+
+.vc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vc-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.vc-input {
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+  border: 2px solid var(--vc-ink);
+  border-radius: 0;
+  background: #fafaf8;
+  color: var(--vc-ink);
+}
+
+.vc-input:focus {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--vc-acid);
+}
+
+.vc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.vc-submit {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.65rem 1rem;
+  border: 2px solid var(--vc-ink);
+  background: var(--vc-ink);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.vc-submit:hover {
+  background: var(--vc-acid);
+  border-color: var(--vc-acid);
+}
+
+.vc-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.vc-skip {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 0.65rem;
+  border: none;
+  background: transparent;
+  color: var(--vc-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-size: 0.75rem;
+}
+
+.vc-skip:hover {
+  color: var(--vc-acid);
+}
+
+.vc-foot {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.5;
+  opacity: 0.75;
+  max-width: 26rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-border {
+    box-shadow: none;
+  }
+}

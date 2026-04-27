@@ -3,7 +3,7 @@
  *
  *  The felt icons are used typographically: as stamps, drop-caps, index
  *  markers, and punctuation on a large, off-white paper canvas. No desktop
- *  metaphor; the Mac OS 8 room still exists at /desktop for anyone who wants
+ *  metaphor; the Mac OS 8 room still exists behind /visit-classic → /desktop.
  *  to visit it.
  */
 
@@ -50,7 +50,7 @@ const ROOMS: Room[] = [
       label: "On view",
       body: "A note on practice, collaborators, and the list of small, stubborn questions the studio keeps coming back to.",
     },
-    path: "/desktop?open=about",
+    path: "/visit-classic?next=/desktop",
     icon: homefelt,
   },
   {
@@ -300,7 +300,7 @@ export default function Home() {
         <button
           type="button"
           className="bh-slip__back"
-          onClick={() => go("/desktop")}
+          onClick={() => go("/visit-classic?next=/desktop")}
           title="Open the Mac OS 8 desktop version"
         >
           ↳ classic desktop
@@ -651,10 +651,10 @@ export default function Home() {
           <div>
             <h4>Return</h4>
             <a
-              href="/desktop"
+              href="/visit-classic?next=/desktop"
               onClick={(e) => {
                 e.preventDefault();
-                go("/desktop");
+                go("/visit-classic?next=/desktop");
               }}
             >
               classic desktop ↳
