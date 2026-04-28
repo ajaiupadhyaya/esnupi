@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { useMemo, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { hydraStage } from "@/lib/hydraStage";
 import { PROJECTS_BY_KIND, type Project } from "@/lib/projectsData";
 import { ScaffoldReveal } from "./ScaffoldReveal";
@@ -8,7 +8,7 @@ import { ScaffoldReveal } from "./ScaffoldReveal";
 /* About                                                                       */
 /* -------------------------------------------------------------------------- */
 
-export function AboutPanel() {
+export function AboutPanel({ onOpenClassicHome }: { onOpenClassicHome?: () => void }) {
   const year = useMemo(() => DateTime.now().year, []);
   return (
     <article className="mac-about-panel" aria-label="About">
@@ -33,6 +33,21 @@ export function AboutPanel() {
             </ul>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
+          ...(onOpenClassicHome
+            ? [
+                <button
+                  key="classic-home"
+                  type="button"
+                  className="mac-find-panel__row mac-find-panel__row--button"
+                  onClick={() => onOpenClassicHome()}
+                >
+                  <span>Open classic homepage</span>
+                  <span className="mac-find-panel__arrow" aria-hidden>
+                    &#8599;
+                  </span>
+                </button>,
+              ]
+            : []),
           <p className="mac-type-metadata mac-about-panel__foot" key="foot">
             Ajai Upadhyaya, {year}
           </p>,
@@ -92,10 +107,9 @@ export function WorkPanel({
   return (
     <article className="mac-profiler mac-work-panel" aria-label="System Profiler">
       <header className="mac-profiler__head">
-        <h3 className="mac-type-metadata">System Profiler</h3>
+        <h3 className="mac-type-metadata">Recent Activity</h3>
         <p className="mac-profiler__sub">
-          Volumes mount as drives; experiments load as kernel extensions. Pick one — the hex
-          dissolves into the wall label. Open the full case study in the archive.
+          take a peek at my recent work including models, writing, research, and more; updated weekly
         </p>
       </header>
       <div className="mac-profiler__layout">
@@ -143,7 +157,7 @@ export function WorkPanel({
                     className="mac-profiler__cta"
                     onClick={() => onOpenArchive(sel.id)}
                   >
-                    <span>Open full case study</span>
+                    <span>Open full project</span>
                     <span className="mac-profiler__cta-arrow" aria-hidden>
                       &#8599;
                     </span>
@@ -179,15 +193,59 @@ export function WorkPanel({
 /* Find                                                                        */
 /* -------------------------------------------------------------------------- */
 
-const LINKS: Array<{ label: string; href: string }> = [
-  { label: "hello@esnupi.example", href: "mailto:hello@esnupi.example" },
-  { label: "github / esnupi", href: "https://github.com/" },
-  { label: "are.na / esnupi", href: "https://www.are.na/" },
+const CONTACT_METHODS: Array<{ label: string; value: string; href: string }> = [
+  { label: "Email", value: "ajaiupad@gmail.com", href: "mailto:ajaiupad@gmail.com" },
+  { label: "Phone", value: "(804)296-8522", href: "tel:+18042968522" },
+  { label: "LinkedIn", value: "linkedin.com/in/ajai-u/", href: "https://www.linkedin.com/in/ajai-u/" },
+  { label: "GitHub", value: "github.com/ajaiupadhyaya", href: "https://github.com/ajaiupadhyaya" },
 ];
 
-export function FindPanel({ onOpenStudy }: { onOpenStudy?: () => void }) {
+const CONTACT_LINKS: Array<{ label: string; href: string }> = [
+  { label: "Portfolio / Archive", href: "/archive" },
+  { label: "Resume (PDF)", href: "#" },
+  { label: "Substack", href: "#" },
+];
+
+export function FindPanel({
+  onOpenStudy,
+  onOpenCalendar,
+}: {
+  onOpenStudy?: () => void;
+  onOpenCalendar?: () => void;
+}) {
   const lines = [
-    <div key="spacer" className="mac-find-panel__spacer" />,
+    <header key="head" className="mac-contact-panel__head">
+      <h3 className="mac-type-metadata">Contact</h3>
+      <p>
+        all my contact information; for immediate response call my cell, for all other inquires send me an email!
+      </p>
+    </header>,
+    <section key="methods" className="mac-contact-panel__card">
+      <h4 className="mac-type-metadata">info</h4>
+      <dl className="mac-contact-panel__grid">
+        {CONTACT_METHODS.map((item) => (
+          <div key={item.label}>
+            <dt>{item.label}</dt>
+            <dd>
+              <a href={item.href} target={item.href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+                {item.value}
+              </a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>,
+    <section key="links" className="mac-contact-panel__card">
+      <h4 className="mac-type-metadata">Links</h4>
+      {CONTACT_LINKS.map((l) => (
+        <a key={l.label} href={l.href} className="mac-find-panel__row">
+          <span>{l.label}</span>
+          <span className="mac-find-panel__arrow" aria-hidden>
+            &#8599;
+          </span>
+        </a>
+      ))}
+    </section>,
     ...(onOpenStudy
       ? [
           <button
@@ -196,26 +254,32 @@ export function FindPanel({ onOpenStudy }: { onOpenStudy?: () => void }) {
             className="mac-find-panel__row mac-find-panel__row--button"
             onClick={() => onOpenStudy()}
           >
-            <span>Study — light, surface, sequence</span>
+            <span>Open study / gallery</span>
             <span className="mac-find-panel__arrow" aria-hidden>
               &#8599;
             </span>
           </button>,
         ]
       : []),
-    ...LINKS.map((l) => (
-      <a key={l.label} href={l.href} className="mac-find-panel__row">
-        <span>{l.label}</span>
-        <span className="mac-find-panel__arrow" aria-hidden>
-          &#8599;
-        </span>
-      </a>
-    )),
+    ...(onOpenCalendar
+      ? [
+          <button
+            key="calendar"
+            type="button"
+            className="mac-find-panel__row mac-find-panel__row--button"
+            onClick={() => onOpenCalendar()}
+          >
+            <span>Schedule a meeting / view availability</span>
+            <span className="mac-find-panel__arrow" aria-hidden>
+              &#8599;
+            </span>
+          </button>,
+        ]
+      : []),
     <div key="foot" className="mac-find-panel__foot">
       <h4 className="mac-type-metadata">Available for</h4>
       <p>
-        Commissions, residencies, and conversations that do not begin
-        with the words &quot;quick call.&quot;
+        I greatly appreciate all inquires, whether it be for employment opportunities or not, I will do my best to respond as soon as possible!
       </p>
     </div>,
   ];
@@ -237,32 +301,33 @@ export function FindPanel({ onOpenStudy }: { onOpenStudy?: () => void }) {
 
 export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void }) {
   return (
-    <article className="mac-about-panel mac-feltmoon-panel" aria-label="Moon, at rest">
+    <article className="mac-about-panel mac-feltmoon-panel" aria-label="Moon">
       <ScaffoldReveal>
         {[
           <header className="mac-feltmoon-panel__head" key="head">
-            <p className="mac-type-metadata">Accession · MOON.01</p>
-            <h3 className="mac-feltmoon-panel__title">Moon, at rest</h3>
+            <p className="mac-type-metadata">Ajai Upadhyaya</p>
+            <h3 className="mac-feltmoon-panel__title">Post Graduate Plans</h3>
             <p className="mac-feltmoon-panel__sub">
-              felt on linen · 2025
+              Master's in Financial Engineering · 2026
             </p>
           </header>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="blurb">
-            <h4 className="mac-type-metadata">Wall text</h4>
+            <h4 className="mac-type-metadata">asd</h4>
             <p>
-              A piece that kept asking to be a door. Click through to an
-              adjacent room — a horizontal scroll of film photographs you
-              can deface, curate, and walk out of.
+              I will be starting a Master's program in Financial Engineering at VCU in the Fall of 2026, I look forward to learning more
+              about financial markets and the application of technology to finance. At the moment, I lack the critical application of my
+              technical skills to the field of finance, and I am excited to learn more about the industry and how to apply my skills to it
+              and better a firm's ability to manage risk and efficiency.
             </p>
           </section>,
           <section className="mac-about-panel__block" key="meta">
-            <h4 className="mac-type-metadata">Details</h4>
+            <h4 className="mac-type-metadata">Program Details</h4>
             <dl className="mac-feltmoon-panel__dl">
-              <div><dt>Title</dt><dd>Moon, at rest</dd></div>
-              <div><dt>Year</dt><dd>2025</dd></div>
-              <div><dt>Medium</dt><dd>felt on linen</dd></div>
-              <div><dt>Room</dt><dd>/feltmoon — digital annex</dd></div>
+              <div><dt>Title</dt><dd>Master's in Financial Engineering</dd></div>
+              <div><dt>Year</dt><dd>2026</dd></div>
+              <div><dt>Curiculum</dt><dd>AJAI PUT THE LINK</dd></div>
+              <div><dt>Program Placement</dt><dd>AJAI LINK HERE</dd></div>
             </dl>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
@@ -273,9 +338,8 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
             onClick={() => onOpenGallery?.()}
           >
             <span className="mac-feltmoon-panel__cta-label">
-              <span className="mac-feltmoon-panel__cta-kicker">open the room</span>
               <span className="mac-feltmoon-panel__cta-title">
-                Light, material, film — an exhibition
+                Explore my work I've done in preparation for this program
               </span>
             </span>
             <span className="mac-feltmoon-panel__cta-arrow" aria-hidden>
@@ -283,7 +347,7 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
             </span>
           </button>,
           <p className="mac-type-metadata mac-feltmoon-panel__foot" key="foot">
-            The desktop dims. A different screen takes over.
+            
           </p>,
         ]}
       </ScaffoldReveal>
@@ -291,26 +355,212 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
   );
 }
 
-export function LabStubPanel({ onNavigateLab }: { onNavigateLab?: () => void }) {
+const WORKSITE_FEATURES: Array<{
+  title: string;
+  category: string;
+  year: string;
+  href: string;
+  description: string;
+  meta: string;
+}> = [
+  {
+    title: "github",
+    category: "GitHub",
+    year: "2026",
+    href: "https://github.com/ajaiupadhyaya",
+    description:
+      "check out my profile for all of my projects, research, models, and a clear demonstration of my technical skills.",
+    meta: "repo / live link / documentation",
+  },
+  {
+    title: "LinkedIn",
+    category: "LinkedIn",
+    year: "2026",
+    href: "https://www.linkedin.com/in/ajai-u/",
+    description:
+      "connect with my on LinkedIn and get to know me better.",
+    meta: "prototype / collaboration / notes",
+  },
+];
+
+const WORKSITE_LINKS: Array<{
+  title: string;
+  category: string;
+  year: string;
+  href: string;
+}> = [
+  { title: "Substack", category: "Projects", year: "2026", href: "https://github.com/your-handle" },
+  { title: "Academic Research", category: "Writing", year: "2026", href: "https://github.com/your-handle" },
+  { title: "Finance Internship Work", category: "Notes", year: "2025", href: "https://github.com/your-handle" },
+  { title: "SWE Internship Work", category: "Research", year: "2025", href: "https://github.com/your-handle" },
+  { title: "UVA Finance Work", category: "Experiments", year: "2025", href: "https://github.com/your-handle" },
+  { title: "UVA Digital Media Work", category: "Collaborations", year: "2024", href: "https://github.com/your-handle" },
+  { title: "Economic Research", category: "Projects", year: "2024", href: "https://github.com/your-handle" },
+];
+
+export function LabStubPanel() {
+  const year = useMemo(() => DateTime.now().year, []);
+  const scrollRef = useRef<HTMLElement>(null);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const updateProgress = () => {
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      setProgress(maxScroll > 0 ? Math.min(1, Math.max(0, el.scrollTop / maxScroll)) : 0);
+    };
+
+    updateProgress();
+    el.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      el.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const nodes = Array.from(el.querySelectorAll<HTMLElement>(".mac-worksite__reveal"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("mac-worksite__reveal--visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { root: el, threshold: 0.18, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <article className="mac-find-panel" aria-label="Lab">
-      <ScaffoldReveal stagger={40}>
+    <article className="mac-worksite" aria-label="My Work website" ref={scrollRef}>
+      <div
+        className="mac-worksite__progress"
+        style={{ "--progress": `${progress * 100}%` } as CSSProperties}
+        aria-hidden
+      />
+      <aside className="mac-worksite__side-label" aria-hidden>
+        ©{year} / VOL. 01
+      </aside>
+
+      <div className="mac-worksite__paper">
+        <header className="mac-worksite__masthead">
+          <span>Personal Catalog</span>
+          <span>/</span>
+          <span>My Work</span>
+          <span>/</span>
+          <span>{year}</span>
+        </header>
+
+        <section className="mac-worksite__hero" aria-label="Work index">
+          <p className="mac-worksite__kicker">Scroll and close the window to return to the desktop</p>
+          <h1>My Work</h1>
+          <p className="mac-worksite__intro">
+            A full catalog of everything I've created in my undergraduate years, in and out of the classroom.
+          </p>
+        </section>
+
+        <section className="mac-worksite__features" aria-label="Featured work links">
+          {WORKSITE_FEATURES.map((item, index) => (
+            <a
+              key={item.title}
+              className={`mac-worksite__feature mac-worksite__feature--${index + 1} mac-worksite__reveal`}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <span className="mac-worksite__feature-count">0{index + 1}</span>
+              <span className="mac-worksite__feature-meta">
+                {item.category} — {item.year}
+              </span>
+              <h2>{item.title}</h2>
+              <p>{item.description}</p>
+              <span className="mac-worksite__feature-hidden">{item.meta}</span>
+            </a>
+          ))}
+        </section>
+
+        <section className="mac-worksite__index" aria-label="Work links">
+          <div className="mac-worksite__index-head">
+            <span>Website</span>
+            <span>Category — Year</span>
+          </div>
+          <div className="mac-worksite__rows">
+            {WORKSITE_LINKS.map((item, index) => (
+              <a
+                key={`${item.title}-${item.year}`}
+                href={item.href}
+                target="_blank"
+                rel="noreferrer"
+                className="mac-worksite__row mac-worksite__reveal"
+                style={{ "--delay": `${160 + index * 45}ms` } as CSSProperties}
+              >
+                <span className="mac-worksite__row-title">
+                  <span className="mac-worksite__row-arrow" aria-hidden>
+                    &#8594;
+                  </span>
+                  {item.title}
+                </span>
+                <span className="mac-worksite__row-dots" aria-hidden />
+                <span className="mac-worksite__row-meta">
+                  {item.category} — {item.year}
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <footer className="mac-worksite__foot">
+          <span>Ajai Upadhyaya</span>
+          <span>2026</span>
+        </footer>
+      </div>
+    </article>
+  );
+}
+
+const CALENDAR_BOOKING_URL = "https://calendly.com/your-handle/meeting";
+const CALENDAR_AVAILABILITY_URL = "https://calendar.google.com/";
+
+export function CalendarPanel() {
+  return (
+    <article className="mac-find-panel mac-calendar-panel" aria-label="Calendar">
+      <ScaffoldReveal stagger={32}>
         {[
-          <p key="p" className="mac-type-content">
-            A separate room for longer writing. The desktop shuts down; the same
-            screen loads a different machine.
-          </p>,
-          <button
-            key="btn"
-            type="button"
-            className="mac-find-panel__row mac-find-panel__row--button"
-            onClick={() => onNavigateLab?.()}
-          >
-            <span>Open the Lab</span>
-            <span className="mac-find-panel__arrow" aria-hidden>
-              &#8599;
-            </span>
-          </button>,
+          <header key="head" className="mac-contact-panel__head">
+            <h3 className="mac-type-metadata">Calendar</h3>
+            <p>
+              My availability for meetings and conversations about anything and everything.
+            </p>
+          </header>,
+          <section key="actions" className="mac-contact-panel__card">
+            <a href={CALENDAR_BOOKING_URL} target="_blank" rel="noreferrer" className="mac-find-panel__row">
+              <span>Book a meeting</span>
+              <span className="mac-find-panel__arrow" aria-hidden>&#8599;</span>
+            </a>
+            <a href={CALENDAR_AVAILABILITY_URL} target="_blank" rel="noreferrer" className="mac-find-panel__row">
+              <span>View availability</span>
+              <span className="mac-find-panel__arrow" aria-hidden>&#8599;</span>
+            </a>
+          </section>,
+          <section key="note" className="mac-contact-panel__card">
+            <h4 className="mac-type-metadata">Full Calendar</h4>
+            <p className="mac-type-content">
+              AJAI REPLACE THIS WITH THE FULL CALENDAR URL AND THE FULL AVAILABILITY URL: in <code>ContentPanels.tsx</code>:
+              <br />
+              <code>CALENDAR_BOOKING_URL</code> and <code>CALENDAR_AVAILABILITY_URL</code>.
+            </p>
+          </section>,
         ]}
       </ScaffoldReveal>
     </article>

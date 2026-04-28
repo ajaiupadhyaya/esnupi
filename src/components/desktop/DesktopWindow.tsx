@@ -6,7 +6,15 @@ import {
   playMacWindowClose,
 } from "@/lib/retroMacSounds";
 import { appendSystemLog } from "@/lib/systemLog";
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  type WheelEvent as ReactWheelEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { cn } from "@/lib/utils";
 import { hydraStage } from "@/lib/hydraStage";
 
@@ -152,6 +160,7 @@ export function DesktopWindow({
     startY: number;
     origW: number;
     origH: number;
+    edge: "corner" | "east" | "south";
   } | null>(null);
 
   const clampToViewport = useCallback((nx: number, ny: number) => {
@@ -231,6 +240,14 @@ export function DesktopWindow({
       e.preventDefault();
       const dw = e.clientX - r.startX;
       const dh = e.clientY - r.startY;
+      if (r.edge === "east") {
+        onResize(r.origW + dw, r.origH);
+        return;
+      }
+      if (r.edge === "south") {
+        onResize(r.origW, r.origH + dh);
+        return;
+      }
       onResize(r.origW + dw, r.origH + dh);
     },
     [onResize],
@@ -251,7 +268,8 @@ export function DesktopWindow({
     [onResizePointerMove],
   );
 
-  const onResizePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onResizePointerDown =
+    (edge: "corner" | "east" | "south") => (e: React.PointerEvent<HTMLDivElement>) => {
     if (!onResize || e.button !== 0) return;
     e.preventDefault();
     e.stopPropagation();
@@ -264,6 +282,7 @@ export function DesktopWindow({
       startY: e.clientY,
       origW: sizeRef.current.width,
       origH: sizeRef.current.height,
+      edge,
     };
     try {
       e.currentTarget.setPointerCapture(e.pointerId);
@@ -274,6 +293,17 @@ export function DesktopWindow({
     document.addEventListener("pointerup", endResize, { capture: true });
     document.addEventListener("pointercancel", endResize, { capture: true });
   };
+
+  const onBodyWheel = useCallback((e: ReactWheelEvent<HTMLDivElement>) => {
+    const body = e.currentTarget;
+    if (body.scrollHeight <= body.clientHeight && body.scrollWidth <= body.clientWidth) return;
+    const prevTop = body.scrollTop;
+    const prevLeft = body.scrollLeft;
+    body.scrollBy({ top: e.deltaY, left: e.deltaX, behavior: "auto" });
+    if (body.scrollTop !== prevTop || body.scrollLeft !== prevLeft) {
+      e.preventDefault();
+    }
+  }, []);
 
   useEffect(() => {
     return () => endResize();
@@ -407,13 +437,29 @@ export function DesktopWindow({
             </button>
           )}
         </div>
-        {!minimized && <div className="mac-window__body mac-surface">{children}</div>}
+        {!minimized && (
+          <div className="mac-window__body mac-surface" onWheel={onBodyWheel}>
+            {children}
+          </div>
+        )}
         {!minimized && onResize ? (
-          <div
-            className="mac-window__resize-grip"
-            aria-hidden
-            onPointerDown={onResizePointerDown}
-          />
+          <>
+            <div
+              className="mac-window__resize-grip mac-window__resize-grip--corner"
+              aria-hidden
+              onPointerDown={onResizePointerDown("corner")}
+            />
+            <div
+              className="mac-window__resize-grip mac-window__resize-grip--east"
+              aria-hidden
+              onPointerDown={onResizePointerDown("east")}
+            />
+            <div
+              className="mac-window__resize-grip mac-window__resize-grip--south"
+              aria-hidden
+              onPointerDown={onResizePointerDown("south")}
+            />
+          </>
         ) : null}
       </div>
     </div>

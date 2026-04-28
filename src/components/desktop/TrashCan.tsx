@@ -64,8 +64,8 @@ export function TrashCan({ count, onEmpty, onMount, hot = false }: TrashCanProps
       <img
         className="mac-trash__art"
         src={felttrashcan}
-        width={48}
-        height={56}
+        width={116}
+        height={116}
         alt=""
         draggable={false}
       />

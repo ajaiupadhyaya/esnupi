@@ -149,7 +149,7 @@ export function MacMenuBar({
             </Submenu>
             <MenuItem onClick={() => run("open-music")}>Jukebox</MenuItem>
             <MenuItem onClick={() => run("open-about")}>About</MenuItem>
-            <MenuItem onClick={() => run("open-lab")}>Lab</MenuItem>
+            <MenuItem onClick={() => run("open-lab")}>My Work</MenuItem>
             <Divider />
             <MenuItem onClick={beep} subtle>Calculator</MenuItem>
             <MenuItem onClick={beep} subtle>Key Caps</MenuItem>

@@ -6,7 +6,6 @@ import Archive from "@/pages/Archive";
 import FeltMoon from "@/pages/FeltMoon";
 import Gallery from "@/pages/Gallery";
 import Home from "@/pages/Home";
-import MdxLab from "@/pages/MdxLab";
 import VisitClassic from "@/pages/VisitClassic";
 import { Route, Routes } from "react-router-dom";
 
@@ -16,10 +15,10 @@ export default function App() {
       <RouteTransitionProvider>
         <Routes>
           <Route element={<SiteLayout />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<MacintoshDesktop />} />
             <Route path="/visit-classic" element={<VisitClassic />} />
             <Route path="/desktop" element={<MacintoshDesktop />} />
-            <Route path="/lab" element={<MdxLab />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/feltmoon" element={<FeltMoon />} />
             <Route path="/archive" element={<Archive />} />

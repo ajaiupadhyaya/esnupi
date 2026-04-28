@@ -15,6 +15,7 @@ const DATE_MODIFIED: Record<string, string> = {
   home: "the night I rewrote everything",
   folder: "3 days ago",
   frame: "last Tuesday",
+  calendar: "always updating",
   moon: "a very quiet afternoon",
   heart1: "today, 3:40 AM",
   heart3: "yesterday",

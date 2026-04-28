@@ -72,6 +72,7 @@ import {
   WorkPanel,
   FindPanel,
   LabStubPanel,
+  CalendarPanel,
   FeltMoonPanel,
 } from "./panels/ContentPanels";
 import type { MusicTrack } from "./panels/MusicPlayerPanel";
@@ -142,6 +143,7 @@ import feltterminalImg from "../../../images/feltterminal.png";
 import musicplayerfeltImg from "../../../images/musicplayerfelt.png";
 import feltphotosappImg from "../../../images/feltphotosapp.png";
 import feltbrowserImg from "../../../images/feltbrowser.png";
+import feltcalendarImg from "../../../images/feltcalendar.png";
 
 import { buildFilmPhotoLibrary } from "@/photography/library";
 
@@ -150,6 +152,9 @@ const WINDOW_STACK_OFFSET = 32;
 const CHROME_MENU_H = 28;
 const CHROME_MARGIN = 10;
 const CHROME_DOCK_RESERVE = 212;
+const LAB_WINDOW_INSET_X = 46;
+const LAB_WINDOW_INSET_TOP = 42;
+const LAB_WINDOW_INSET_BOTTOM = 58;
 
 type AnyWindowId =
   | WindowId
@@ -188,7 +193,8 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
   { id: "about", label: "Home", icon: homefeltImg },
   { id: "projects", label: "Profiler", icon: feltfolderImg },
   { id: "contact", label: "Contact", icon: emailfeltImg },
-  { id: "lab", label: "Lab", icon: framefeltImg },
+  { id: "lab", label: "My Work", icon: framefeltImg },
+  { id: "calendar", label: "Calendar", icon: feltcalendarImg },
   { id: "terminal", label: "Terminal", icon: feltterminalImg },
   { id: "photobooth", label: "Photobooth", icon: photoboothfeltImg },
   { id: "photobook", label: "Photobook", icon: photobookfeltImg },
@@ -201,12 +207,13 @@ const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
 const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
   about: { title: "About", w: 700, h: 580 },
   projects: { title: "System Profiler", w: 820, h: 640 },
-  contact: { title: "Find", w: 700, h: 560 },
-  lab: { title: "Lab", w: 760, h: 580 },
+  contact: { title: "Contact", w: 760, h: 620 },
+  lab: { title: "My Work", w: 860, h: 640 },
+  calendar: { title: "Calendar", w: 820, h: 640 },
   terminal: { title: "Terminal", w: 1000, h: 680 },
   photobooth: { title: "Photobooth", w: 880, h: 760 },
   photobook: { title: "Scrapbook", w: 1120, h: 780 },
-  visitorlog: { title: "Guest Log", w: 520, h: 560 },
+  visitorlog: { title: "Guest Log", w: 820, h: 640 },
   music: { title: "iTunes", w: 780, h: 640 },
   photos: { title: "Photos", w: 1140, h: 780 },
   browser: { title: "Browser", w: 1200, h: 840 },
@@ -247,6 +254,36 @@ function stackedWindowPosition(width: number, height: number, openCount: number)
   const baseY = centerY + height / 2;
   const offset = openCount * WINDOW_STACK_OFFSET;
   return clampWindowPosition(baseX + offset, baseY + offset, width, height);
+}
+
+function fullScreenLabGeometry() {
+  const x = LAB_WINDOW_INSET_X;
+  const y = CHROME_MENU_H + LAB_WINDOW_INSET_TOP;
+  const w = Math.max(520, window.innerWidth - LAB_WINDOW_INSET_X * 2);
+  const h = Math.max(420, window.innerHeight - CHROME_MENU_H - LAB_WINDOW_INSET_TOP - LAB_WINDOW_INSET_BOTTOM);
+
+  return {
+    x: Math.min(x, Math.max(CHROME_MARGIN, window.innerWidth - w - CHROME_MARGIN)),
+    y: Math.min(y, Math.max(CHROME_MENU_H + CHROME_MARGIN, window.innerHeight - h - CHROME_MARGIN)),
+    w,
+    h,
+  };
+}
+
+function initialWindowGeometry() {
+  const seed = Object.fromEntries(
+    Object.entries(INITIAL).map(([k, v]) => [k, { x: 80, y: 80, w: v.w, h: v.h }]),
+  ) as Record<AnyWindowId, { x: number; y: number; w: number; h: number }>;
+  if (typeof window === "undefined") return seed;
+  const about = INITIAL.about;
+  const centered = clampWindowPosition(
+    window.innerWidth / 2,
+    window.innerHeight / 2,
+    about.w,
+    about.h,
+  );
+  seed.about = { ...seed.about, ...centered };
+  return seed;
 }
 
 // --- Persistent icon positions --------------------------------------------
@@ -306,7 +343,7 @@ function MacintoshDesktopInner() {
   const lastActiveRef = useRef(Date.now());
 
   const [open, setOpen] = useState<Record<AnyWindowId, boolean>>({
-    about: false, projects: false, contact: false, lab: false,
+    about: true, projects: false, contact: false, lab: false, calendar: false,
     terminal: false, photobooth: false, photobook: false, visitorlog: false, music: false,
     photos: false,
     browser: false, feltmoon: false, aboutMac: false, secret: false,
@@ -315,14 +352,14 @@ function MacintoshDesktopInner() {
     slideshow: false, internals: false, finder: false,
   });
   const [geom, setGeom] = useState<Record<AnyWindowId, { x: number; y: number; w: number; h: number }>>(
-    () => Object.fromEntries(Object.entries(INITIAL).map(([k, v]) => [k, { x: 80, y: 80, w: v.w, h: v.h }])) as never,
+    () => initialWindowGeometry(),
   );
   const [minimized, setMinimized] = useState<Record<AnyWindowId, boolean>>({} as never);
   const [photos, setPhotos] = useState<SharedPhoto[]>([]);
   const [loadingPhotos, setLoadingPhotos] = useState(true);
   const [photoError, setPhotoError] = useState<string | null>(null);
-  const [zOrder, setZOrder] = useState<AnyWindowId[]>([]);
-  const [activeId, setActiveId] = useState<AnyWindowId | null>(null);
+  const [zOrder, setZOrder] = useState<AnyWindowId[]>(["about"]);
+  const [activeId, setActiveId] = useState<AnyWindowId | null>("about");
   const [selectedIconId, setSelectedIconId] = useState<string | null>(null);
   const spawnAnchors = useRef<Record<string, { x: number; y: number }>>({});
 
@@ -336,10 +373,6 @@ function MacintoshDesktopInner() {
       navigate(`/visit-classic?next=${next}`, { replace: true });
     }
   }, [navigate, location.pathname, location.search]);
-
-  const navigateToLab = useCallback(() => {
-    routeTransition.goto("/lab");
-  }, [routeTransition]);
 
   const navigateToGallery = useCallback(() => {
     routeTransition.goto("/gallery");
@@ -355,6 +388,10 @@ function MacintoshDesktopInner() {
     },
     [routeTransition],
   );
+
+  const navigateToClassicHome = useCallback(() => {
+    routeTransition.goto("/home");
+  }, [routeTransition]);
 
   /* --- Persist icon positions ------------------------------------------- */
   useEffect(() => {
@@ -535,6 +572,12 @@ function MacintoshDesktopInner() {
       const initial = INITIAL[id];
       const wasAlreadyOpen = open[id];
       setGeom((g) => {
+        if (id === "lab") {
+          return {
+            ...g,
+            lab: fullScreenLabGeometry(),
+          };
+        }
         if (open[id]) return g;
         const cur = g[id];
         const nextPos = anchor
@@ -583,6 +626,15 @@ function MacintoshDesktopInner() {
       return next;
     });
   }, []);
+
+  useEffect(() => {
+    if (!open.lab) return;
+    const syncLabWindow = () => {
+      setGeom((g) => ({ ...g, lab: fullScreenLabGeometry() }));
+    };
+    window.addEventListener("resize", syncLabWindow);
+    return () => window.removeEventListener("resize", syncLabWindow);
+  }, [open.lab]);
 
   const zFor = useCallback(
     (id: AnyWindowId) => {
@@ -689,7 +741,7 @@ function MacintoshDesktopInner() {
           openWindow("controls");
           break;
         case "open-lab":
-          navigateToLab();
+          openWindow("lab");
           break;
         case "open-clock":
           openWindow("clock");
@@ -905,7 +957,7 @@ function MacintoshDesktopInner() {
               onOpen={(anchor) => {
                 playMacIconOpen();
                 if (def.id === "frame" && def.windowId === "lab") {
-                  // "corrupted" easter egg: MDX Lab icon sometimes glitches open
+                  // "corrupted" easter egg: My Work icon sometimes glitches open
                   if (Math.random() < 0.25) {
                     triggerCorruption();
                     return;
@@ -955,10 +1007,16 @@ function MacintoshDesktopInner() {
                 ])
               }
             >
-              {id === "about" && <NewAboutPanel />}
+              {id === "about" && <NewAboutPanel onOpenClassicHome={navigateToClassicHome} />}
               {id === "projects" && <WorkPanel onOpenArchive={navigateToArchive} />}
-              {id === "contact" && <FindPanel onOpenStudy={navigateToGallery} />}
-              {id === "lab" && <LabStubPanel onNavigateLab={() => navigateToLab()} />}
+              {id === "contact" && (
+                <FindPanel
+                  onOpenStudy={navigateToGallery}
+                  onOpenCalendar={() => openWindow("calendar")}
+                />
+              )}
+              {id === "lab" && <LabStubPanel />}
+              {id === "calendar" && <CalendarPanel />}
               {id === "feltmoon" && (
                 <FeltMoonPanel onOpenGallery={navigateToFeltMoon} />
               )}
@@ -1272,7 +1330,8 @@ function balloonText(id: WindowId) {
     case "about": return "Who lives here. Click to find out.";
     case "projects": return "Drives and kernel extensions — portfolio as hardware.";
     case "contact": return "Say hi. The machine will pass it on.";
-    case "lab": return "Essays, notes, long thoughts.";
+    case "lab": return "Work samples, writing, and highlighted projects.";
+    case "calendar": return "Scheduling links and live availability.";
     case "terminal": return "Try `matrix`, `neofetch`, `fortune`.";
     case "photobooth": return "Become part of the museum wall.";
     case "photobook": return "Visitors who came before you.";

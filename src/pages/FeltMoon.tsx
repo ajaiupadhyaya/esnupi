@@ -56,67 +56,67 @@ const WORKS: Work[] = [
   },
   {
     id: "02",
-    title: "Paper sky",
-    year: "2023",
+    title: "Private Credit Modeling",
+    year: "2026",
     location: "Marfa, TX",
-    stock: "Ilford HP5+ · pushed 1 stop",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "Abstraction as refusal. There is no subject here, only viscosity and edge.",
+      "A comprehensive analysis of the private credit market and its importance into the financing sources of firms.",
     src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57f90?auto=format&fit=max&w=2400&q=88",
     aspect: 16 / 9,
   },
   {
     id: "03",
-    title: "Field note",
-    year: "2022",
+    title: "GPU Depreciation Cycle",
+    year: "2026",
     location: "Unknown coast",
-    stock: "Fuji Superia 200",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "What looks like noise is a list of intentions. Ideas staged as texture.",
+      "An analysis of the rapidly depreciating value of GPUs in the data center and the impact on AI and investors.",
     src: "https://images.unsplash.com/photo-1500534314211-6a8a052b84e0?auto=format&fit=max&w=2400&q=88",
     aspect: 3 / 2,
   },
   {
     id: "04",
-    title: "Altitude",
+    title: "Computer Vision for Investment Research",
     year: "2024",
-    location: "Highway 9, CA",
-    stock: "Kodak Ektar 100",
+    location: "New York, NY",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "Distance collapses into tone. The frame decides what weather is allowed inside.",
+      "An analysis of the use of computer vision for investment research and the impact on the investment industry.",
     src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=max&w=2400&q=88",
     aspect: 3 / 2,
   },
   {
     id: "05",
-    title: "Chorus, interior",
+    title: "Machine Learning strategies for investment research",
     year: "2023",
-    location: "Lisbon, PT",
-    stock: "Cinestill 800T",
+    location: "New York, NY",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "A room that only makes sense at night — the tungsten translates it.",
+      "An analysis of the use of machine learning for investment research and the impact on the investment industry.",
     src: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=max&w=2400&q=88",
     aspect: 16 / 10,
   },
   {
     id: "06",
-    title: "Negative, quiet",
-    year: "2022",
-    location: "Studio, home",
-    stock: "Kodak Tri-X 400",
+    title: "Financial Modeling for Wealth Management",
+    year: "2026",
+    location: "New York, NY",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "The grain does the describing. I stopped trying to explain it in colour.",
+      "An analysis of the use of financial modeling for wealth management and the impact on the wealth management industry.",
     src: "https://images.unsplash.com/photo-1504198322253-cfa87a0ff25f?auto=format&fit=max&w=2400&q=88",
     aspect: 3 / 2,
   },
   {
     id: "07",
-    title: "Still life, with moon",
+    title: "Autonomous Option Pricing Model",
     year: "2025",
-    location: "Felt, linen",
-    stock: "Digital, archival print",
+    location: "New York, NY",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "The accompanying piece. Fabric as a substitute for sky, at rest.",
+      "An analysis of the use of autonomous option pricing models and the impact on the option pricing industry.",
     src: feltmoonImg,
     aspect: 1,
   },
@@ -266,11 +266,11 @@ export default function FeltMoon() {
 
       <header className="fm-bar">
         <span className="fm-bar__accession">
-          ESNUPI / MOON ROOM · {String(activeIndex + 1).padStart(2, "0")} /
+          2026 · {String(activeIndex + 1).padStart(2, "0")} /
           {" "}
           {String(WORKS.length).padStart(2, "0")}
         </span>
-        <span className="fm-bar__title">Light, material, film</span>
+        <span className="fm-bar__title">Ajai Upadhyaya</span>
         <button
           type="button"
           className="fm-bar__back"
@@ -295,18 +295,18 @@ export default function FeltMoon() {
             {/* Opening plaque — a beat of silence before the first photo. */}
             <article className="fm-slot fm-slot--intro" aria-hidden>
               <div className="fm-intro">
-                <p className="fm-intro__kicker">Temporary exhibition</p>
+                <p className="fm-intro__kicker"></p>
                 <h1 className="fm-intro__title">
-                  Light,
+                  Scroll
                   <br />
-                  material,
+                  to
                   <br />
-                  film.
+                  explore.
                 </h1>
                 <p className="fm-intro__lede">
                   A horizontal room. Scroll (or use the arrow keys) to walk
-                  the wall. One picture at a time is framed; the rest are
-                  waiting. Press <kbd>G</kbd> to deface the wall.
+                  the wall. Snapshot picking while the rest are waiting in line.
+                  Press <kbd>G</kbd> to deface the wall.
                 </p>
                 <div className="fm-intro__rule" aria-hidden />
                 <p className="fm-intro__foot">

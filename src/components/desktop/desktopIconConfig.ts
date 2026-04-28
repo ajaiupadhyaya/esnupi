@@ -1,13 +1,12 @@
 import emailfelt from "../../../images/emailfelt.png";
-import feltheart1 from "../../../images/feltheart1.png";
 import feltheart3 from "../../../images/feltheart3.webp";
 import feltfolder from "../../../images/feltfolder.png";
 import feltmoon from "../../../images/feltmoon.png";
+import feltcalendar from "../../../images/feltcalendar.png";
 import photobookfelt from "../../../images/photobookfelt.png";
 import photoboothfelt from "../../../images/photoboothfelt.png";
 import framefelt from "../../../images/framefelt.png";
 import homefelt from "../../../images/homefelt.png";
-import phonefelt from "../../../images/phonefelt.png";
 import feltlog from "../../../images/feltlog.png";
 
 import filmblob from "../../../images/filmblob.png";
@@ -24,6 +23,7 @@ export type WindowId =
   | "music"
   | "photos"
   | "browser"
+  | "calendar"
   | "feltmoon";
 
 export type DesktopIconDef = {
@@ -49,14 +49,13 @@ export const FELT_FRAME = {
  * Several icons may open the same window (e.g. email + phone → contact).
  */
 export const DESKTOP_ICONS: DesktopIconDef[] = [
-  { id: "email", label: "Email", src: emailfelt, windowId: "contact", frame: "blob1", xPct: 7, yPct: 16 },
-  { id: "phone", label: "Phone", src: phonefelt, windowId: "contact", frame: "blob2", xPct: 74, yPct: 12 },
+  { id: "email", label: "Contact", src: emailfelt, windowId: "contact", frame: "blob1", xPct: 7, yPct: 16 },
   { id: "home", label: "Home", src: homefelt, windowId: "about", frame: "blob1", xPct: 16, yPct: 8 },
   { id: "folder", label: "Profiler", src: feltfolder, windowId: "projects", frame: "blob2", xPct: 44, yPct: 22 },
-  { id: "frame", label: "MDX Lab", src: framefelt, windowId: "lab", frame: "blob1", xPct: 81, yPct: 38 },
-  { id: "moon", label: "Moon", src: feltmoon, windowId: "feltmoon", frame: "blob2", xPct: 9, yPct: 48 },
-  { id: "heart1", label: "Heart 1", src: feltheart3, windowId: "projects", frame: "blob1", xPct: 31, yPct: 58 },
-  { id: "heart3", label: "Heart 3", src: feltheart1, windowId: "contact", frame: "blob1", xPct: 19, yPct: 74 },
+  { id: "frame", label: "My Work", src: framefelt, windowId: "lab", frame: "blob1", xPct: 81, yPct: 38 },
+  { id: "calendar", label: "Calendar", src: feltcalendar, windowId: "calendar", frame: "blob2", xPct: 86, yPct: 14 },
+  { id: "moon", label: "Life Outlook", src: feltmoon, windowId: "feltmoon", frame: "blob2", xPct: 9, yPct: 48 },
+  { id: "heart1", label: "Recent Activity", src: feltheart3, windowId: "projects", frame: "blob1", xPct: 31, yPct: 58 },
   { id: "photobooth", label: "Photobooth", src: photoboothfelt, windowId: "photobooth", frame: "blob1", xPct: 48, yPct: 74 },
   { id: "photobook", label: "Photobook", src: photobookfelt, windowId: "photobook", frame: "blob2", xPct: 72, yPct: 80 },
   {

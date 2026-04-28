@@ -197,9 +197,9 @@ export default function Archive() {
       <header className="archive-bar">
         <span className="archive-bar__lockup">
           <span className="archive-bar__mark" aria-hidden />
-          <span className="archive-bar__title">esnupi — Archive</span>
+          <span className="archive-bar__title">Ajai - Archive</span>
         </span>
-        <span className="archive-bar__meta">Volume 01 · 2019 — {new Date().getFullYear()}</span>
+        <span className="archive-bar__meta">2019 —  {new Date().getFullYear()}</span>
         <span className="archive-bar__meta" aria-hidden>
           {accessionRange}
         </span>
@@ -214,7 +214,7 @@ export default function Archive() {
           Permanent collection · Ongoing
         </p>
         <h1 className="archive-hero__title archive-reveal">
-          Works,
+          creations,
           <br />
           2019
           <em>—</em>
@@ -238,11 +238,11 @@ export default function Archive() {
           </div>
           <div>
             <dt>Location</dt>
-            <dd>Brooklyn / online</dd>
+            <dd>digital</dd>
           </div>
           <div>
             <dt>Curated by</dt>
-            <dd>esnupi</dd>
+            <dd>ajai</dd>
           </div>
         </dl>
       </section>
