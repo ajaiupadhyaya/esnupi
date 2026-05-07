@@ -15,21 +15,22 @@ export function AboutPanel({ onOpenClassicHome }: { onOpenClassicHome?: () => vo
       <ScaffoldReveal>
         {[
           <p className="mac-about-panel__statement" key="stmt">
-            Ajai Upadhyaya is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, and Private Credit or find my thoughts on Substack! (click the red heart button)
+            Ajai Upadhyaya is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, Private Credit or find my thoughts on Substack! (click the red heart button)
           </p>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="cur">
             <h4 className="mac-type-metadata">Currently</h4>
-            <p>Thoroughly excited to learn a lot this Fall as I will be starting a Masters Program in Financial Engineering at VCU</p>
+            <p>I am preparing to start a Masters Program in Business Administration, concentration in Corporate Finance and Financial Engineering at Virginia Commonwealth University in Fall 2026</p>
           </section>,
           <section className="mac-about-panel__block" key="prev">
             <h4 className="mac-type-metadata">Previously</h4>
             <ul className="mac-about-panel__list">
-              <li>B.S in CS and Economics from University of Virginia, 2023 - 2026</li>
+              <li>B.S in CS and Economics from University of Virginia, 2023 - 2026 (3.75 GPA)</li>
               <li>University of Virginia Investment Management, (UVIMCO) Intern, 2025 - 2026</li>
-              <li>University of Virginia Digital Media Intern, 2023 - 2026</li>
+              <li>Database Engineering Intern at YugabyteDB, 2025 - 2026</li>
+              <li>University of Virginia Digital Media Management Employee, 2023 - 2026</li>
               <li>VITA Financial Accounting and Operations Intern, 2024 - 2025</li>
-              <li>Software Engineering Intern at Specialized, 2023 - 2024</li>
+              <li>Software Engineering Intern at Specialized Bicycling Components, 2023 - 2024</li>
             </ul>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
@@ -308,25 +309,35 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
             <p className="mac-type-metadata">Ajai Upadhyaya</p>
             <h3 className="mac-feltmoon-panel__title">Post Graduate Plans</h3>
             <p className="mac-feltmoon-panel__sub">
-              Master's in Financial Engineering · 2026
+              MBA with Concentrations in Corporate Finance and Financial Engineering · 2026
             </p>
           </header>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="blurb">
-            <h4 className="mac-type-metadata">asd</h4>
+            <h4 className="mac-type-metadata">Looking Ahead</h4>
             <p>
-              I will be starting a Master's program in Financial Engineering at VCU in the Fall of 2026, I look forward to learning more
-              about financial markets and the application of technology to finance. At the moment, I lack the critical application of my
-              technical skills to the field of finance, and I am excited to learn more about the industry and how to apply my skills to it
+              I will be starting a Business Administration Masters Program at VCU in the Fall of 2026. My concentrations within this program are
+              Corporate Finance and Financial Engineering. I am excited to learn more about the industry and how to apply my technical skills to the field of finance
               and better a firm's ability to manage risk and efficiency.
             </p>
           </section>,
           <section className="mac-about-panel__block" key="meta">
             <h4 className="mac-type-metadata">Program Details</h4>
             <dl className="mac-feltmoon-panel__dl">
-              <div><dt>Title</dt><dd>Master's in Financial Engineering</dd></div>
+              <div><dt>Title</dt><dd>Business Admin Masters w/Concentrations in Corp. Finance and Financial Engineering</dd></div>
               <div><dt>Year</dt><dd>2026</dd></div>
-              <div><dt>Curiculum</dt><dd>AJAI PUT THE LINK</dd></div>
+              <div>
+                <dt>Curriculum</dt>
+                <dd>
+                  <a
+                    href="https://bulletin.vcu.edu/graduate/school-business/mba-programs/business-administration-corporate-finance/business-administration-corporate-finance.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    VCU bulletin — Business Administration, Corporate Finance (PDF)
+                  </a>
+                </dd>
+              </div>
               <div><dt>Program Placement</dt><dd>AJAI LINK HERE</dd></div>
             </dl>
           </section>,
@@ -393,6 +404,7 @@ const WORKSITE_LINKS: Array<{
   { title: "Academic Research", category: "Writing", year: "2026", href: "https://github.com/your-handle" },
   { title: "Finance Internship Work", category: "Notes", year: "2025", href: "https://github.com/your-handle" },
   { title: "SWE Internship Work", category: "Research", year: "2025", href: "https://github.com/your-handle" },
+  { title: "Database Engineering Internship Work", category: "Research", year: "2026", href: "https://github.com/ajaiupadhyaya" },
   { title: "UVA Finance Work", category: "Experiments", year: "2025", href: "https://github.com/your-handle" },
   { title: "UVA Digital Media Work", category: "Collaborations", year: "2024", href: "https://github.com/your-handle" },
   { title: "Economic Research", category: "Projects", year: "2024", href: "https://github.com/your-handle" },
@@ -529,38 +541,117 @@ export function LabStubPanel() {
   );
 }
 
-const CALENDAR_BOOKING_URL = "https://calendly.com/your-handle/meeting";
-const CALENDAR_AVAILABILITY_URL = "https://calendar.google.com/";
+/** Public embed URL (America/New_York). Must match sharing settings in Google Calendar. */
+const GOOGLE_CALENDAR_EMBED_URL =
+  "https://calendar.google.com/calendar/embed?src=ajaiupad%40gmail.com&ctz=America%2FNew_York";
+
+const SCHEDULING_EMAIL = "ajaiupad@gmail.com";
+
+/**
+ * Optional self-serve booking page (Calendly, Google Appointment Schedules, SavvyCal, etc.).
+ * Set to a full URL to show a “pick a time” button above the email request.
+ */
+const SCHEDULING_BOOKING_PAGE_URL: string | null = null;
+
+const QUICK_EMAIL_HREF = `mailto:${SCHEDULING_EMAIL}`;
+
+const MEETING_REQUEST_MAILTO = (() => {
+  const subject = "Meeting request — proposing times";
+  const body = `Hi Ajai,
+
+I'd like to find a time to meet. Here are some windows that work on my side (add your time zone):
+
+— 
+— 
+— 
+
+Thanks,`;
+  return `mailto:${SCHEDULING_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+})();
 
 export function CalendarPanel() {
   return (
     <article className="mac-find-panel mac-calendar-panel" aria-label="Calendar">
-      <ScaffoldReveal stagger={32}>
+      <ScaffoldReveal stagger={24}>
         {[
-          <header key="head" className="mac-contact-panel__head">
-            <h3 className="mac-type-metadata">Calendar</h3>
-            <p>
-              My availability for meetings and conversations about anything and everything.
-            </p>
-          </header>,
-          <section key="actions" className="mac-contact-panel__card">
-            <a href={CALENDAR_BOOKING_URL} target="_blank" rel="noreferrer" className="mac-find-panel__row">
-              <span>Book a meeting</span>
-              <span className="mac-find-panel__arrow" aria-hidden>&#8599;</span>
-            </a>
-            <a href={CALENDAR_AVAILABILITY_URL} target="_blank" rel="noreferrer" className="mac-find-panel__row">
-              <span>View availability</span>
-              <span className="mac-find-panel__arrow" aria-hidden>&#8599;</span>
-            </a>
-          </section>,
-          <section key="note" className="mac-contact-panel__card">
-            <h4 className="mac-type-metadata">Full Calendar</h4>
-            <p className="mac-type-content">
-              AJAI REPLACE THIS WITH THE FULL CALENDAR URL AND THE FULL AVAILABILITY URL: in <code>ContentPanels.tsx</code>:
-              <br />
-              <code>CALENDAR_BOOKING_URL</code> and <code>CALENDAR_AVAILABILITY_URL</code>.
-            </p>
-          </section>,
+          <div key="layout" className="mac-calendar-panel__layout">
+            <header className="mac-contact-panel__head mac-calendar-panel__head">
+              <h3 className="mac-type-metadata">Calendar</h3>
+              <p className="mac-calendar-panel__intro">
+                <strong className="mac-calendar-panel__lead">Meet with me:</strong> glance at my availability
+                below (US Eastern), then request a time. Your mail app opens with a short template you can edit—add
+                the slots that work for you.
+              </p>
+            </header>
+
+            <div className="mac-calendar-panel__hero-actions">
+              {SCHEDULING_BOOKING_PAGE_URL ? (
+                <a
+                  href={SCHEDULING_BOOKING_PAGE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mac-profiler__cta mac-calendar-panel__cta-hero"
+                >
+                  <span>Pick a time (self-serve booking)</span>
+                  <span className="mac-profiler__cta-arrow" aria-hidden>
+                    &#8599;
+                  </span>
+                </a>
+              ) : null}
+              <a href={MEETING_REQUEST_MAILTO} className="mac-profiler__cta mac-calendar-panel__cta-hero">
+                <span>Request a meeting by email</span>
+                <span className="mac-profiler__cta-arrow" aria-hidden>
+                  &#8599;
+                </span>
+              </a>
+            </div>
+
+            <section className="mac-contact-panel__card mac-calendar-panel__more" aria-label="Other scheduling options">
+              <h4 className="mac-type-metadata">Also</h4>
+              <a
+                href={GOOGLE_CALENDAR_EMBED_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="mac-find-panel__row"
+              >
+                <span>View this calendar in a full browser tab</span>
+                <span className="mac-find-panel__arrow" aria-hidden>
+                  &#8599;
+                </span>
+              </a>
+              <a href={QUICK_EMAIL_HREF} className="mac-find-panel__row">
+                <span>Email me ({SCHEDULING_EMAIL})</span>
+                <span className="mac-find-panel__arrow" aria-hidden>
+                  &#8599;
+                </span>
+              </a>
+            </section>
+
+            <div className="mac-calendar-panel__embed">
+              <div className="mac-calendar-panel__embed-cap">
+                <h4 className="mac-type-metadata" id="calendar-embed-label">
+                  When I’m busy / free
+                </h4>
+                <p className="mac-calendar-panel__embed-hint" id="calendar-embed-desc">
+                  Shown in US Eastern. Busy blocks are generally not available; open gaps are easier to propose for a
+                  meeting.
+                </p>
+              </div>
+              <div className="mac-calendar-panel__embed-frame">
+                <iframe
+                  title="Google Calendar"
+                  src={GOOGLE_CALENDAR_EMBED_URL}
+                  width={800}
+                  height={600}
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  aria-labelledby="calendar-embed-label"
+                  aria-describedby="calendar-embed-desc"
+                />
+              </div>
+            </div>
+          </div>,
         ]}
       </ScaffoldReveal>
     </article>

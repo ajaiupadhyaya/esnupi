@@ -41,11 +41,10 @@ export function p5starCollageSketch(p: p5) {
     pg = p.createGraphics(w, h);
     pg.noStroke();
     const particleCount = Math.floor(cs * cs * 0.08);
-    pg.randomSeed(num);
-
+    /* p5 v2: Graphics has no randomSeed — main instance RNG is already seeded above. */
     for (let i = 0; i < particleCount; i++) {
-      const x = pg.random(w);
-      const y = pg.random(h);
+      const x = p.random(0, w);
+      const y = p.random(0, h);
       const n = p.noise(x * 0.01, y * 0.01) * (((cs + cs) / 2) * 0.002);
       pg.fill(255, 100);
       pg.ellipse(x, y, n, n);

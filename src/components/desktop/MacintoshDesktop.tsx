@@ -534,13 +534,19 @@ function MacintoshDesktopInner() {
   }, []);
 
   /* --- Fetch shared photos ------------------------------------------- */
-  const refreshPhotos = useCallback(async () => {
+  const refreshPhotos = useCallback(async (): Promise<boolean> => {
     try {
       setPhotoError(null);
-      const data = await loadSharedPhotos();
-      setPhotos(data);
+      const { photos, failed } = await loadSharedPhotos();
+      setPhotos(photos);
+      if (failed) {
+        setPhotoError("Unable to load shared gallery right now.");
+        return false;
+      }
+      return true;
     } catch {
       setPhotoError("Unable to load shared gallery right now.");
+      return false;
     } finally {
       setLoadingPhotos(false);
     }
@@ -552,11 +558,22 @@ function MacintoshDesktopInner() {
       setPhotoError("Shared gallery is not configured yet.");
       return;
     }
-    void refreshPhotos();
-    const channel = subscribeToSharedPhotos(() => {
-      void refreshPhotos();
-    });
+    let cancelled = false;
+    let channel: ReturnType<typeof subscribeToSharedPhotos> = null;
+    void (async () => {
+      const ok = await refreshPhotos();
+      if (!ok || cancelled) return;
+      const ch = subscribeToSharedPhotos(() => {
+        void refreshPhotos();
+      });
+      if (cancelled) {
+        unsubscribeSharedPhotos(ch);
+        return;
+      }
+      channel = ch;
+    })();
     return () => {
+      cancelled = true;
       unsubscribeSharedPhotos(channel);
     };
   }, [refreshPhotos]);
@@ -1331,7 +1348,7 @@ function balloonText(id: WindowId) {
     case "projects": return "Drives and kernel extensions — portfolio as hardware.";
     case "contact": return "Say hi. The machine will pass it on.";
     case "lab": return "Work samples, writing, and highlighted projects.";
-    case "calendar": return "Scheduling links and live availability.";
+    case "calendar": return "Availability, request a meeting, and email.";
     case "terminal": return "Try `matrix`, `neofetch`, `fortune`.";
     case "photobooth": return "Become part of the museum wall.";
     case "photobook": return "Visitors who came before you.";

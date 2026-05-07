@@ -16,6 +16,7 @@
  */
 
 import feltmoonImg from "../../images/feltmoon.png";
+import privateCreditImage from "../../privatecreditimage.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { Entropy } from "@/components/ui/entropy";
 import gsap from "gsap";
@@ -45,23 +46,23 @@ type Work = {
 const WORKS: Work[] = [
   {
     id: "01",
-    title: "Room, before morning",
-    year: "2024",
-    location: "Brooklyn, NY",
-    stock: "Kodak Portra 400 · 35mm",
+    title: "Private Credit Modeling",
+    year: "2026",
+    location: "Charlottesville, VA",
+    stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "A curtain holds the light and then releases it, carefully, like a name.",
-    src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=max&w=2400&q=88",
+      "A comprehensive analysis of the private credit market and its importance into the financing sources of firms.",
+    src: privateCreditImage,
     aspect: 3 / 2,
   },
   {
     id: "02",
-    title: "Private Credit Modeling",
+    title: "GPU Depreciation Cycle",
     year: "2026",
-    location: "Marfa, TX",
+    location: "Charlottesville, VA",
     stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
-      "A comprehensive analysis of the private credit market and its importance into the financing sources of firms.",
+      "An analysis of the rapidly depreciating value of GPUs in the data center and the impact on AI and investors.",
     src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57f90?auto=format&fit=max&w=2400&q=88",
     aspect: 16 / 9,
   },

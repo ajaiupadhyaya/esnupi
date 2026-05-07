@@ -296,11 +296,32 @@ export function DesktopWindow({
 
   const onBodyWheel = useCallback((e: ReactWheelEvent<HTMLDivElement>) => {
     const body = e.currentTarget;
-    if (body.scrollHeight <= body.clientHeight && body.scrollWidth <= body.clientWidth) return;
-    const prevTop = body.scrollTop;
-    const prevLeft = body.scrollLeft;
-    body.scrollBy({ top: e.deltaY, left: e.deltaX, behavior: "auto" });
-    if (body.scrollTop !== prevTop || body.scrollLeft !== prevLeft) {
+    const bodyScrollable =
+      body.scrollHeight > body.clientHeight || body.scrollWidth > body.clientWidth;
+
+    /* My Work (`LabStubPanel`) uses `overflow: hidden` on the body and scrolls an inner
+       `.mac-worksite`. When the body reports no overflow (absolute children), wheel events
+       must target that nested scrollport — otherwise trackpads appear dead. */
+    const nested =
+      body.querySelector<HTMLElement>(".mac-worksite") ??
+      body.querySelector<HTMLElement>(".mac-terminal-host");
+    const nestedScrollable =
+      nested &&
+      (nested.scrollHeight > nested.clientHeight || nested.scrollWidth > nested.clientWidth);
+
+    const scrollHost = bodyScrollable ? body : nestedScrollable ? nested! : body;
+
+    if (
+      scrollHost.scrollHeight <= scrollHost.clientHeight &&
+      scrollHost.scrollWidth <= scrollHost.clientWidth
+    ) {
+      return;
+    }
+
+    const prevTop = scrollHost.scrollTop;
+    const prevLeft = scrollHost.scrollLeft;
+    scrollHost.scrollBy({ top: e.deltaY, left: e.deltaX, behavior: "auto" });
+    if (scrollHost.scrollTop !== prevTop || scrollHost.scrollLeft !== prevLeft) {
       e.preventDefault();
     }
   }, []);

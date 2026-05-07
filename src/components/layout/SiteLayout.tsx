@@ -5,17 +5,14 @@ import { Outlet, useLocation } from "react-router-dom";
 export function SiteLayout() {
   const { pathname } = useLocation();
 
-  /** The brutalist home (/) and secondary rooms render opaque surfaces that
-   *  cover the wallpaper, so we suppress it to save CPU/GPU and avoid
-   *  any flicker beneath them. The classic Mac desktop uses p5, /lab
-   *  keeps the Hydra shader stack. */
-  const isDesktop = pathname.startsWith("/desktop");
+  /** Classic Mac desktop uses p5 (one random sketch per visit). `/` and
+   *  `/desktop` both mount `MacintoshDesktop`; other routes use opaque UIs
+   *  so we skip the live wallpaper to save CPU/GPU. `/lab` uses Hydra instead. */
+  const showP5Mac = pathname === "/" || pathname.startsWith("/desktop");
   const isLab = pathname.startsWith("/lab");
-  const showP5Mac = isDesktop;
   const showHydra = isLab;
 
-  /** The brutalist home is its own sealed paper surface, and /desktop wants
-   *  the wallpaper fully vivid — so only /lab gets the readability scrim. */
+  /** Only /lab gets the readability scrim over Hydra. */
   const showScrim = pathname.startsWith("/lab");
 
   return (
