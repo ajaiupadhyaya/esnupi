@@ -22,6 +22,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
+import gpuDepreciationGif from "../../gpu_depreciation.gif";
 export type ProjectKind = "drive" | "kext";
 
 export type ProjectLink = {
@@ -86,7 +87,7 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
-    id: "Private Credit Modeling",
+    id: "private-credit-modeling",
     index: "01",
     accession: "Esn-0001",
     kind: "drive",
@@ -99,12 +100,16 @@ export const PROJECTS: Project[] = [
     ],
     tags: ["Blue Owl", "Interest Rates", "Regulation", "2026"],
     tools: ["Python", "Pandas", "Matplotlib", "Seaborn", "Plotly"],
-    collaborators: ["— TODO: collaborator name"],
+    collaborators: [],
     status: "complete",
     hex: "7f 45 4c 46 02 01 01 00 00 00 00 00 00 00 00 00",
     links: [
-      { label: "Read writeup", href: "#", kind: "writeup" },
-      { label: "GitHub", href: "https://github.com/", kind: "github" },
+      {
+        label: "Read writeup",
+        href: "/archive#project-private-credit-modeling",
+        kind: "writeup",
+      },
+      { label: "GitHub", href: "https://github.com/ajaiupadhyaya", kind: "github" },
     ],
     // TODO: Replace Unsplash placeholders with your own photographs.
     media: [
@@ -138,7 +143,7 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "GPU Depreciation",
+    id: "gpu-depreciation-cycle",
     index: "02",
     accession: "Esn-0002",
     kind: "drive",
@@ -156,16 +161,20 @@ export const PROJECTS: Project[] = [
     status: "complete",
     hex: "c0 ff ee c0 ff ee 00 00 01 00 00 00 00 00 00 00",
     links: [
-      { label: "Demo video", href: "#", kind: "demo" },
-      { label: "Process notes", href: "#", kind: "writeup" },
+      {
+        label: "Visual report",
+        href: "/archive#project-gpu-depreciation-cycle",
+        kind: "demo",
+      },
+      { label: "Process notes", href: "https://github.com/ajaiupadhyaya", kind: "writeup" },
     ],
     media: [
       {
         kind: "image",
         layout: "full",
-        src: "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=max&w=2400&q=85",
-        alt: "A soft textured object against a neutral background.",
-        caption: "Felt Cursor v2, in the studio.",
+        src: gpuDepreciationGif,
+        alt: "GPU depreciation report charts showing utilization, power cost, and ROI trends.",
+        caption: "GPU depreciation report visual summary.",
       },
       {
         kind: "image",
@@ -183,7 +192,7 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "Computer Vision for Investment Research",
+    id: "computer-vision-investment-research",
     index: "03",
     accession: "Esn-0003",
     kind: "drive",
@@ -199,8 +208,12 @@ export const PROJECTS: Project[] = [
     status: "complete",
     hex: "de ad be ef 00 00 00 10 fa ce b0 0c 00 00 00 01",
     links: [
-      { label: "Visit the room", href: "#", kind: "demo" },
-      { label: "Press", href: "#", kind: "press" },
+      { label: "Visit the room", href: "/gallery", kind: "demo" },
+      {
+        label: "Press",
+        href: "https://www.linkedin.com/in/ajai-u/",
+        kind: "press",
+      },
     ],
     media: [
       {
@@ -232,7 +245,7 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "echo-index",
+    id: "machine-learning-investment-research",
     index: "04",
     accession: "Esn-0101",
     kind: "kext",
@@ -248,8 +261,8 @@ export const PROJECTS: Project[] = [
     status: "ongoing",
     hex: "55 aa 55 aa 00 ff 11 ee 22 dd 33 cc 44 bb 55 aa",
     links: [
-      { label: "GitHub", href: "https://github.com/", kind: "github" },
-      { label: "Essay — 'Memory as UI'", href: "#", kind: "writeup" },
+      { label: "GitHub", href: "https://github.com/ajaiupadhyaya", kind: "github" },
+      { label: "Essay — 'Memory as UI'", href: "/archive", kind: "writeup" },
     ],
     media: [
       {
@@ -268,7 +281,7 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "late-night-channel",
+    id: "financial-modeling-wealth-management",
     index: "05",
     accession: "Esn-0102",
     kind: "kext",
@@ -284,8 +297,8 @@ export const PROJECTS: Project[] = [
     status: "ongoing",
     hex: "00 11 22 33 44 55 66 77 88 99 aa bb cc dd ee ff",
     links: [
-      { label: "Tune in", href: "#", kind: "demo" },
-      { label: "Archive", href: "#", kind: "writeup" },
+      { label: "Tune in", href: "/feltmoon", kind: "demo" },
+      { label: "Archive", href: "/archive", kind: "writeup" },
     ],
     media: [
       {
@@ -310,7 +323,7 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "study-light",
+    id: "autonomous-option-pricing-model",
     index: "06",
     accession: "Esn-0103",
     kind: "kext",

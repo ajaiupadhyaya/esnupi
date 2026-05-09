@@ -23,6 +23,15 @@ Portfolio playground: **Vite · React · TypeScript · Tailwind · MDX**. Live b
 
 Copy `.env.example` to `.env` and set optional variables.
 
+## Environment variables
+
+Only set what you need:
+
+- `VITE_GITHUB_USER` (optional) — username used by the GitHub demo panel.
+- `VITE_SPLINE_URL` (optional) — public Spline scene URL.
+- `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (optional pair) — enables shared photobook storage.
+- `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (optional aliases) — accepted for compatibility.
+
 ## Shared photobook setup (Supabase)
 
 For the `Photobooth`/`Photobook` desktop apps to store a truly shared museum collection:
@@ -37,6 +46,9 @@ For the `Photobooth`/`Photobook` desktop apps to store a truly shared museum col
 
 - `src/components/HydraBackground.tsx` — Hydra canvas
 - `src/lib/randomHydraSketch.ts` — random Hydra programs
-- `src/pages/Home.tsx` — library showcase
+- `src/components/desktop/MacintoshDesktop.tsx` — primary desktop experience
+- `src/pages/Archive.tsx` — long-form archive room
+- `src/pages/Gallery.tsx` — study/gallery route
+- `src/pages/FeltMoon.tsx` — horizontal scroll gallery route
 - `src/content/hello.mdx` — sample MDX
 - `src/music/` — drop local audio files for the desktop Music app

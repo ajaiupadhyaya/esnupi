@@ -258,7 +258,7 @@ export function PhotoboothPanel({
   return (
     <section className="mac-photobooth">
       <header className="mac-photobooth__header">
-        <p>Camera Obscura Mode. Choose a filter, pose, and contribute to the museum.</p>
+        <p>Choose a filter, pose, and contribute to the museum.</p>
       </header>
 
       <div className="mac-photobooth__filters" role="tablist">

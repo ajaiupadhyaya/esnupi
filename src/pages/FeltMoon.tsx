@@ -15,6 +15,7 @@
  *  - Subtle film grain + index counter.
  */
 
+import gpuDepreciationGif from "../../gpu_depreciation.gif";
 import feltmoonImg from "../../images/feltmoon.png";
 import privateCreditImage from "../../privatecreditimage.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
@@ -63,7 +64,7 @@ const WORKS: Work[] = [
     stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
       "An analysis of the rapidly depreciating value of GPUs in the data center and the impact on AI and investors.",
-    src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57f90?auto=format&fit=max&w=2400&q=88",
+    src: gpuDepreciationGif,
     aspect: 16 / 9,
   },
   {
@@ -300,18 +301,16 @@ export default function FeltMoon() {
                 <h1 className="fm-intro__title">
                   Scroll
                   <br />
-                  to
-                  <br />
-                  explore.
+                  down
                 </h1>
                 <p className="fm-intro__lede">
-                  A horizontal room. Scroll (or use the arrow keys) to walk
-                  the wall. Snapshot picking while the rest are waiting in line.
+                  Scroll (or use the arrow keys) to walk
+                  the wall. 
                   Press <kbd>G</kbd> to deface the wall.
                 </p>
                 <div className="fm-intro__rule" aria-hidden />
                 <p className="fm-intro__foot">
-                  Companion piece: <em>Moon, at rest</em> — felt on linen, 2025.
+                  Automatically Updated <em></em> — 2023 - 2026
                 </p>
               </div>
             </article>
@@ -329,9 +328,7 @@ export default function FeltMoon() {
               <div className="fm-colophon">
                 <p className="fm-colophon__kicker">Colophon</p>
                 <p className="fm-colophon__body">
-                  Set in IBM Plex Mono, Playfair Display, Public Sans, and La
-                  Belle Aurore. Photographs printed as archival pigment. Wall,
-                  plaster. Scroll, felt.
+                  Return to desktop to further explore.
                 </p>
                 <button
                   type="button"

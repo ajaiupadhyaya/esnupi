@@ -110,7 +110,8 @@ export default function Archive() {
     const raw = window.location.hash;
     if (!raw) return;
     const id = window.setTimeout(() => {
-      const node = document.getElementById(raw.replace(/^#/, ""));
+      const targetId = decodeURIComponent(raw.replace(/^#/, ""));
+      const node = document.getElementById(targetId);
       if (node) {
         node.scrollIntoView({ behavior: "smooth", block: "start" });
       }
@@ -168,7 +169,7 @@ export default function Archive() {
   const jumpTo = useCallback((id: string) => {
     const node = document.getElementById(`project-${id}`);
     if (!node) return;
-    history.replaceState(null, "", `#project-${id}`);
+    history.replaceState(null, "", `#project-${encodeURIComponent(id)}`);
     node.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
@@ -214,7 +215,7 @@ export default function Archive() {
           Permanent collection · Ongoing
         </p>
         <h1 className="archive-hero__title archive-reveal">
-          creations,
+          full archive
           <br />
           2019
           <em>—</em>
@@ -222,9 +223,11 @@ export default function Archive() {
         </h1>
         <hr className="archive-hero__rule archive-reveal" />
         <p className="archive-hero__lede archive-reveal">
-          A catalog of finished objects, unfinished experiments, and the occasional essay.
-          This room is organized like a museum plan: <em>walk slowly</em>, read the wall
-          text, let the index be the map. Press <kbd>1</kbd>–<kbd>{PROJECTS.length}</kbd> to
+          Automatically updates with <em>everything</em> I publish. There's a lot of stuff...
+          <br />
+          <em>scroll slowly</em>, read the text, and let the index be the map.
+          <br />
+          Press <kbd>1</kbd>–<kbd>{PROJECTS.length}</kbd> to
           jump between works, or <kbd>G</kbd> to return to the index.
         </p>
         <dl className="archive-hero__info archive-reveal">
@@ -300,12 +303,11 @@ export default function Archive() {
 
       {/* ─── Manifesto + marquee (camp punctuation) ────────────────── */}
       <section className="archive-manifesto">
-        <p className="archive-manifesto__eyebrow archive-reveal">Wall text · §00</p>
+        <p className="archive-manifesto__eyebrow archive-reveal">ajai upadhyaya · §00</p>
         <p className="archive-manifesto__text archive-reveal">
-          A portfolio is not a resume. It is a <mark>room</mark> you were invited into —
-          and you are allowed, in that room, to be <em>strange</em>.
+          if you find anything interesting, please write me; I <mark>love</mark> talking to people about the things I'm passionate about.
         </p>
-        <p className="archive-manifesto__sig archive-reveal">— esnupi, on the wall, {new Date().getFullYear()}</p>
+        <p className="archive-manifesto__sig archive-reveal">— ajai upadhyaya, {new Date().getFullYear()}</p>
       </section>
 
       <div className="archive-marquee" aria-hidden>
@@ -419,17 +421,30 @@ function CaseStudy({
           {p.links.length > 0 ? (
             <div className="archive-linkrow archive-reveal">
               {p.links.map((l) => (
-                <a
-                  key={l.label}
-                  className="archive-link"
-                  data-kind={l.kind ?? "external"}
-                  href={l.href}
-                  target={l.href.startsWith("http") ? "_blank" : undefined}
-                  rel={l.href.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  <span>{l.label}</span>
-                  <span aria-hidden>↗</span>
-                </a>
+                l.href === "#" ? (
+                  <span
+                    key={l.label}
+                    className="archive-link"
+                    data-kind={l.kind ?? "external"}
+                    aria-disabled="true"
+                    title="Link pending"
+                  >
+                    <span>{l.label}</span>
+                    <span aria-hidden>⏳</span>
+                  </span>
+                ) : (
+                  <a
+                    key={l.label}
+                    className="archive-link"
+                    data-kind={l.kind ?? "external"}
+                    href={l.href}
+                    target={l.href.startsWith("http") ? "_blank" : undefined}
+                    rel={l.href.startsWith("http") ? "noreferrer" : undefined}
+                  >
+                    <span>{l.label}</span>
+                    <span aria-hidden>↗</span>
+                  </a>
+                )
               ))}
             </div>
           ) : null}

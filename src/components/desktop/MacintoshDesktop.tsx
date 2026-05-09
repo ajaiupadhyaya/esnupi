@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 
-import { useLocation, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
 import {
@@ -59,7 +58,6 @@ import {
   markKonamiUsed,
   markSecretFound,
 } from "@/lib/visitMemory";
-import { hasCompletedVisitorGate } from "@/lib/visitorIdentity";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CursorTrails } from "./overlays/CursorTrails";
 import { DustMotes } from "./overlays/DustMotes";
@@ -364,15 +362,6 @@ function MacintoshDesktopInner() {
   const spawnAnchors = useRef<Record<string, { x: number; y: number }>>({});
 
   const routeTransition = useRouteTransition();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (!hasCompletedVisitorGate()) {
-      const next = encodeURIComponent(`${location.pathname}${location.search}`);
-      navigate(`/visit-classic?next=${next}`, { replace: true });
-    }
-  }, [navigate, location.pathname, location.search]);
 
   const navigateToGallery = useCallback(() => {
     routeTransition.goto("/gallery");
@@ -388,10 +377,6 @@ function MacintoshDesktopInner() {
     },
     [routeTransition],
   );
-
-  const navigateToClassicHome = useCallback(() => {
-    routeTransition.goto("/home");
-  }, [routeTransition]);
 
   /* --- Persist icon positions ------------------------------------------- */
   useEffect(() => {
@@ -1024,7 +1009,7 @@ function MacintoshDesktopInner() {
                 ])
               }
             >
-              {id === "about" && <NewAboutPanel onOpenClassicHome={navigateToClassicHome} />}
+              {id === "about" && <NewAboutPanel />}
               {id === "projects" && <WorkPanel onOpenArchive={navigateToArchive} />}
               {id === "contact" && (
                 <FindPanel

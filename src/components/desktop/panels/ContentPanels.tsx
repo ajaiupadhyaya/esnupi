@@ -8,7 +8,7 @@ import { ScaffoldReveal } from "./ScaffoldReveal";
 /* About                                                                       */
 /* -------------------------------------------------------------------------- */
 
-export function AboutPanel({ onOpenClassicHome }: { onOpenClassicHome?: () => void }) {
+export function AboutPanel() {
   const year = useMemo(() => DateTime.now().year, []);
   return (
     <article className="mac-about-panel" aria-label="About">
@@ -34,21 +34,6 @@ export function AboutPanel({ onOpenClassicHome }: { onOpenClassicHome?: () => vo
             </ul>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
-          ...(onOpenClassicHome
-            ? [
-                <button
-                  key="classic-home"
-                  type="button"
-                  className="mac-find-panel__row mac-find-panel__row--button"
-                  onClick={() => onOpenClassicHome()}
-                >
-                  <span>Open classic homepage</span>
-                  <span className="mac-find-panel__arrow" aria-hidden>
-                    &#8599;
-                  </span>
-                </button>,
-              ]
-            : []),
           <p className="mac-type-metadata mac-about-panel__foot" key="foot">
             Ajai Upadhyaya, {year}
           </p>,
@@ -203,8 +188,8 @@ const CONTACT_METHODS: Array<{ label: string; value: string; href: string }> = [
 
 const CONTACT_LINKS: Array<{ label: string; href: string }> = [
   { label: "Portfolio / Archive", href: "/archive" },
-  { label: "Resume (PDF)", href: "#" },
-  { label: "Substack", href: "#" },
+  { label: "GitHub", href: "https://github.com/ajaiupadhyaya" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/ajai-u/" },
 ];
 
 export function FindPanel({
@@ -324,7 +309,7 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
           <section className="mac-about-panel__block" key="meta">
             <h4 className="mac-type-metadata">Program Details</h4>
             <dl className="mac-feltmoon-panel__dl">
-              <div><dt>Title</dt><dd>Business Admin Masters w/Concentrations in Corp. Finance and Financial Engineering</dd></div>
+              <div><dt>Title</dt><dd>MBA w/Concentrations in Corp. Finance and Financial Engineering</dd></div>
               <div><dt>Year</dt><dd>2026</dd></div>
               <div>
                 <dt>Curriculum</dt>
@@ -338,7 +323,18 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
                   </a>
                 </dd>
               </div>
-              <div><dt>Program Placement</dt><dd>AJAI LINK HERE</dd></div>
+              <div>
+                <dt>Program Placement</dt>
+                <dd>
+                  <a
+                    href="https://www.vcu.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    VCU graduate programs
+                  </a>
+                </dd>
+              </div>
             </dl>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
@@ -390,7 +386,7 @@ const WORKSITE_FEATURES: Array<{
     href: "https://www.linkedin.com/in/ajai-u/",
     description:
       "connect with my on LinkedIn and get to know me better.",
-    meta: "prototype / collaboration / notes",
+    meta: "professional development / collaboration / connecting",
   },
 ];
 
@@ -400,14 +396,15 @@ const WORKSITE_LINKS: Array<{
   year: string;
   href: string;
 }> = [
-  { title: "Substack", category: "Projects", year: "2026", href: "https://github.com/your-handle" },
-  { title: "Academic Research", category: "Writing", year: "2026", href: "https://github.com/your-handle" },
-  { title: "Finance Internship Work", category: "Notes", year: "2025", href: "https://github.com/your-handle" },
-  { title: "SWE Internship Work", category: "Research", year: "2025", href: "https://github.com/your-handle" },
-  { title: "Database Engineering Internship Work", category: "Research", year: "2026", href: "https://github.com/ajaiupadhyaya" },
-  { title: "UVA Finance Work", category: "Experiments", year: "2025", href: "https://github.com/your-handle" },
-  { title: "UVA Digital Media Work", category: "Collaborations", year: "2024", href: "https://github.com/your-handle" },
-  { title: "Economic Research", category: "Projects", year: "2024", href: "https://github.com/your-handle" },
+  { title: "My Resume", category: "PDF", year: "2026", href: "/resume.pdf" },
+  { title: "Substack", category: "Writing", year: "2026", href: "https://ajaiupadhyaya.substack.com/" },
+  { title: "Undergrad Econ Research", category: "Research", year: "2026", href: "/archive" },
+  { title: "Undergrad CS Research", category: "Research", year: "2026", href: "/gallery" },
+  { title: "Excel Models & Dashboards", category: "Notes", year: "2026", href: "/feltmoon" },
+  { title: "YugabyteDB Intern Work", category: "Internship Work", year: "2026", href: "https://github.com/ajaiupadhyaya" },
+  { title: "VITA Finance Work", category: "Internship Work", year: "2026", href: "https://github.com/ajaiupadhyaya" },
+  { title: "UVIMCO Work", category: "Internship Work", year: "2025-26", href: "https://www.linkedin.com/in/ajai-u/" },
+  { title: "UVA DM Consultant Work", category: "Projects", year: "2024", href: "https://www.linkedin.com/in/ajai-u/" },
 ];
 
 export function LabStubPanel() {
@@ -488,8 +485,8 @@ export function LabStubPanel() {
               key={item.title}
               className={`mac-worksite__feature mac-worksite__feature--${index + 1} mac-worksite__reveal`}
               href={item.href}
-              target="_blank"
-              rel="noreferrer"
+              target={item.href.startsWith("http") ? "_blank" : undefined}
+              rel={item.href.startsWith("http") ? "noreferrer" : undefined}
             >
               <span className="mac-worksite__feature-count">0{index + 1}</span>
               <span className="mac-worksite__feature-meta">
@@ -512,8 +509,8 @@ export function LabStubPanel() {
               <a
                 key={`${item.title}-${item.year}`}
                 href={item.href}
-                target="_blank"
-                rel="noreferrer"
+                target={item.href.startsWith("http") ? "_blank" : undefined}
+                rel={item.href.startsWith("http") ? "noreferrer" : undefined}
                 className="mac-worksite__row mac-worksite__reveal"
                 style={{ "--delay": `${160 + index * 45}ms` } as CSSProperties}
               >

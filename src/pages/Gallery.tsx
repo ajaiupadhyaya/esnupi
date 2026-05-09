@@ -167,7 +167,7 @@ export default function Gallery() {
                 <img
                   className="gallery-figure__img gallery-parallax"
                   src={w.src}
-                  alt=""
+                  alt={`${w.title}, ${w.year}`}
                   width={2400}
                   height={1030}
                   loading="lazy"
@@ -217,7 +217,7 @@ export default function Gallery() {
                 <img
                   className="gallery-block__img gallery-parallax"
                   src={w.src}
-                  alt=""
+                  alt={`${w.title}, ${w.year}`}
                   width={2400}
                   height={1800}
                   loading="lazy"
