@@ -4,6 +4,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const Archive = lazy(() => import("@/pages/Archive"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
@@ -49,6 +50,7 @@ export default function App() {
           </Route>
         </Routes>
       </RouteTransitionProvider>
+      <SpeedInsights />
     </ErrorBoundary>
   );
 }
