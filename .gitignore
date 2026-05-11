@@ -4,7 +4,6 @@ dist
 *.local
 .env
 .venv
-images/
 .vercel
 music/
 
