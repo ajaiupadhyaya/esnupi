@@ -180,7 +180,7 @@ export function WorkPanel({
 /* -------------------------------------------------------------------------- */
 
 const CONTACT_METHODS: Array<{ label: string; value: string; href: string }> = [
-  { label: "Email", value: "ajaiupad@gmail.com", href: "mailto:ajaiupad@gmail.com" },
+  { label: "Email", value: "ajaiupad@gmail.com", href: "mailto:ajaiupadhyaya@ajaiupadhyaya.com" },
   { label: "Phone", value: "(804)296-8522", href: "tel:+18042968522" },
   { label: "LinkedIn", value: "linkedin.com/in/ajai-u/", href: "https://www.linkedin.com/in/ajai-u/" },
   { label: "GitHub", value: "github.com/ajaiupadhyaya", href: "https://github.com/ajaiupadhyaya" },
