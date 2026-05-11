@@ -134,7 +134,7 @@ export default function Gallery() {
       </header>
 
       <section className="gallery-hero">
-        <p className="gallery-hero__label gallery-reveal">Temporary exhibition / digital room</p>
+        <p className="gallery-hero__label gallery-reveal">Digital exhibition / study room</p>
         <h1 className="gallery-hero__title gallery-reveal">
           Light,
           <br />
@@ -250,8 +250,8 @@ export default function Gallery() {
         <p className="gallery-text__label gallery-reveal">Wall text</p>
         <p className="gallery-reveal">
           This room treats the browser like a museum plan: slow movement, hard margins, and captions
-          that admit doubt. Replace the images with your own negatives when you are ready — the
-          layout is the argument.
+          that admit doubt. The layout is intentional and consistent across series, so each image can
+          read as part of a broader sequence.
         </p>
         <p className="gallery-reveal">
           Ideas appear here as short statements so photography can stay large. Nothing scrolls for
@@ -264,8 +264,7 @@ export default function Gallery() {
           ← Desktop
         </button>
         <p className="gallery-foot__note">
-          Replace the Unsplash placeholders with your own files when the work is ready — the layout is
-          the constant.
+          Curated selection from the current study archive.
         </p>
       </footer>
     </main>

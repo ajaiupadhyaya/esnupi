@@ -396,7 +396,6 @@ const WORKSITE_LINKS: Array<{
   year: string;
   href: string;
 }> = [
-  { title: "My Resume", category: "PDF", year: "2026", href: "/resume.pdf" },
   { title: "Substack", category: "Writing", year: "2026", href: "https://ajaiupadhyaya.substack.com/" },
   { title: "Undergrad Econ Research", category: "Research", year: "2026", href: "/archive" },
   { title: "Undergrad CS Research", category: "Research", year: "2026", href: "/gallery" },
@@ -405,6 +404,7 @@ const WORKSITE_LINKS: Array<{
   { title: "VITA Finance Work", category: "Internship Work", year: "2026", href: "https://github.com/ajaiupadhyaya" },
   { title: "UVIMCO Work", category: "Internship Work", year: "2025-26", href: "https://www.linkedin.com/in/ajai-u/" },
   { title: "UVA DM Consultant Work", category: "Projects", year: "2024", href: "https://www.linkedin.com/in/ajai-u/" },
+  { title: "Request Resume (Email)", category: "PDF", year: "2026", href: "mailto:ajaiupad@gmail.com?subject=Resume%20Request" },
 ];
 
 export function LabStubPanel() {
