@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
 import { SiteLayout } from "@/components/layout/SiteLayout";
@@ -49,6 +50,7 @@ export default function App() {
           </Route>
         </Routes>
       </RouteTransitionProvider>
+      <Analytics />
     </ErrorBoundary>
   );
 }
