@@ -1,0 +1,255 @@
+/* Retro iPhone–style shell (iOS 6-ish): linen, glossy icons, in-app navigation bar.
+   Sits over the same live wallpaper as the Mac desktop via SiteLayout. */
+
+body.ios-retro-active {
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.ios-retro-root {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  font-family:
+    -apple-system,
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    sans-serif;
+  color: #1a1a1a;
+  -webkit-tap-highlight-color: transparent;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.ios-retro-root--home {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 42%),
+    linear-gradient(165deg, #c4c0ba 0%, #a8a49e 45%, #8e8a84 100%);
+}
+
+.ios-retro-status {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 14px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f8f8f8;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.ios-retro-status__carrier {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 5rem;
+}
+
+.ios-retro-status__dots {
+  display: flex;
+  gap: 2px;
+}
+.ios-retro-status__dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25);
+}
+
+.ios-retro-status__time {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-variant-numeric: tabular-nums;
+}
+
+.ios-retro-status__battery {
+  min-width: 5rem;
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.ios-retro-home {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px 20px;
+  overflow: hidden auto;
+}
+
+.ios-retro-home__page {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px 10px;
+  align-content: start;
+  padding: 12px 4px 88px;
+}
+
+.ios-retro-icon-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: inherit;
+  width: 100%;
+}
+
+.ios-retro-icon-btn:active .ios-retro-icon-btn__tile {
+  transform: scale(0.94);
+}
+
+.ios-retro-icon-btn__tile {
+  width: 59px;
+  height: 59px;
+  border-radius: 13px;
+  background: linear-gradient(180deg, #fff 0%, #e8e6e2 40%, #d4d0ca 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.08) inset,
+    0 3px 8px rgba(0, 0, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease;
+}
+
+.ios-retro-icon-btn__tile img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.12));
+}
+
+.ios-retro-icon-btn__label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  max-width: 76px;
+}
+
+.ios-retro-dock {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  z-index: 210;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.35) inset,
+    0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.ios-retro-dock .ios-retro-icon-btn {
+  width: auto;
+  min-width: 56px;
+}
+
+.ios-retro-dock .ios-retro-icon-btn__tile {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+}
+
+.ios-retro-dock .ios-retro-icon-btn__tile img {
+  width: 38px;
+  height: 38px;
+}
+
+.ios-retro-dock .ios-retro-icon-btn__label {
+  display: none;
+}
+
+.ios-retro-app {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #d8d4ce 0%, #c4c0ba 100%);
+}
+
+.ios-retro-nav {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(72px, 1fr) 2fr minmax(72px, 1fr);
+  align-items: center;
+  min-height: 44px;
+  padding: 4px 6px;
+  background: linear-gradient(180deg, #c9c5bf 0%, #b0aca6 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+
+.ios-retro-nav__back {
+  justify-self: start;
+  border: none;
+  background: none;
+  color: #0a4f9c;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.ios-retro-nav__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: center;
+  color: #1a1a1a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ios-retro-nav__spacer {
+  width: 1px;
+}
+
+.ios-retro-app__body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--window-body, #fdfaf5);
+}
+
+.ios-retro-app__body-inner {
+  min-height: 100%;
+  padding: 10px 12px 28px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 480px) {
+  .ios-retro-home__page {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

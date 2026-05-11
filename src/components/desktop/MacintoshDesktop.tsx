@@ -1,12 +1,4 @@
-import {
-  lazy,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import gsap from "gsap";
 import { cn } from "@/lib/utils";
@@ -40,7 +32,6 @@ import { ContextMenuProvider, useContextMenu } from "./ContextMenu";
 import { TrashCan } from "./TrashCan";
 import { MagneticDock } from "./MagneticDock";
 import { ShutdownScreen } from "./ShutdownScreen";
-import { MobileAlert } from "./MobileAlert";
 import { MacMenuBar, type MenuAction, type OpenWindowInfo } from "./MacMenuBar";
 import { useKonamiCode } from "./useKonamiCode";
 import { hydraStage } from "@/lib/hydraStage";
@@ -62,90 +53,22 @@ import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CursorTrails } from "./overlays/CursorTrails";
 import { DustMotes } from "./overlays/DustMotes";
 import { MacNotifications } from "./overlays/Notifications";
-import { AboutThisMacPanel } from "./panels/AboutThisMacPanel";
-import { SecretPanel } from "./panels/SecretPanel";
-import { StickyNotePanel } from "./panels/StickyNotePanel";
-import {
-  AboutPanel as NewAboutPanel,
-  WorkPanel,
-  FindPanel,
-  LabStubPanel,
-  CalendarPanel,
-  FeltMoonPanel,
-} from "./panels/ContentPanels";
-import type { MusicTrack } from "./panels/MusicPlayerPanel";
 import { DefragScreensaver } from "./overlays/DefragScreensaver";
 import { DesktopPet } from "./overlays/DesktopPet";
 import { MemoryLeakOverlay } from "./overlays/MemoryLeakOverlay";
-
-/* Heavy / app-like panels load on demand so the desktop boots fast. */
-const MacTerminalApp = lazy(() =>
-  import("./MacTerminalApp").then((m) => ({ default: m.MacTerminalApp })),
-);
-const PhotoboothPanel = lazy(() =>
-  import("./panels/PhotoboothPanel").then((m) => ({ default: m.PhotoboothPanel })),
-);
-const ScrapbookPanel = lazy(() =>
-  import("./panels/ScrapbookPanel").then((m) => ({ default: m.ScrapbookPanel })),
-);
-const MusicPlayerPanel = lazy(() =>
-  import("./panels/MusicPlayerPanel").then((m) => ({ default: m.MusicPlayerPanel })),
-);
-const WebBrowserPanel = lazy(() =>
-  import("./panels/WebBrowserPanel").then((m) => ({ default: m.WebBrowserPanel })),
-);
-const MinesweeperPanel = lazy(() =>
-  import("./panels/MinesweeperPanel").then((m) => ({ default: m.MinesweeperPanel })),
-);
-const ControlPanelsPanel = lazy(() =>
-  import("./panels/ControlPanelsPanel").then((m) => ({ default: m.ControlPanelsPanel })),
-);
-const ClockPanel = lazy(() =>
-  import("./programs/ClockPanel").then((m) => ({ default: m.ClockPanel })),
-);
-const TypistPanel = lazy(() =>
-  import("./programs/TypistPanel").then((m) => ({ default: m.TypistPanel })),
-);
-const NotepadPanel = lazy(() =>
-  import("./programs/NotepadPanel").then((m) => ({ default: m.NotepadPanel })),
-);
-const KaleidoscopePanel = lazy(() =>
-  import("./programs/KaleidoscopePanel").then((m) => ({ default: m.KaleidoscopePanel })),
-);
-const SlideshowPanel = lazy(() =>
-  import("./programs/SlideshowPanel").then((m) => ({ default: m.SlideshowPanel })),
-);
-const FilmPhotosPanel = lazy(() =>
-  import("./panels/FilmPhotosPanel").then((m) => ({ default: m.FilmPhotosPanel })),
-);
-const InternalsPanel = lazy(() =>
-  import("./panels/InternalsPanel").then((m) => ({ default: m.InternalsPanel })),
-);
-const FinderPanel = lazy(() =>
-  import("./panels/FinderPanel").then((m) => ({ default: m.FinderPanel })),
-);
-const VisitorLogPanel = lazy(() =>
-  import("./panels/VisitorLogPanel").then((m) => ({ default: m.VisitorLogPanel })),
-);
-
+import { MacintoshWindowPanelContent } from "./MacintoshWindowPanelContent";
+import { IphoneMobileShell } from "./IphoneMobileShell";
+import {
+  type AnyWindowId,
+  DOCK_APPS,
+  FILM_PHOTO_ITEMS,
+  INITIAL,
+  MUSIC_LIBRARY,
+} from "./windowRegistry";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 import "./macintosh-desktop.css";
 
-import homefeltImg from "../../../images/homefelt.png";
-import feltfolderImg from "../../../images/feltfolder.png";
-import emailfeltImg from "../../../images/emailfelt.png";
-import framefeltImg from "../../../images/framefelt.png";
-import photoboothfeltImg from "../../../images/photoboothfelt.png";
-import photobookfeltImg from "../../../images/photobookfelt.png";
-import feltterminalImg from "../../../images/feltterminal.png";
-import musicplayerfeltImg from "../../../images/musicplayerfelt.png";
-import feltphotosappImg from "../../../images/feltphotosapp.png";
-import feltbrowserImg from "../../../images/feltbrowser.png";
-import feltcalendarImg from "../../../images/feltcalendar.png";
-
-import { buildFilmPhotoLibrary } from "@/photography/library";
-
-const FILM_PHOTO_ITEMS = buildFilmPhotoLibrary();
 const WINDOW_STACK_OFFSET = 32;
 const CHROME_MENU_H = 28;
 const CHROME_MARGIN = 10;
@@ -153,83 +76,6 @@ const CHROME_DOCK_RESERVE = 212;
 const LAB_WINDOW_INSET_X = 46;
 const LAB_WINDOW_INSET_TOP = 42;
 const LAB_WINDOW_INSET_BOTTOM = 58;
-
-type AnyWindowId =
-  | WindowId
-  | "aboutMac"
-  | "secret"
-  | "sticky"
-  | "minesweeper"
-  | "getinfo"
-  | "controls"
-  | "clock"
-  | "typist"
-  | "notepad"
-  | "kaleidoscope"
-  | "slideshow"
-  | "internals"
-  | "finder";
-
-const musicModules = import.meta.glob("/src/music/*.{mp3,wav,ogg,m4a,flac,aac}", {
-  eager: true,
-  import: "default",
-}) as Record<string, string>;
-
-const MUSIC_LIBRARY: MusicTrack[] = Object.entries(musicModules)
-  .map(([path, src]) => {
-    const name = path.split("/").pop()?.replace(/\.[^.]+$/, "") ?? "Untitled";
-    const title = name.replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim();
-    return {
-      id: path,
-      title: title.length ? title : "Untitled",
-      src,
-    };
-  })
-  .sort((a, b) => a.title.localeCompare(b.title));
-
-const DOCK_APPS: Array<{ id: WindowId; label: string; icon: string }> = [
-  { id: "about", label: "Home", icon: homefeltImg },
-  { id: "projects", label: "Profiler", icon: feltfolderImg },
-  { id: "contact", label: "Contact", icon: emailfeltImg },
-  { id: "lab", label: "My Work", icon: framefeltImg },
-  { id: "calendar", label: "Calendar", icon: feltcalendarImg },
-  { id: "terminal", label: "Terminal", icon: feltterminalImg },
-  { id: "photobooth", label: "Photobooth", icon: photoboothfeltImg },
-  { id: "photobook", label: "Photobook", icon: photobookfeltImg },
-  { id: "music", label: "iTunes", icon: musicplayerfeltImg },
-  { id: "photos", label: "Photos", icon: feltphotosappImg },
-  { id: "browser", label: "Browser", icon: feltbrowserImg },
-];
-
-/** Default geometry when a window first opens — intentionally large; users can resize. */
-const INITIAL: Record<AnyWindowId, { title: string; w: number; h: number }> = {
-  about: { title: "About", w: 700, h: 580 },
-  projects: { title: "System Profiler", w: 820, h: 640 },
-  contact: { title: "Contact", w: 760, h: 620 },
-  lab: { title: "My Work", w: 860, h: 640 },
-  calendar: { title: "Calendar", w: 820, h: 640 },
-  terminal: { title: "Terminal", w: 1000, h: 680 },
-  photobooth: { title: "Photobooth", w: 880, h: 760 },
-  photobook: { title: "Scrapbook", w: 1120, h: 780 },
-  visitorlog: { title: "Guest Log", w: 820, h: 640 },
-  music: { title: "iTunes", w: 780, h: 640 },
-  photos: { title: "Photos", w: 1140, h: 780 },
-  browser: { title: "Browser", w: 1200, h: 840 },
-  feltmoon: { title: "Moon, at rest", w: 660, h: 680 },
-  aboutMac: { title: "About this Mac", w: 560, h: 540 },
-  secret: { title: "— private collection —", w: 780, h: 640 },
-  sticky: { title: "Note", w: 320, h: 300 },
-  minesweeper: { title: "Minefield", w: 680, h: 620 },
-  getinfo: { title: "Get Info", w: 440, h: 380 },
-  controls: { title: "Control Panels", w: 640, h: 600 },
-  clock: { title: "Clock", w: 340, h: 420 },
-  typist: { title: "Typist", w: 780, h: 640 },
-  notepad: { title: "Notepad", w: 720, h: 580 },
-  kaleidoscope: { title: "Kaleidoscope", w: 800, h: 700 },
-  slideshow: { title: "Slideshow", w: 1040, h: 760 },
-  internals: { title: "INTERNALS", w: 880, h: 680 },
-  finder: { title: "Desktop", w: 760, h: 580 },
-};
 
 function clampWindowPosition(anchorX: number, anchorY: number, width: number, height: number) {
   const nx = anchorX - width / 2;
@@ -335,6 +181,7 @@ function MacintoshDesktopInner() {
   const [beachBall, setBeachBall] = useState(false);
   const [corruptedActive, setCorruptedActive] = useState(false);
   const [getInfoTarget, setGetInfoTarget] = useState<AnyWindowId | null>(null);
+  const [mobilePendingOpen, setMobilePendingOpen] = useState<AnyWindowId | null>(null);
   const [lightNorm, setLightNorm] = useState({ x: 0.5, y: 0.5 });
   const [memoryLeakActive, setMemoryLeakActive] = useState(false);
   const [midnightDrift, setMidnightDrift] = useState(false);
@@ -362,6 +209,7 @@ function MacintoshDesktopInner() {
   const spawnAnchors = useRef<Record<string, { x: number; y: number }>>({});
 
   const routeTransition = useRouteTransition();
+  const isMobileLayout = useMediaQuery("(max-width: 760px)");
 
   const navigateToGallery = useCallback(() => {
     routeTransition.goto("/gallery");
@@ -460,16 +308,6 @@ function MacintoshDesktopInner() {
       reduceMotion: controlSettings.reduceMotion,
     };
   }, [controlSettings.ambientSounds, controlSettings.reduceMotion]);
-
-  /* --- Konami --------------------------------------------------------- */
-  useKonamiCode(() => {
-    if (konamiUnlocked) return;
-    setKonamiUnlocked(true);
-    markKonamiUsed();
-    playKonamiFanfare();
-    hydraStage.setMood("ARCHIVE");
-    openWindow("secret");
-  });
 
   /* --- Accumulate total-time-on-site every 30 s while tab is visible --- */
   useEffect(() => {
@@ -615,6 +453,24 @@ function MacintoshDesktopInner() {
       });
     },
     [bringToFront, open, zOrder.length],
+  );
+
+  /* --- Konami --------------------------------------------------------- */
+  useKonamiCode(
+    useCallback(() => {
+      if (konamiUnlocked) return;
+      setKonamiUnlocked(true);
+      markKonamiUsed();
+      playKonamiFanfare();
+      hydraStage.setMood("ARCHIVE");
+      if (window.matchMedia("(max-width: 760px)").matches) {
+        setMobilePendingOpen("secret");
+        markSecretFound();
+        hydraStage.pulse();
+      } else {
+        openWindow("secret");
+      }
+    }, [konamiUnlocked, openWindow]),
   );
 
   const closeWindow = useCallback((id: AnyWindowId) => {
@@ -874,6 +730,38 @@ function MacintoshDesktopInner() {
     window.setTimeout(() => setIconsWobble(false), 2000);
   }, []);
 
+  const consumeMobilePending = useCallback(() => {
+    setMobilePendingOpen(null);
+  }, []);
+
+  if (isMobileLayout) {
+    return (
+      <IphoneMobileShell
+        photos={photos}
+        loadingPhotos={loadingPhotos}
+        photoError={photoError}
+        getInfoTarget={getInfoTarget}
+        setGetInfoTarget={setGetInfoTarget}
+        onOpenWindow={openWindow}
+        onNavigateArchive={navigateToArchive}
+        onNavigateGallery={navigateToGallery}
+        onNavigateFeltMoon={navigateToFeltMoon}
+        onAddPhoto={addPhoto}
+        onWobbleIcons={wobbleIcons}
+        onMatrixMode={() => {
+          setMatrixMode(true);
+          window.setTimeout(() => setMatrixMode(false), 10_000);
+        }}
+        onMemoryLeak={() => {
+          setMemoryLeakActive(true);
+          window.setTimeout(() => setMemoryLeakActive(false), 10_000);
+        }}
+        pendingOpenId={mobilePendingOpen}
+        onConsumedPendingOpen={consumeMobilePending}
+      />
+    );
+  }
+
   return (
     <div
       className={cn(
@@ -1009,78 +897,32 @@ function MacintoshDesktopInner() {
                 ])
               }
             >
-              {id === "about" && <NewAboutPanel />}
-              {id === "projects" && <WorkPanel onOpenArchive={navigateToArchive} />}
-              {id === "contact" && (
-                <FindPanel
-                  onOpenStudy={navigateToGallery}
-                  onOpenCalendar={() => openWindow("calendar")}
-                />
-              )}
-              {id === "lab" && <LabStubPanel />}
-              {id === "calendar" && <CalendarPanel />}
-              {id === "feltmoon" && (
-                <FeltMoonPanel onOpenGallery={navigateToFeltMoon} />
-              )}
               <Suspense fallback={<div className="mac-panel-fallback" aria-hidden />}>
-                {id === "terminal" && (
-                  <MacTerminalApp
-                    windowActive={activeId === id}
-                    onOpenWindow={(w) => openWindow(w)}
-                    onGlitch={wobbleIcons}
-                    onMatrixMode={() => {
-                      setMatrixMode(true);
-                      window.setTimeout(() => setMatrixMode(false), 10_000);
-                    }}
-                    onMemoryLeak={() => {
-                      setMemoryLeakActive(true);
-                      window.setTimeout(() => setMemoryLeakActive(false), 10_000);
-                    }}
-                  />
-                )}
-                {id === "photobooth" && (
-                  <PhotoboothPanel
-                    onCapture={addPhoto}
-                    onOpenPhotobook={() => openWindow("photobook")}
-                  />
-                )}
-                {id === "photobook" && (
-                  <ScrapbookPanel
-                    photos={photos}
-                    loading={loadingPhotos}
-                    error={photoError}
-                    sharedEnabled={hasSupabaseConfig}
-                  />
-                )}
-                {id === "visitorlog" && <VisitorLogPanel />}
-                {id === "music" && <MusicPlayerPanel library={MUSIC_LIBRARY} />}
-                {id === "photos" && <FilmPhotosPanel items={FILM_PHOTO_ITEMS} />}
-                {id === "browser" && <WebBrowserPanel />}
-                {id === "controls" && <ControlPanelsPanel />}
-                {id === "minesweeper" && <MinesweeperPanel />}
-                {id === "clock" && <ClockPanel />}
-                {id === "typist" && (
-                  <TypistPanel
-                    onMagicWord={() => {
-                      openWindow("internals");
-                      window.setTimeout(() => hydraStage.pulse(), 80);
-                    }}
-                  />
-                )}
-                {id === "notepad" && <NotepadPanel />}
-                {id === "kaleidoscope" && <KaleidoscopePanel />}
-                {id === "slideshow" && <SlideshowPanel />}
-              </Suspense>
-              {id === "aboutMac" && <AboutThisMacPanel />}
-              {id === "secret" && <SecretPanel />}
-              {id === "sticky" && <StickyNotePanel />}
-              {id === "getinfo" && <GetInfoPanel target={getInfoTarget ?? "about"} />}
-              {id === "internals" && <InternalsPanel />}
-              {id === "finder" && (
-                <FinderPanel
-                  onOpen={(target) => openWindow(target as AnyWindowId)}
+                <MacintoshWindowPanelContent
+                  id={id}
+                  activeId={activeId}
+                  getInfoTarget={getInfoTarget}
+                  photos={photos}
+                  loadingPhotos={loadingPhotos}
+                  photoError={photoError}
+                  musicLibrary={MUSIC_LIBRARY}
+                  filmItems={FILM_PHOTO_ITEMS}
+                  onOpenWindow={openWindow}
+                  onNavigateArchive={navigateToArchive}
+                  onNavigateGallery={navigateToGallery}
+                  onNavigateFeltMoon={navigateToFeltMoon}
+                  onAddPhoto={addPhoto}
+                  onWobbleIcons={wobbleIcons}
+                  onMatrixMode={() => {
+                    setMatrixMode(true);
+                    window.setTimeout(() => setMatrixMode(false), 10_000);
+                  }}
+                  onMemoryLeak={() => {
+                    setMemoryLeakActive(true);
+                    window.setTimeout(() => setMemoryLeakActive(false), 10_000);
+                  }}
                 />
-              )}
+              </Suspense>
             </DesktopWindow>
           );
         })}
@@ -1115,7 +957,6 @@ function MacintoshDesktopInner() {
 
       <MacNotifications />
       <DefragScreensaver />
-      <MobileAlert />
       <MemoryLeakOverlay active={memoryLeakActive} />
 
       {shutdownMode && (
@@ -1351,27 +1192,6 @@ function balloonText(id: WindowId) {
 /* ------------------------------------------------------------------------ */
 
 /* Content panels live in ./panels/ContentPanels.tsx */
-
-function GetInfoPanel({ target }: { target: AnyWindowId }) {
-  const info = INITIAL[target];
-  return (
-    <section className="mac-getinfo">
-      <h3 className="mac-getinfo__title">Info — {info.title}</h3>
-      <dl>
-        <div><dt>Kind</dt><dd>desktop window</dd></div>
-        <div><dt>Where</dt><dd>/esnupi/windows/{String(target)}</dd></div>
-        <div><dt>Size</dt><dd>{info.w}×{info.h} px</dd></div>
-        <div><dt>Created</dt><dd>1998-09-21 03:41</dd></div>
-        <div><dt>Modified</dt><dd>when you opened it</dd></div>
-        <div><dt>Locked</dt><dd>no. but it knows you are reading this.</dd></div>
-      </dl>
-      <p className="mac-getinfo__comment">
-        Comments: a window is a polite request to look inside. thank you for knocking.
-      </p>
-    </section>
-  );
-}
-
 
 /* ------------------------------------------------------------------------ */
 /* CRT monitor chassis — Y2K Macintosh housing                              */
