@@ -10,6 +10,25 @@ export default defineConfig({
   define: {
     global: "globalThis",
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-three": ["three", "@react-three/fiber", "@react-three/drei"],
+          "vendor-p5": ["p5"],
+          "vendor-hydra": ["hydra-synth"],
+          "vendor-motion": ["gsap", "lenis", "animejs"],
+          "vendor-chart": ["chart.js", "react-chartjs-2"],
+          "vendor-xterm": ["@xterm/xterm", "@xterm/addon-fit"],
+          "vendor-supabase": ["@supabase/supabase-js"],
+          "vendor-mdx": ["@mdx-js/react"],
+          "vendor-analytics": ["@vercel/analytics"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 800,
+  },
   plugins: [
     mdx(),
     // MDX must be handled only by @mdx-js/rollup — do not pass .mdx/.md through react-babel.
