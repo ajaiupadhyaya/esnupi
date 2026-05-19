@@ -22,7 +22,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-import gpuDepreciationGif from "../../gpu_depreciation.gif";
+import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
 export type ProjectKind = "drive" | "kext";
 
 export type ProjectLink = {
@@ -170,10 +170,9 @@ export const PROJECTS: Project[] = [
     ],
     media: [
       {
-        kind: "image",
+        kind: "video",
         layout: "full",
-        src: gpuDepreciationGif,
-        alt: "GPU depreciation report charts showing utilization, power cost, and ROI trends.",
+        src: gpuDepreciation,
         caption: "GPU depreciation report visual summary.",
       },
       {

@@ -15,7 +15,7 @@
  *  - Subtle film grain + index counter.
  */
 
-import gpuDepreciationGif from "../../gpu_depreciation.gif";
+import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
 import feltmoonImg from "../../images/feltmoon.png";
 import privateCreditImage from "../../privatecreditimage.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
@@ -39,6 +39,8 @@ type Work = {
   stock?: string;
   description: string;
   src: string;
+  /** "image" (default) or "video" — controls whether to render <img> or <video>. */
+  kind?: "image" | "video";
   /** Aspect ratio hint so the strip lays out predictably before images load. */
   aspect: number;
 };
@@ -64,7 +66,8 @@ const WORKS: Work[] = [
     stock: "Python · Pandas · Matplotlib · Seaborn · Plotly",
     description:
       "An analysis of the rapidly depreciating value of GPUs in the data center and the impact on AI and investors.",
-    src: gpuDepreciationGif,
+    src: gpuDepreciation,
+    kind: "video",
     aspect: 16 / 9,
   },
   {
@@ -427,14 +430,27 @@ function FmImage({ work, active }: { work: Work; active: boolean }) {
     >
       <div className="fm-photo">
         <div className="fm-photo__frame" ref={frameRef}>
-          <img
-            src={work.src}
-            alt={work.title}
-            className="fm-photo__img"
-            loading="lazy"
-            decoding="async"
-            draggable={false}
-          />
+          {work.kind === "video" ? (
+            <video
+              src={work.src}
+              className="fm-photo__img"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={work.title}
+            />
+          ) : (
+            <img
+              src={work.src}
+              alt={work.title}
+              className="fm-photo__img"
+              loading="lazy"
+              decoding="async"
+              draggable={false}
+            />
+          )}
         </div>
         <p className="fm-photo__accession">{work.id}</p>
       </div>
