@@ -2,6 +2,7 @@ import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { FilmPhoto } from "@/photography/library";
+import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
 import { cn } from "@/lib/utils";
 
 type FilmPhotosPanelProps = {
@@ -94,7 +95,14 @@ export function FilmPhotosPanel({ items }: FilmPhotosPanelProps) {
                 onClick={() => setSelectedIndex(idx)}
               >
                 <span className="mac-photos-app__sidebar-thumb-wrap">
-                  <img src={item.src} alt="" className="mac-photos-app__sidebar-thumb" loading="lazy" decoding="async" />
+                  <ResponsivePicture
+                    image={item.image}
+                    alt=""
+                    className="mac-photos-app__sidebar-thumb"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
                 <span className="mac-photos-app__sidebar-title">{item.title}</span>
               </button>
@@ -114,10 +122,11 @@ export function FilmPhotosPanel({ items }: FilmPhotosPanelProps) {
           {selected ? (
             <>
               <div className="mac-photos-app__canvas mac-surface">
-                <img
-                  src={selected.src}
+                <ResponsivePicture
+                  image={selected.image}
                   alt={selected.title}
                   className="mac-photos-app__hero"
+                  sizes="100vw"
                   loading="eager"
                   decoding="async"
                 />
