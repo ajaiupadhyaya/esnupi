@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react";
 import mdx from "@mdx-js/rollup";
 import { imagetools } from "vite-imagetools";
 import { defineConfig } from "vite";
+import type { PluginOption } from "vite";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   envPrefix: ["VITE_", "NEXT_PUBLIC_"],
@@ -47,7 +49,14 @@ export default defineConfig({
         return new URLSearchParams();
       },
     }),
-  ],
+    process.env.ANALYZE === "1" &&
+      visualizer({
+        open: false,
+        filename: "dist/stats.html",
+        gzipSize: true,
+        brotliSize: true,
+      }),
+  ].filter(Boolean) as PluginOption[],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
