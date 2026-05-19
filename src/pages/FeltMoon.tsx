@@ -16,8 +16,8 @@
  */
 
 import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
-import feltmoonImg from "../../images/feltmoon.png";
-import privateCreditImage from "../../privatecreditimage.png";
+import feltmoonImg from "@/assets/icons/feltmoon.png";
+import privateCreditImage from "@/assets/privatecreditimage.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { Entropy } from "@/components/ui/entropy";
 import gsap from "gsap";

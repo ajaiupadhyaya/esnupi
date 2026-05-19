@@ -9,14 +9,14 @@
  * overlay with longer-form text set in the serif content font.
  */
 
-import feltfolder from "../../images/feltfolder.png";
-import feltheart1 from "../../images/feltheart1.png";
-import feltheart2 from "../../images/feltheart2.png";
-import feltheart3 from "../../images/feltheart3.webp";
-import feltheart4 from "../../images/feltheart4.webp";
-import feltmoon from "../../images/feltmoon.png";
-import homefelt from "../../images/homefelt.png";
-import photobookfelt from "../../images/photobookfelt.png";
+import feltfolder from "@/assets/icons/feltfolder.png";
+import feltheart1 from "@/assets/icons/feltheart1.png";
+import feltheart2 from "@/assets/icons/feltheart2.png";
+import feltheart3 from "@/assets/icons/feltheart3.webp";
+import feltheart4 from "@/assets/icons/feltheart4.webp";
+import feltmoon from "@/assets/icons/feltmoon.png";
+import homefelt from "@/assets/icons/homefelt.png";
+import photobookfelt from "@/assets/icons/photobookfelt.png";
 
 export type Slide = {
   src: string;

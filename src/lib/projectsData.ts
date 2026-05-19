@@ -7,7 +7,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  *   1. Copy any existing entry below as a template.
  *   2. Replace the placeholder copy and Unsplash image URLs (marked TODO).
- *      For local images: `import foo from "../../images/foo.jpg"` at the top
+ *      For local images: `import foo from "@/assets/icons/foo.jpg"` at the top
  *      of this file, then set `src: foo`.
  *   3. `id` becomes the URL anchor — `/archive#project-<id>` — so keep it
  *      slug-safe (lowercase, hyphens, no spaces).
