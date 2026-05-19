@@ -57,12 +57,12 @@ The live wallpaper is `hydra-synth` (`HydraBackground.tsx`) with random or autho
 ### MDX, photography, audio
 
 - MDX is wired through `@mdx-js/rollup` only. The `@vitejs/plugin-react` `include` is explicitly restricted to `/\.(jsx|js|tsx|ts)$/` so babel doesn't touch `.mdx`. Don't broaden that include. `/lab` route + `src/content/*.mdx`.
-- Photography catalog: `src/photography/manifest.ts` + `library.ts` → `buildFilmPhotoLibrary()` → `FILM_PHOTO_ITEMS` in `windowRegistry.ts`. Photos in `src/photography/images/` are imported directly so Vite fingerprints them; many are multi-megabyte JPGs.
+- Photography catalog: `src/photography/manifest.ts` + `library.ts` → `buildFilmPhotoLibrary()` → `FILM_PHOTO_ITEMS` in `windowRegistry.ts`. Photos are loaded via `import.meta.glob` with `?responsive` so `vite-imagetools` produces AVIF/WebP/JPG variants at 480/1024/2048 widths. The shape is `ResponsiveImage` (sources + fallback img); render with `<ResponsivePicture image={photo.image} />` from `@/components/ui/ResponsivePicture`. The one exception is `src/p5mac/p5starCollageSketch.ts` which uses `p.loadImage()` — that needs a plain URL, so `skyline3.jpg` is imported without `?responsive`.
 - Local audio: `src/music/` (gitignored — `music/` in `.gitignore`). `ambientAudio.ts` runs site ambience; `retroMacSounds.ts` triggers UI chirps (icon select/open, trash empty, glitch burst, Konami fanfare). Both are gated by `controlSettings`.
 
 ### Path alias
 
-`@/` → `src/`. Use it consistently — relative `../../../images/foo.png` is also used for image imports from inside `src/components/desktop/` (because images live at the repo root in `images/`, not `src/`).
+`@/` → `src/`. Use it consistently. UI icon imports live at `@/assets/icons/...`; other assets at `@/assets/...` (e.g. `gpu_depreciation.mp4`). The old root-level `images/` directory is gone — don't reintroduce relative `../../images/...` paths.
 
 ### Persistence
 
@@ -72,5 +72,7 @@ Session/visit state is in `localStorage` via `lib/visitMemory.ts` (visit count, 
 
 - Two of the most-edited files are large: `MacintoshDesktop.tsx` (~1.2k lines) and `macintosh-desktop.css` (~5k lines). Prefer adding to the existing file in the same section over creating a parallel file, unless you're carving out a self-contained module.
 - `windowRegistry.INITIAL` must contain an entry for every `AnyWindowId` — TypeScript will enforce this; if you add a window id, add the title/size or the build breaks.
-- The repo ships a `.venv/` (gitignored), `node_modules/`, `dist/`, and `.vercel/` — none of these should be touched by code changes.
-- `images/`, `gpu_depreciation.gif`, and `privatecreditimage.png` at the repo root are imported as Vite assets — moving them requires updating the import paths.
+- The repo ships `node_modules/`, `dist/`, and `.vercel/` — none of these should be touched by code changes.
+- Vendor chunks are configured in `vite.config.ts` (`build.rollupOptions.output.manualChunks`). New heavy deps belong in an existing or new `vendor-*` chunk; otherwise they land in the entry bundle.
+- `vite-imagetools` is wired with a `defaultDirectives` callback that only activates on imports tagged `?responsive`. Other image imports pass through Vite's default asset handling unchanged.
+- `HydraBackground` and `P5MacBackground` short-circuit on mobile (`max-width: 640px`) and `prefers-reduced-motion: reduce`. Don't reintroduce eager WebGL/p5 startup on those code paths.
