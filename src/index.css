@@ -211,6 +211,20 @@ input,
 }
 
 /*
+ * Global focus indicator for keyboard navigation on non-desktop routes.
+ * 2px solid ring with 2px offset, more visible than the Mac aesthetic.
+ * This rule has lower specificity than the .mac-desktop-root variant below,
+ * so the desktop's 1px dotted blue still wins inside the desktop.
+ */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/*
  * Authentic Mac OS 8 focus ring: dotted Mac-selection-blue, 1px, with 1px offset.
  * Scoped to :focus-visible so it only appears for keyboard users.
  * The ring uses the selection blue (not pure black) so focus reads as
