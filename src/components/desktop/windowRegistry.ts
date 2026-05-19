@@ -2,20 +2,20 @@ import type { MusicTrack } from "./panels/MusicPlayerPanel";
 import type { WindowId } from "./desktopIconConfig";
 import { buildFilmPhotoLibrary } from "@/photography/library";
 
-import homefeltImg from "../../../images/homefelt.png";
-import feltfolderImg from "../../../images/feltfolder.png";
-import emailfeltImg from "../../../images/emailfelt.png";
-import framefeltImg from "../../../images/framefelt.png";
-import photoboothfeltImg from "../../../images/photoboothfelt.png";
-import photobookfeltImg from "../../../images/photobookfelt.png";
-import feltterminalImg from "../../../images/feltterminal.png";
-import musicplayerfeltImg from "../../../images/musicplayerfelt.png";
-import feltphotosappImg from "../../../images/feltphotosapp.png";
-import feltbrowserImg from "../../../images/feltbrowser.png";
-import feltcalendarImg from "../../../images/feltcalendar.png";
-import feltlogImg from "../../../images/feltlog.png";
-import feltmoonImg from "../../../images/feltmoon.png";
-import phonefeltImg from "../../../images/phonefelt.png";
+import homefeltImg from "@/assets/icons/homefelt.png";
+import feltfolderImg from "@/assets/icons/feltfolder.png";
+import emailfeltImg from "@/assets/icons/emailfelt.png";
+import framefeltImg from "@/assets/icons/framefelt.png";
+import photoboothfeltImg from "@/assets/icons/photoboothfelt.png";
+import photobookfeltImg from "@/assets/icons/photobookfelt.png";
+import feltterminalImg from "@/assets/icons/feltterminal.png";
+import musicplayerfeltImg from "@/assets/icons/musicplayerfelt.png";
+import feltphotosappImg from "@/assets/icons/feltphotosapp.png";
+import feltbrowserImg from "@/assets/icons/feltbrowser.png";
+import feltcalendarImg from "@/assets/icons/feltcalendar.png";
+import feltlogImg from "@/assets/icons/feltlog.png";
+import feltmoonImg from "@/assets/icons/feltmoon.png";
+import phonefeltImg from "@/assets/icons/phonefelt.png";
 
 export type AnyWindowId =
   | WindowId

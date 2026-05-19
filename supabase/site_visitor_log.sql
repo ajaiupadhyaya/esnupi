@@ -10,13 +10,13 @@ alter table public.site_visitor_log enable row level security;
 create policy "site visitor log is publicly readable"
   on public.site_visitor_log
   for select
-  to anon
+  to anon, authenticated
   using (true);
 
 create policy "site visitor log is publicly insertable"
   on public.site_visitor_log
   for insert
-  to anon
+  to anon, authenticated
   with check (true);
 
 -- Realtime (enable in dashboard if not already): add table to supabase_realtime publication.

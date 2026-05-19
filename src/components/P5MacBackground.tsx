@@ -9,6 +9,7 @@ import { p5flowersSketch } from "../p5mac/p5flowersSketch";
 import { p5itoWeaveSketch } from "../p5mac/p5itoWeaveSketch";
 import { p5starCollageSketch } from "../p5mac/p5starCollageSketch";
 import { pickP5MacVariant, type P5MacVariant } from "../p5mac/pickP5MacVariant";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 import "./P5MacBackground.css";
 
@@ -27,6 +28,8 @@ const SKETCH: Record<P5MacVariant, (p: p5) => void> = {
  * Exposes the same `hydraStage` hooks as HydraBackground, driving CSS filters and loop/pause on the p5 instance.
  */
 export function P5MacBackground() {
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const isPhone = useMediaQuery("(max-width: 640px)");
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const p5Ref = useRef<InstanceType<typeof p5> | null>(null);
@@ -34,6 +37,7 @@ export function P5MacBackground() {
   const variant = useMemo(() => pickP5MacVariant(), []);
 
   useEffect(() => {
+    if (reduceMotion || isPhone) return;
     if (failed) return;
     const el = containerRef.current;
     const wrap = wrapRef.current;
@@ -181,9 +185,10 @@ export function P5MacBackground() {
         /* ignore */
       }
     };
-  }, [variant, failed]);
+  }, [variant, failed, reduceMotion, isPhone]);
 
   useEffect(() => {
+    if (reduceMotion || isPhone) return;
     const onMove = (e: MouseEvent) => {
       const xn = e.clientX / Math.max(1, window.innerWidth);
       const yn = e.clientY / Math.max(1, window.innerHeight);
@@ -191,8 +196,9 @@ export function P5MacBackground() {
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reduceMotion, isPhone]);
 
+  if (reduceMotion || isPhone) return null;
   if (failed) {
     return <div className="p5-mac-fallback" aria-hidden />;
   }

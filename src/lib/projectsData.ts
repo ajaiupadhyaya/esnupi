@@ -7,7 +7,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  *   1. Copy any existing entry below as a template.
  *   2. Replace the placeholder copy and Unsplash image URLs (marked TODO).
- *      For local images: `import foo from "../../images/foo.jpg"` at the top
+ *      For local images: `import foo from "@/assets/icons/foo.jpg"` at the top
  *      of this file, then set `src: foo`.
  *   3. `id` becomes the URL anchor — `/archive#project-<id>` — so keep it
  *      slug-safe (lowercase, hyphens, no spaces).
@@ -22,7 +22,7 @@
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-import gpuDepreciationGif from "../../gpu_depreciation.gif";
+import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
 export type ProjectKind = "drive" | "kext";
 
 export type ProjectLink = {
@@ -170,10 +170,9 @@ export const PROJECTS: Project[] = [
     ],
     media: [
       {
-        kind: "image",
+        kind: "video",
         layout: "full",
-        src: gpuDepreciationGif,
-        alt: "GPU depreciation report charts showing utilization, power cost, and ROI trends.",
+        src: gpuDepreciation,
         caption: "GPU depreciation report visual summary.",
       },
       {

@@ -6,4 +6,5 @@ dist
 .venv
 .vercel
 music/
+tsconfig.tsbuildinfo
 

@@ -1,5 +1,4 @@
 @import "normalize.css/normalize.css";
-@import url("https://fonts.googleapis.com/css2?family=Public+Sans:opsz,wght@8..144,200;8..144,300;8..144,400;8..144,500;8..144,700&family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=IBM+Plex+Mono:wght@300;400;500;600&family=La+Belle+Aurore&family=Alfa+Slab+One&family=UnifrakturCook:wght@700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -209,6 +208,20 @@ input,
 .mac-desktop-root [disabled],
 .mac-desktop-root :disabled {
   cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22'><circle cx='11' cy='11' r='9' fill='none' stroke='%23000' stroke-width='2'/><line x1='4' y1='4' x2='18' y2='18' stroke='%23000' stroke-width='2'/></svg>") 11 11, not-allowed;
+}
+
+/*
+ * Global focus indicator for keyboard navigation on non-desktop routes.
+ * 2px solid ring with 2px offset, more visible than the Mac aesthetic.
+ * This rule has lower specificity than the .mac-desktop-root variant below,
+ * so the desktop's 1px dotted blue still wins inside the desktop.
+ */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /*

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { playMacIconSelect, playMacTrashEmpty } from "@/lib/retroMacSounds";
 
-import felttrashcan from "../../../images/felttrashcan.png";
+import felttrashcan from "@/assets/icons/felttrashcan.png";
 
 /**
  * TrashCan — the classic Mac trash icon. Tracks whether it contains items

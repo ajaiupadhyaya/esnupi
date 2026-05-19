@@ -10,6 +10,12 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export function LenisGsapProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
+    // Skip Lenis (and the GSAP ticker integration that pairs with it) when the
+    // user has opted into reduced motion. Native browser scroll takes over.
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
     const lenis = new Lenis({
       smoothWheel: true,
       syncTouch: true,
@@ -25,7 +31,7 @@ export function LenisGsapProvider({ children }: { children: ReactNode }) {
 
     return () => {
       gsap.ticker.remove(ticker);
-      lenis.stop();
+      lenis.destroy();
     };
   }, []);
 

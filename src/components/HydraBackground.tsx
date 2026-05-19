@@ -12,6 +12,7 @@ import {
   saveShaderLabState,
   type ShaderLabParams,
 } from "../lib/shaderLab";
+import { useMediaQuery } from "@/lib/useMediaQuery";
 
 type ActiveMood = HydraMoodId | "RANDOM";
 
@@ -23,6 +24,8 @@ import "./HydraBackground.css";
  * inverts when trash is emptied, and pauses under load.
  */
 export function HydraBackground() {
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const isPhone = useMediaQuery("(max-width: 640px)");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [useFallback, setUseFallback] = useState(false);
@@ -36,6 +39,7 @@ export function HydraBackground() {
   }, []);
 
   useEffect(() => {
+    if (reduceMotion || isPhone) return;
     if (useFallback) return;
     const canvas = canvasRef.current;
     const wrap = wrapRef.current;
@@ -263,10 +267,11 @@ export function HydraBackground() {
         /* ignore */
       }
     };
-  }, [randomSketch, useFallback]);
+  }, [randomSketch, useFallback, reduceMotion, isPhone]);
 
   /* ---- surface mouse position to the stage ---- */
   useEffect(() => {
+    if (reduceMotion || isPhone) return;
     const onMove = (e: MouseEvent) => {
       const xn = e.clientX / Math.max(1, window.innerWidth);
       const yn = e.clientY / Math.max(1, window.innerHeight);
@@ -274,8 +279,9 @@ export function HydraBackground() {
     };
     window.addEventListener("mousemove", onMove, { passive: true });
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reduceMotion, isPhone]);
 
+  if (reduceMotion || isPhone) return null;
   if (useFallback) {
     return <div className="hydra-backdrop hydra-fallback" aria-hidden />;
   }

@@ -3455,6 +3455,15 @@ body.mac-konami-unlocked .hydra-backdrop {
     transparent 1px 3px
   );
 }
+/* CSS safety net: if the JS reduced-motion gate somehow doesn't suppress the
+   overlay render, collapse the animation to a 1 ms no-op so it clears
+   immediately without any visible flash or motion. */
+@media (prefers-reduced-motion: reduce) {
+  .mac-route-transition--crt-collapse,
+  .mac-route-transition--boot {
+    animation-duration: 1ms !important;
+  }
+}
 
 /* =========================================================== */
 /* Mobile alert                                                */

@@ -1,3 +1,4 @@
+import type { ResponsiveImage } from "@/components/ui/ResponsivePicture";
 import { PHOTO_MANIFEST } from "./manifest";
 
 const photoModules = import.meta.glob(
@@ -5,8 +6,9 @@ const photoModules = import.meta.glob(
   {
     eager: true,
     import: "default",
+    query: "?responsive",
   },
-) as Record<string, string>;
+) as Record<string, ResponsiveImage>;
 
 function prettyName(file: string): string {
   const base = file.replace(/\.[^.]+$/, "");
@@ -22,7 +24,7 @@ function trimmedOrUndefined(s: string | undefined): string | undefined {
 
 export type FilmPhoto = {
   id: string;
-  src: string;
+  image: ResponsiveImage;
   file: string;
   title: string;
   location: string;
@@ -30,10 +32,10 @@ export type FilmPhoto = {
 };
 
 export function buildFilmPhotoLibrary(): FilmPhoto[] {
-  const byFile = new Map<string, { id: string; src: string; file: string }>();
-  for (const [path, src] of Object.entries(photoModules)) {
+  const byFile = new Map<string, { id: string; image: ResponsiveImage; file: string }>();
+  for (const [path, image] of Object.entries(photoModules)) {
     const file = path.split("/").pop() ?? path;
-    byFile.set(file, { id: path, src, file });
+    byFile.set(file, { id: path, image, file });
   }
 
   const used = new Set<string>();

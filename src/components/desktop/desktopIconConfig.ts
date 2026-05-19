@@ -1,15 +1,15 @@
-import emailfelt from "../../../images/emailfelt.png";
-import feltheart3 from "../../../images/feltheart3.webp";
-import feltfolder from "../../../images/feltfolder.png";
-import feltmoon from "../../../images/feltmoon.png";
-import feltcalendar from "../../../images/feltcalendar.png";
-import photobookfelt from "../../../images/photobookfelt.png";
-import photoboothfelt from "../../../images/photoboothfelt.png";
-import framefelt from "../../../images/framefelt.png";
-import homefelt from "../../../images/homefelt.png";
-import feltlog from "../../../images/feltlog.png";
+import emailfelt from "@/assets/icons/emailfelt.png";
+import feltheart3 from "@/assets/icons/feltheart3.webp";
+import feltfolder from "@/assets/icons/feltfolder.png";
+import feltmoon from "@/assets/icons/feltmoon.png";
+import feltcalendar from "@/assets/icons/feltcalendar.png";
+import photobookfelt from "@/assets/icons/photobookfelt.png";
+import photoboothfelt from "@/assets/icons/photoboothfelt.png";
+import framefelt from "@/assets/icons/framefelt.png";
+import homefelt from "@/assets/icons/homefelt.png";
+import feltlog from "@/assets/icons/feltlog.png";
 
-import filmblob from "../../../images/filmblob.png";
+import filmblob from "@/assets/icons/filmblob.png";
 
 export type WindowId =
   | "about"
