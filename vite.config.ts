@@ -38,11 +38,14 @@ export default defineConfig({
     imagetools({
       defaultDirectives: (url) => {
         // Only apply defaults to imports that opt in with `?responsive`.
-        // Produces a <picture>-shaped object with AVIF + WebP + JPG variants at 480/1024/2048 widths.
+        // Produces a <picture>-shaped object with WebP + JPG variants at 1024/2048 widths.
+        // AVIF dropped: sharp's AVIF encoder is ~10x slower than WebP and pushed the Vercel
+        // build past 10 min for 75 photos. WebP is supported in every modern browser and gives
+        // ~95% of AVIF's compression at a fraction of the build cost.
         if (url.searchParams.has("responsive")) {
           return new URLSearchParams({
-            format: "avif;webp;jpg",
-            w: "480;1024;2048",
+            format: "webp;jpg",
+            w: "1024;2048",
             as: "picture",
           });
         }
