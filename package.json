@@ -21,7 +21,6 @@
     "@xterm/addon-fit": "^0.11.0",
     "@xterm/xterm": "^6.0.0",
     "animejs": "^4.3.6",
-    "aos": "^2.3.4",
     "chart.js": "^4.5.1",
     "chroma-js": "^3.2.0",
     "class-variance-authority": "^0.7.1",
@@ -45,7 +44,6 @@
   "devDependencies": {
     "@mdx-js/rollup": "^3.1.1",
     "@tailwindcss/typography": "^0.5.19",
-    "@types/aos": "^3.0.7",
     "@types/chroma-js": "^3.1.2",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.6.0",
