@@ -5,7 +5,6 @@ import type { SharedPhoto } from "@/lib/photobookStore";
 import type { FilmPhoto } from "@/photography/library";
 import type { MusicTrack } from "./panels/MusicPlayerPanel";
 import { AboutThisMacPanel } from "./panels/AboutThisMacPanel";
-import { SecretPanel } from "./panels/SecretPanel";
 import { StickyNotePanel } from "./panels/StickyNotePanel";
 import {
   AboutPanel as NewAboutPanel,
@@ -65,6 +64,9 @@ const FinderPanel = lazy(() =>
 );
 const VisitorLogPanel = lazy(() =>
   import("./panels/VisitorLogPanel").then((m) => ({ default: m.VisitorLogPanel })),
+);
+const SecretPanel = lazy(() =>
+  import("./panels/SecretPanel").then((m) => ({ default: m.SecretPanel })),
 );
 
 export type MacintoshWindowPanelContentProps = {
@@ -159,13 +161,13 @@ export function MacintoshWindowPanelContent({
         {id === "notepad" && <NotepadPanel />}
         {id === "kaleidoscope" && <KaleidoscopePanel />}
         {id === "slideshow" && <SlideshowPanel />}
+        {id === "internals" && <InternalsPanel />}
+        {id === "finder" && <FinderPanel onOpen={(target) => onOpenWindow(target as AnyWindowId)} />}
+        {id === "secret" && <SecretPanel />}
       </Suspense>
       {id === "aboutMac" && <AboutThisMacPanel />}
-      {id === "secret" && <SecretPanel />}
       {id === "sticky" && <StickyNotePanel />}
       {id === "getinfo" && <GetInfoPanel target={getInfoTarget ?? "about"} />}
-      {id === "internals" && <InternalsPanel />}
-      {id === "finder" && <FinderPanel onOpen={(target) => onOpenWindow(target as AnyWindowId)} />}
     </>
   );
 }
