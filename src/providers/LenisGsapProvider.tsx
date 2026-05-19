@@ -31,7 +31,7 @@ export function LenisGsapProvider({ children }: { children: ReactNode }) {
 
     return () => {
       gsap.ticker.remove(ticker);
-      lenis.stop();
+      lenis.destroy();
     };
   }, []);
 
