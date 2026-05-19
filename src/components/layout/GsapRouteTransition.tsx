@@ -13,6 +13,17 @@ export function GsapRouteTransition({ children }: { children: ReactNode }) {
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Skip the slide-in tween when the user prefers reduced motion; set the
+    // final state directly so nothing lingers mid-animation.
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      gsap.set(el, { y: 0, clearProps: "transform" });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       // Do not animate opacity: 0 → 1 on the whole app shell — if a tween is interrupted
       // or reverted badly, the UI can stay fully invisible (blank black screen).

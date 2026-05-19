@@ -42,13 +42,24 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
 
   const goto = useCallback(
     (path: string) => {
+      const current = window.location.pathname;
+      if (current === path) return;
+
+      // Skip the CRT/boot overlay animation entirely when the user prefers
+      // reduced motion — navigate synchronously with no fullscreen flash.
+      const reduceMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduceMotion) {
+        navigate(path);
+        return;
+      }
+
       const isSecondaryRoom =
         path.startsWith("/lab") ||
         path.startsWith("/gallery") ||
         path.startsWith("/archive") ||
         path.startsWith("/feltmoon");
-      const current = window.location.pathname;
-      if (current === path) return;
       const nextKind: TransitionKind = isSecondaryRoom && current === "/" ? "crt-collapse" : "boot";
       setKind(nextKind);
       setPhase("playing");
