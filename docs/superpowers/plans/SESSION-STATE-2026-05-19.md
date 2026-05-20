@@ -1,6 +1,23 @@
-# Session state — 2026-05-19 (pause point)
+# Session state — 2026-05-19
 
-## Live site
+## ✅ RESOLVED — 2026-05-19
+
+The deployment incident is fully resolved. The stuck build aged out on Vercel's
+build timeout, which freed the queue and let the fix deploy on its own.
+
+- **Production is live on commit `2629995`** — deployment `dpl_BSV7jWTX49zeRQCiW7cjJgVHuVv1`,
+  state `READY`, build ~2m9s. Custom domain `ajaiupadhyaya.com` / `www.ajaiupadhyaya.com`
+  is aliased to it.
+- Verified in a real browser: Mac OS 8 desktop renders fully (menu bar, all desktop
+  icons, dock), **zero console errors**.
+- Pre-fix deployment `dpl_CwZhdn7qjAXeXYkZxVPDavrYJ7Pi` (commit `56c2797`) remains
+  available as a one-click rollback candidate in the Vercel dashboard if ever needed.
+
+Everything below is the historical pause-point snapshot, kept for the root-cause record.
+
+---
+
+## Live site (at pause)
 - Production URL still serves commit **`56c2797`** (pre-fix). Deployment id: `dpl_CwZhdn7qjAXeXYkZxVPDavrYJ7Pi`. Site is up.
 - Rollback tag: `pre-production-fix-2026-05-19` → `56c2797` (pushed to origin).
 
