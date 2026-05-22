@@ -1,15 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CASE_STUDY_GITHUB, CASE_STUDY_URL } from "@/lib/caseStudyUrl";
 import { playMacTypeTick, playPongBeep } from "@/lib/retroMacSounds";
 
-const BROWSER_HOME = "https://example.com";
+const BROWSER_HOME = CASE_STUDY_URL;
 const BROWSER_PRESETS = [
-  "https://example.com",
+  CASE_STUDY_URL,
+  CASE_STUDY_GITHUB,
+  "https://github.com/ajaiupadhyaya",
   "https://en.wikipedia.org/wiki/Mac_OS_8",
   "https://archive.org",
-  "https://developer.mozilla.org",
 ];
 
 const BOOKMARKS: Array<{ label: string; url: string }> = [
+  { label: "Case study dashboard", url: CASE_STUDY_URL },
+  { label: "case-study (GitHub)", url: CASE_STUDY_GITHUB },
   { label: "Space Jam (1996, archived)", url: "https://web.archive.org/web/1996/https://www.spacejam.com/" },
   { label: "Apple.com (1997, archived)", url: "https://web.archive.org/web/1997/https://www.apple.com/" },
   { label: "Suck.com", url: "https://web.archive.org/web/2000/https://www.suck.com/" },

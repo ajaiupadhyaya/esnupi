@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { hydraStage } from "@/lib/hydraStage";
+import { CASE_STUDY_GITHUB, CASE_STUDY_URL } from "@/lib/caseStudyUrl";
 import { PROJECTS_BY_KIND, type Project } from "@/lib/projectsData";
 import { ScaffoldReveal } from "./ScaffoldReveal";
 
@@ -137,6 +138,22 @@ export function WorkPanel({
                     <span key={t} className="mac-profiler__tag">#{t}</span>
                   ))}
                 </div>
+                {sel.links.length ? (
+                  <div className="mac-profiler__linkrow">
+                    {sel.links.map((link) => (
+                      <a
+                        key={link.label}
+                        className="mac-profiler__link"
+                        href={link.href}
+                        data-kind={link.kind ?? "external"}
+                        target={link.href.startsWith("http") ? "_blank" : undefined}
+                        rel={link.href.startsWith("http") ? "noreferrer" : undefined}
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
                 {onOpenArchive ? (
                   <button
                     type="button"
@@ -188,6 +205,7 @@ const CONTACT_METHODS: Array<{ label: string; value: string; href: string }> = [
 
 const CONTACT_LINKS: Array<{ label: string; href: string }> = [
   { label: "Portfolio / Archive", href: "/archive" },
+  { label: "Case study dashboard", href: CASE_STUDY_URL },
   { label: "GitHub", href: "https://github.com/ajaiupadhyaya" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/ajai-u/" },
 ];
@@ -371,6 +389,15 @@ const WORKSITE_FEATURES: Array<{
   meta: string;
 }> = [
   {
+    title: "Case Study Dashboard",
+    category: "Projects",
+    year: "2026",
+    href: CASE_STUDY_URL,
+    description:
+      "Applied financial math case studies — interactive dashboard of models, writeups, and decision-making work.",
+    meta: "live app / Vercel / GitHub",
+  },
+  {
     title: "github",
     category: "GitHub",
     year: "2026",
@@ -397,6 +424,13 @@ const WORKSITE_LINKS: Array<{
   href: string;
 }> = [
   { title: "Substack", category: "Writing", year: "2026", href: "https://ajaiupadhyaya.substack.com/" },
+  {
+    title: "Case Study Dashboard",
+    category: "Projects",
+    year: "2026",
+    href: CASE_STUDY_URL,
+  },
+  { title: "case-study repo", category: "GitHub", year: "2026", href: CASE_STUDY_GITHUB },
   { title: "Undergrad Econ Research", category: "Research", year: "2026", href: "/archive" },
   { title: "Undergrad CS Research", category: "Research", year: "2026", href: "/gallery" },
   { title: "Excel Models & Dashboards", category: "Notes", year: "2026", href: "/feltmoon" },

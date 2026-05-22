@@ -1406,6 +1406,29 @@ body.mac-matrix-mode .mac-desktop-surface {
   background: #f0f0f0;
   color: #555;
 }
+.mac-profiler__linkrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 10px;
+}
+.mac-profiler__link {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border: 1px solid #888;
+  background: #fff;
+  color: #222;
+  text-decoration: none;
+}
+.mac-profiler__link:hover {
+  background: #f8f4ec;
+}
+.mac-profiler__link[data-kind="demo"] {
+  border-color: #4a6fa5;
+  color: #1a3a6b;
+}
 .mac-profiler__cta {
   display: inline-flex;
   align-items: center;

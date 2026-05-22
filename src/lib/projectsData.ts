@@ -23,6 +23,7 @@
  */
 
 import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
+import { CASE_STUDY_GITHUB, CASE_STUDY_URL } from "@/lib/caseStudyUrl";
 export type ProjectKind = "drive" | "kext";
 
 export type ProjectLink = {
@@ -244,8 +245,52 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "machine-learning-investment-research",
+    id: "case-study-dashboard",
     index: "04",
+    accession: "Esn-0004",
+    kind: "drive",
+    title: "Case Study Dashboard",
+    year: "2026",
+    role: "Applied financial math · decision-making · writing",
+    blurb:
+      "Interactive dashboard of applied finance case studies — models, writeups, and outcomes collected in one place.",
+    wallText: [
+      "Applied Financial Math for Decision-Making: a living catalog of case studies built as its own app. Each entry is a self-contained investigation; the dashboard is the reading room.",
+      "Open the live dashboard from the in-desktop Browser (home page) or use the links below. Individual studies are maintained there so this archive entry stays a hub, not a duplicate of every writeup.",
+    ],
+    tags: ["Finance", "Modeling", "Dashboard", "2026"],
+    tools: ["React", "TypeScript", "Vercel"],
+    collaborators: [],
+    status: "complete",
+    hex: "ca 5e 0d 15 74 75 64 79 20 64 61 73 68 62 6f 61",
+    links: [
+      { label: "Open dashboard", href: CASE_STUDY_URL, kind: "demo" },
+      {
+        label: "Hub on this site",
+        href: "/archive#project-case-study-dashboard",
+        kind: "writeup",
+      },
+      { label: "GitHub", href: CASE_STUDY_GITHUB, kind: "github" },
+    ],
+    media: [
+      {
+        kind: "image",
+        layout: "full",
+        src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=max&w=2400&q=85",
+        alt: "Analytics charts on a laptop screen.",
+        caption: "Dashboard hub — detail lives at case-study.vercel.app.",
+      },
+      {
+        kind: "image",
+        layout: "wide",
+        src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=max&w=2400&q=85",
+        alt: "Spreadsheet and charts on a desk.",
+      },
+    ],
+  },
+  {
+    id: "machine-learning-investment-research",
+    index: "05",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -281,7 +326,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "05",
+    index: "06",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -323,7 +368,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "06",
+    index: "07",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
