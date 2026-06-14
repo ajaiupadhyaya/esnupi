@@ -19,6 +19,7 @@ import gpuDepreciation from "@/assets/gpu_depreciation.mp4";
 import feltmoonImg from "@/assets/icons/feltmoon.png";
 import privateCreditImage from "@/assets/privatecreditimage.png";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { Entropy } from "@/components/ui/entropy";
 import gsap from "gsap";
 import {
@@ -256,7 +257,11 @@ export default function FeltMoon() {
   const active = WORKS[activeIndex]!;
 
   return (
-    <main className={`fm-root${curatorMode ? " fm-root--curator" : ""}`}>
+    <main
+      className={`fm-root${curatorMode ? " fm-root--curator" : ""}`}
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} felt moon room`}
+    >
       {/* Living plaster: particle field, split order / chaos, reacts to
           the cursor. Sits behind everything at z-index 0. */}
       <Entropy

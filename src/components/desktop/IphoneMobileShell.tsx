@@ -4,6 +4,7 @@ import type { SharedPhoto } from "@/lib/photobookStore";
 import { playMacIconOpen } from "@/lib/retroMacSounds";
 import { MacintoshWindowPanelContent } from "./MacintoshWindowPanelContent";
 import type { AnyWindowId } from "./windowRegistry";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { DOCK_APPS, INITIAL, MOBILE_EXTRA_APPS, FILM_PHOTO_ITEMS, MUSIC_LIBRARY } from "./windowRegistry";
 import "./retro-iphone-shell.css";
 
@@ -115,7 +116,8 @@ export function IphoneMobileShell({
     <div
       className={`ios-retro-root${screen === "home" ? " ios-retro-root--home" : ""}`}
       role="application"
-      aria-label="Retro phone home"
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} mobile portfolio`}
     >
       <header className="ios-retro-status">
         <div className="ios-retro-status__carrier" aria-hidden>

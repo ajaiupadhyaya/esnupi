@@ -1,4 +1,5 @@
 import { useRouteTransition } from "@/components/layout/RouteTransition";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { PROJECTS, type ProjectKind, type ProjectMedia } from "@/lib/projectsData";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./archive.css";
@@ -193,7 +194,11 @@ export default function Archive() {
   }, []);
 
   return (
-    <main className="archive-root" aria-label="Archive of works">
+    <main
+      className="archive-root"
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} project archive`}
+    >
       <div className="archive-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden />
 
       <header className="archive-bar">

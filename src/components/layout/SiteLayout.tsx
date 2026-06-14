@@ -1,5 +1,8 @@
+import { HiddenSiteIdentity } from "@/components/seo/HiddenSiteIdentity";
+import { SiteSeoHead } from "@/components/seo/SiteSeoHead";
 import { HydraBackground } from "@/components/HydraBackground";
 import { P5MacBackground } from "@/components/P5MacBackground";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { Outlet, useLocation } from "react-router-dom";
 
 export function SiteLayout() {
@@ -16,13 +19,27 @@ export function SiteLayout() {
   const showScrim = pathname.startsWith("/lab");
 
   return (
-    <div className="site-fusion-shell relative min-h-dvh text-foreground">
-      {showP5Mac && <P5MacBackground />}
-      {showHydra && <HydraBackground />}
-      <div className="site-fusion-topo" aria-hidden />
-      <div className="site-fusion-jpeg" aria-hidden />
-      <div className="site-film-vignette" aria-hidden />
-      <div className="site-film-grain" aria-hidden />
+    <div
+      className="site-fusion-shell relative min-h-dvh text-foreground"
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} portfolio`}
+    >
+      <SiteSeoHead />
+      <HiddenSiteIdentity />
+      {showP5Mac && (
+        <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
+          <P5MacBackground />
+        </div>
+      )}
+      {showHydra && (
+        <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
+          <HydraBackground />
+        </div>
+      )}
+      <div className="site-fusion-topo" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+      <div className="site-fusion-jpeg" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+      <div className="site-film-vignette" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+      <div className="site-film-grain" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
       {showScrim && (
         <div
           className="pointer-events-none fixed inset-0 z-[1] bg-gradient-to-b from-background/30 via-background/55 to-background/90"

@@ -1,4 +1,5 @@
 import { useRouteTransition } from "@/components/layout/RouteTransition";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
@@ -121,7 +122,12 @@ export default function Gallery() {
   }, []);
 
   return (
-    <main ref={rootRef} className="gallery-root">
+    <main
+      ref={rootRef}
+      className="gallery-root"
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} photography gallery`}
+    >
       <div
         className="gallery-progress"
         style={{ transform: `scaleX(${progress})` }}

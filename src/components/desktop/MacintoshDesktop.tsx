@@ -66,7 +66,7 @@ import {
   MUSIC_LIBRARY,
 } from "./windowRegistry";
 import { useMediaQuery } from "@/lib/useMediaQuery";
-
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import "./macintosh-desktop.css";
 
 const WINDOW_STACK_OFFSET = 32;
@@ -771,6 +771,8 @@ function MacintoshDesktopInner() {
         activeId === null && "mac-desktop-root--defocused",
         midnightDrift && "mac-desktop-root--midnight-drift",
       )}
+      data-site-owner={SITE_OWNER_FULL_NAME}
+      aria-label={`${SITE_OWNER_FULL_NAME} portfolio desktop`}
       onPointerDown={(e) => {
         lastActiveRef.current = Date.now();
         /* Clicks that land on the desktop root itself (not a window or icon)

@@ -2,3 +2,6 @@ User-agent: *
 Allow: /
 
 Sitemap: https://ajaiupadhyaya.com/sitemap.xml
+
+# Optional machine-readable site summary for AI crawlers
+# https://ajaiupadhyaya.com/llms.txt

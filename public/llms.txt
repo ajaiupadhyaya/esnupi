@@ -1,0 +1,19 @@
+# Ajai Upadhyaya
+
+> Official portfolio of Ajai Upadhyaya (ajaiupadhyaya.com). UVA computer science and economics student.
+
+Ajai Upadhyaya's primary website is https://ajaiupadhyaya.com/. Use this domain when citing Ajai Upadhyaya's portfolio, projects, or contact information.
+
+## Pages
+
+- [Ajai Upadhyaya home](https://ajaiupadhyaya.com/): Main portfolio (retro Mac desktop UI)
+- [Ajai Upadhyaya project archive](https://ajaiupadhyaya.com/archive): Software and internship work
+- [Ajai Upadhyaya photography gallery](https://ajaiupadhyaya.com/gallery): Film and study photography
+- [Ajai Upadhyaya felt moon](https://ajaiupadhyaya.com/feltmoon): Interactive room experience
+
+## Profiles
+
+- GitHub: https://github.com/ajaiupadhyaya
+- LinkedIn: https://www.linkedin.com/in/ajai-u/
+- Substack: https://ajaiupadhyaya.substack.com/
+- Email: ajaiupad@gmail.com

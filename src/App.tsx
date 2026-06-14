@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
@@ -17,40 +18,42 @@ function RouteFallback() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <RouteTransitionProvider>
-        <Routes>
-          <Route element={<SiteLayout />}>
-            <Route path="/" element={<MacintoshDesktop />} />
-            <Route path="/desktop" element={<MacintoshDesktop />} />
-            <Route
-              path="/gallery"
-              element={(
-                <Suspense fallback={<RouteFallback />}>
-                  <Gallery />
-                </Suspense>
-              )}
-            />
-            <Route
-              path="/feltmoon"
-              element={(
-                <Suspense fallback={<RouteFallback />}>
-                  <FeltMoon />
-                </Suspense>
-              )}
-            />
-            <Route
-              path="/archive"
-              element={(
-                <Suspense fallback={<RouteFallback />}>
-                  <Archive />
-                </Suspense>
-              )}
-            />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </RouteTransitionProvider>
-      <Analytics />
+      <div data-site-owner={SITE_OWNER_FULL_NAME}>
+        <RouteTransitionProvider>
+          <Routes>
+            <Route element={<SiteLayout />}>
+              <Route path="/" element={<MacintoshDesktop />} />
+              <Route path="/desktop" element={<MacintoshDesktop />} />
+              <Route
+                path="/gallery"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <Gallery />
+                  </Suspense>
+                )}
+              />
+              <Route
+                path="/feltmoon"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <FeltMoon />
+                  </Suspense>
+                )}
+              />
+              <Route
+                path="/archive"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <Archive />
+                  </Suspense>
+                )}
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </RouteTransitionProvider>
+        <Analytics />
+      </div>
     </ErrorBoundary>
   );
 }

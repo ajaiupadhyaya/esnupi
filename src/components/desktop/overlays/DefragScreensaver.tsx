@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getControlSettings } from "../controlSettings";
 
-const IDLE_MS = 90_000;
+const IDLE_MS = 300_000;
 const GRID_COLS = 40;
 const GRID_ROWS = 20;
 const FILL_MS = 12_000;
@@ -10,8 +10,8 @@ const HOLD_MS = 3_000;
 type Phase = "idle" | "filling" | "complete";
 
 /**
- * The machine gets bored. 90 seconds without input, it starts defragmenting
- * an imaginary disk. Any input returns you to the desktop.
+ * The machine gets bored. After five minutes without input, it starts
+ * defragmenting an imaginary disk. Any input returns you to the desktop.
  */
 export function DefragScreensaver() {
   const [active, setActive] = useState(false);
