@@ -1,9 +1,14 @@
 import { type ImgHTMLAttributes } from "react";
 
-type PictureSource = { srcset: string; type: string };
-
+/**
+ * The shape `vite-imagetools` actually emits for `?responsive` (`as=picture`):
+ * `sources` is an object keyed by format, not a list. Key order follows the
+ * order the formats were requested in `vite.config.ts` (`format: "webp;jpg"` →
+ * `webp`, then `jpeg`), and `<picture>` takes the first `<source>` the browser
+ * supports — so the modern format must stay first.
+ */
 export type ResponsiveImage = {
-  sources: PictureSource[];
+  sources: Record<string, string>;
   img: { src: string; w: number; h: number };
 };
 
@@ -15,8 +20,8 @@ type Props = Omit<ImgHTMLAttributes<HTMLImageElement>, "src" | "srcSet"> & {
 export function ResponsivePicture({ image, sizes = "100vw", alt, ...rest }: Props) {
   return (
     <picture>
-      {image.sources.map((source) => (
-        <source key={source.type} type={source.type} srcSet={source.srcset} sizes={sizes} />
+      {Object.entries(image.sources).map(([format, srcset]) => (
+        <source key={format} type={`image/${format}`} srcSet={srcset} sizes={sizes} />
       ))}
       <img
         {...rest}

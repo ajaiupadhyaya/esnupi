@@ -36,6 +36,11 @@ export default defineConfig({
     // MDX must be handled only by @mdx-js/rollup — do not pass .mdx/.md through react-babel.
     react({ include: /\.(jsx|js|tsx|ts)$/ }),
     imagetools({
+      // imagetools' default `include` is case-sensitive, so an image saved as
+      // `.JPG` silently bypasses the plugin and resolves to a plain URL string
+      // instead of a picture object — which then blows up in <ResponsivePicture>.
+      // Same list as the default, matched case-insensitively.
+      include: /^[^?]+\.(avif|gif|heif|jpeg|jpg|png|tiff|webp)(\?.*)?$/i,
       defaultDirectives: (url) => {
         // Only apply defaults to imports that opt in with `?responsive`.
         // Produces a <picture>-shaped object with WebP + JPG variants at 1024/2048 widths.

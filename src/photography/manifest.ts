@@ -258,7 +258,7 @@ export const PHOTO_MANIFEST: PhotoManifestEntry[] = [
     blurb: "I sat on a hydrant pipe and ate my chicken over rice EXTRA white sauce",
   },
   {
-    file: "meinlondon.JPG",
+    file: "meinlondon.jpg",
     title: "shot by anya, myself in london",
     location: "london",
     blurb: "anya took this of me when I went and visited her when she lived there",
