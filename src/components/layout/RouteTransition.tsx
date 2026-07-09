@@ -59,6 +59,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         path.startsWith("/lab") ||
         path.startsWith("/gallery") ||
         path.startsWith("/archive") ||
+        path.startsWith("/film") ||
         path.startsWith("/feltmoon");
       const nextKind: TransitionKind = isSecondaryRoom && current === "/" ? "crt-collapse" : "boot";
       setKind(nextKind);

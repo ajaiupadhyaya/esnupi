@@ -117,8 +117,13 @@ existing shape instead of introducing a new mechanism.
 - Bottom-left: title, then location, then blurb — each omitted when empty.
 - `←` / `→` step (wrapping), `Esc` closes, backdrop click closes. Prev/next
   controls are real buttons so touch and pointer users get the same affordance.
-- `role="dialog"`, `aria-modal="true"`, focus trapped inside, focus restored to
-  the originating grid cell on close.
+- `role="dialog"`, `aria-modal="true"`, focus trapped inside. On close, focus
+  moves to the cell for the frame the viewer was **last showing** — not the cell
+  that opened it. Open 016, step to 017, close: focus lands on 017 and scrolls
+  it into view. This departs from the usual "return focus to the invoker" rule
+  because the viewer navigates the same collection the grid shows; returning to
+  the invoker would scroll the page backwards, away from the photograph the
+  reader just chose to look at.
 - Immediate neighbours are preloaded so stepping does not flash.
 - The overlay root carries `data-lenis-prevent`. `LenisGsapProvider` checks for
   exactly that attribute; without it, global Lenis keeps smooth-scrolling the

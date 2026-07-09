@@ -30,7 +30,9 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
 
 ### Routing layer (thin)
 
-`src/App.tsx` is a small React Router shell. `MacintoshDesktop` at `/` and `/desktop` is **not** lazy; everything else (`/archive`, `/gallery`, `/feltmoon`) is `React.lazy` + `Suspense`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
+`src/App.tsx` is a small React Router shell. `MacintoshDesktop` at `/` and `/desktop` is **not** lazy; everything else (`/archive`, `/gallery`, `/film`, `/feltmoon`) is `React.lazy` + `Suspense`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
+
+`/film` (`src/pages/Film.tsx`) is the one route that opts out of the site's chrome: `SiteLayout` skips the grain/vignette/topo/JPEG overlays and the crosshair cursor when `pathname` starts with `/film` (the `isBare` branch), and the page sets `data-film-page` on `<html>` while mounted so the field, overscroll, and scrollbars follow `prefers-color-scheme` instead of the site's dark-only tokens. It is the only light-capable surface on the site. Its lightbox portals into `<body>` and carries `data-lenis-prevent` — the attribute `LenisGsapProvider` checks — so global smooth scroll doesn't drive the page behind the overlay.
 
 ### Desktop is the product
 
@@ -57,7 +59,10 @@ The live wallpaper is `hydra-synth` (`HydraBackground.tsx`) with random or autho
 ### MDX, photography, audio
 
 - MDX is wired through `@mdx-js/rollup` only. The `@vitejs/plugin-react` `include` is explicitly restricted to `/\.(jsx|js|tsx|ts)$/` so babel doesn't touch `.mdx`. Don't broaden that include. `/lab` route + `src/content/*.mdx`.
-- Photography catalog: `src/photography/manifest.ts` + `library.ts` → `buildFilmPhotoLibrary()` → `FILM_PHOTO_ITEMS` in `windowRegistry.ts`. Photos are loaded via `import.meta.glob` with `?responsive` so `vite-imagetools` produces WebP/JPG variants at 1024/2048 widths (4 outputs per photo). AVIF was tried but sharp's AVIF encoder pushed the Vercel build past 10 min for 75 photos. WebP gives ~95% of AVIF's compression at ~10x the speed. The shape is `ResponsiveImage` (sources + fallback img); render with `<ResponsivePicture image={photo.image} />` from `@/components/ui/ResponsivePicture`. The one exception is `src/p5mac/p5starCollageSketch.ts` which uses `p.loadImage()` — that needs a plain URL, so `skyline3.jpg` is imported without `?responsive`.
+- Photography catalog: `src/photography/manifest.ts` + `library.ts` → `buildFilmPhotoLibrary()` → `FILM_PHOTO_ITEMS` in `windowRegistry.ts` (desktop Photos window) and `src/pages/Film.tsx` (the `/film` route). Photos are loaded via `import.meta.glob` with `?responsive` so `vite-imagetools` produces WebP/JPG variants at 1024/2048 widths (4 outputs per photo). AVIF was tried but sharp's AVIF encoder pushed the Vercel build past 10 min for 75 photos. WebP gives ~95% of AVIF's compression at ~10x the speed. Render with `<ResponsivePicture image={photo.image} />` from `@/components/ui/ResponsivePicture`. The one exception is `src/p5mac/p5starCollageSketch.ts` which uses `p.loadImage()` — that needs a plain URL, so `skyline3.jpg` is imported without `?responsive`.
+- Two imagetools traps, both hit in production before:
+  - `as=picture` returns `sources` as an **object keyed by format** (`{webp: srcset, jpeg: srcset}`), not an array. `src/types/imagetools.d.ts` is hand-written and does not validate against reality, so `tsc` cannot catch a wrong `ResponsiveImage` shape — a mismatch only surfaces as a runtime crash inside `ResponsivePicture`.
+  - imagetools' `include` regex is matched **case-insensitively** only because `vite.config.ts` passes the `i` flag explicitly. Its default is case-sensitive, so a photo saved as `.JPG` silently bypasses the plugin and resolves to a plain URL string. Keep image filenames lowercase anyway.
 - Local audio: `src/music/` (gitignored — `music/` in `.gitignore`). `ambientAudio.ts` runs site ambience; `retroMacSounds.ts` triggers UI chirps (icon select/open, trash empty, glitch burst, Konami fanfare). Both are gated by `controlSettings`.
 
 ### Path alias

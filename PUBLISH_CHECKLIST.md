@@ -30,7 +30,10 @@
   - `/`
   - `/archive`
   - `/gallery`
+  - `/film`
   - `/feltmoon`
+- `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
+  with no grain, vignette, or crosshair cursor.
 - Desktop interactions checked manually:
   - icon single-click, double-click, drag, context menu
   - window drag/resize/minimize/close

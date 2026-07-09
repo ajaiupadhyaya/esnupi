@@ -23,6 +23,7 @@ export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
   { path: "/archive", label: `${SITE_OWNER_FULL_NAME} project archive` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
+  { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
   { path: "/feltmoon", label: `${SITE_OWNER_FULL_NAME} felt moon room` },
 ] as const;
 
@@ -58,6 +59,16 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
       canonicalPath: "/gallery",
       ogType: "website",
       canonicalUrl: canonicalUrl("/gallery"),
+    };
+  }
+
+  if (normalized === "/film") {
+    return {
+      title: `${SITE_OWNER_FULL_NAME} — Film Photography | ${SITE_BRAND}`,
+      description: `35mm and 110mm film photographs by ${SITE_OWNER_FULL_NAME}. New York, Richmond, California, and Charlottesville, scanned and catalogued on ajaiupadhyaya.com.`,
+      canonicalPath: "/film",
+      ogType: "website",
+      canonicalUrl: canonicalUrl("/film"),
     };
   }
 

@@ -9,6 +9,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 const Archive = lazy(() => import("@/pages/Archive"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
+const Film = lazy(() => import("@/pages/Film"));
 const Gallery = lazy(() => import("@/pages/Gallery"));
 
 function RouteFallback() {
@@ -29,6 +30,14 @@ export default function App() {
                 element={(
                   <Suspense fallback={<RouteFallback />}>
                     <Gallery />
+                  </Suspense>
+                )}
+              />
+              <Route
+                path="/film"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <Film />
                   </Suspense>
                 )}
               />

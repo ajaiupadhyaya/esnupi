@@ -18,10 +18,15 @@ export function SiteLayout() {
   /** Only /lab gets the readability scrim over Hydra. */
   const showScrim = pathname.startsWith("/lab");
 
+  /** /film is a bare field — no grain, vignette, topo, JPEG artifact, or
+   *  crosshair cursor. The photographs carry the page on their own. */
+  const isBare = pathname.startsWith("/film");
+
   return (
     <div
       className="site-fusion-shell relative min-h-dvh text-foreground"
       data-site-owner={SITE_OWNER_FULL_NAME}
+      data-bare={isBare ? "" : undefined}
       aria-label={`${SITE_OWNER_FULL_NAME} portfolio`}
     >
       <SiteSeoHead />
@@ -36,10 +41,14 @@ export function SiteLayout() {
           <HydraBackground />
         </div>
       )}
-      <div className="site-fusion-topo" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
-      <div className="site-fusion-jpeg" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
-      <div className="site-film-vignette" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
-      <div className="site-film-grain" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+      {!isBare && (
+        <>
+          <div className="site-fusion-topo" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+          <div className="site-fusion-jpeg" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+          <div className="site-film-vignette" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+          <div className="site-film-grain" aria-hidden data-site-owner={SITE_OWNER_FULL_NAME} />
+        </>
+      )}
       {showScrim && (
         <div
           className="pointer-events-none fixed inset-0 z-[1] bg-gradient-to-b from-background/30 via-background/55 to-background/90"
