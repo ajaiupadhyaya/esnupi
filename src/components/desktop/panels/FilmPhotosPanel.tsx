@@ -1,6 +1,7 @@
 import type { KeyboardEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useRouteTransition } from "@/components/layout/RouteTransition";
 import type { FilmPhoto } from "@/photography/library";
 import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ type FilmPhotosPanelProps = {
 };
 
 export function FilmPhotosPanel({ items }: FilmPhotosPanelProps) {
+  const routeTransition = useRouteTransition();
   const rootRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -72,6 +74,15 @@ export function FilmPhotosPanel({ items }: FilmPhotosPanelProps) {
       <header className="mac-photos-app__toolbar mac-surface">
         <span className="mac-photos-app__toolbar-title">Photos</span>
         <span className="mac-photos-app__toolbar-meta">{sidebarHint}</span>
+        {/* The only way into /film. Without this the route is reachable only by
+         * typing the URL — it is in the sitemap but nothing on the site links it. */}
+        <button
+          type="button"
+          className="mac-photos-app__toolbar-link"
+          onClick={() => routeTransition.goto("/film")}
+        >
+          Contact sheet <span aria-hidden>↗</span>
+        </button>
       </header>
 
       <div className="mac-photos-app__split">

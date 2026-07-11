@@ -135,7 +135,7 @@ export function FilmLightbox({ photos, index, onIndexChange, onClose }: FilmLigh
           {pad(index + 1)} / {pad(count)}
         </span>
         <button ref={closeRef} type="button" className="film-lightbox__close" onClick={onClose}>
-          Close <span aria-hidden>[esc]</span>
+          close <span aria-hidden>(esc)</span>
         </button>
       </div>
 
@@ -153,16 +153,20 @@ export function FilmLightbox({ photos, index, onIndexChange, onClose }: FilmLigh
       <div className="film-lightbox__foot">
         <div className="film-lightbox__caption">
           <h2 className="film-lightbox__title">{photo.title}</h2>
-          {photo.location ? <p className="film-lightbox__loc">{photo.location}</p> : null}
-          {photo.blurb ? <p className="film-lightbox__blurb">{photo.blurb}</p> : null}
+          {photo.location || photo.blurb ? (
+            <p className="film-lightbox__meta">
+              {photo.location ? <span>{photo.location}</span> : null}
+              {photo.blurb ? <span>{photo.blurb}</span> : null}
+            </p>
+          ) : null}
         </div>
 
         <div className="film-lightbox__nav">
           <button type="button" className="film-lightbox__step" onClick={() => step(-1)}>
-            <span aria-hidden>←</span> Prev
+            <span aria-hidden>←</span> prev
           </button>
           <button type="button" className="film-lightbox__step" onClick={() => step(1)}>
-            Next <span aria-hidden>→</span>
+            next <span aria-hidden>→</span>
           </button>
         </div>
       </div>

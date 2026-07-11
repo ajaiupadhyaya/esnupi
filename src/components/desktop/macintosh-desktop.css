@@ -2518,6 +2518,7 @@ body.mac-matrix-mode .mac-desktop-surface {
     inset 0 -1px 0 rgba(0, 0, 0, 0.06);
 }
 .mac-photos-app__toolbar-title {
+  margin-right: auto; /* pins the meta + contact-sheet link to the right edge */
   font-family: var(--mac-font-system);
   font-size: var(--text-lg);
   font-weight: 600;
@@ -2530,6 +2531,25 @@ body.mac-matrix-mode .mac-desktop-surface {
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   color: var(--text-secondary);
+}
+.mac-photos-app__toolbar-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--mac-font-system);
+  font-size: var(--text-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  text-decoration: underline;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.mac-photos-app__toolbar-link:hover {
+  opacity: 0.65;
+}
+.mac-photos-app__toolbar-link:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
 }
 
 .mac-photos-app__split {

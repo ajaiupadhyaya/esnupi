@@ -1,7 +1,17 @@
-/* /film — a contact sheet, and nothing else.
+/* /film — the unstyled document.
  *
- * The rest of the site is dark-only and wears grain, vignette, and a crosshair
- * cursor. This page wears none of it. Field colour follows the device.
+ * The rest of this site is a simulated Mac OS 8 desktop: grain, vignette,
+ * crosshair cursor, dark-only. It is the loudest thing here. This page is the
+ * plain document underneath it.
+ *
+ * So there is no design system. There is the browser's default stylesheet.
+ * Every colour, size, and unit of space below is a value a browser would have
+ * used if nobody had styled anything: Times at 2em for the heading, 1rem for
+ * the paragraph, `body { margin: 8px }` as the entire spacing scale, and the UA
+ * anchor colour on the one link. Times and Courier are system faces, so the page
+ * costs no webfont request.
+ *
+ * The grid is the only thing here that was designed. That is the whole idea.
  *
  * Tokens are declared on both `.film-root` and `.film-lightbox` because the
  * lightbox renders through a portal into <body>, outside the page subtree, and
@@ -10,19 +20,32 @@
 
 .film-root,
 .film-lightbox {
-  --film-bg: #ffffff;
-  --film-fg: #000000;
-  --film-rule: rgba(0, 0, 0, 0.12);
-  --film-muted: rgba(0, 0, 0, 0.45);
-  --film-mono: var(--font-mono-site, "IBM Plex Mono", ui-monospace, monospace);
+  --film-canvas: #ffffff;
+  --film-ink: #000000;
+  --film-link: #0000ee; /* the UA anchor colour. the only colour on the page. */
+  --film-rule: rgba(0, 0, 0, 0.14);
+  --film-muted: rgba(0, 0, 0, 0.5);
+
+  --film-margin: 8px; /* body { margin: 8px }. page gutter AND grid gutter. */
+  --film-block: 16px; /* margin-block: 1em */
+  --film-section: 24px; /* three margins */
+
+  --film-serif: "Times New Roman", Times, serif;
+  --film-mono: "Courier New", Courier, monospace;
+
+  /* Kept in step with the grid below — the description's measure is derived
+   * from it, so the paragraph is bounded by the grid rather than by a
+   * max-width someone picked. */
+  --film-cols: 2;
 }
 
 @media (prefers-color-scheme: dark) {
   .film-root,
   .film-lightbox {
-    --film-bg: #000000;
-    --film-fg: #ffffff;
-    --film-rule: rgba(255, 255, 255, 0.2);
+    --film-canvas: #000000;
+    --film-ink: #ffffff;
+    --film-link: #9e9eff; /* the UA anchor colour in a dark UA */
+    --film-rule: rgba(255, 255, 255, 0.22);
     --film-muted: rgba(255, 255, 255, 0.55);
   }
 }
@@ -50,10 +73,14 @@ html[data-film-page] body {
 .film-root {
   display: flex;
   flex-direction: column;
+  gap: var(--film-section);
   min-height: 100dvh;
-  background: var(--film-bg);
-  color: var(--film-fg);
-  font-family: var(--film-mono);
+  padding: var(--film-margin);
+  background: var(--film-canvas);
+  color: var(--film-ink);
+  font-family: var(--film-serif);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .film-root *,
@@ -61,81 +88,91 @@ html[data-film-page] body {
   box-sizing: border-box;
 }
 
-/* ---------------------------------------------------------------- header -- */
+/* -------------------------------------------------------------- masthead -- */
 
-.film-header {
-  position: sticky;
-  top: 0;
-  z-index: 2;
+.film-masthead {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  height: 56px;
-  padding: 0 24px;
-  background: var(--film-bg);
-  border-bottom: 1px solid var(--film-rule);
+  flex-direction: column;
+  gap: var(--film-section);
 }
 
-.film-header__home,
-.film-header__count {
-  font-family: var(--film-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+.film-nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--film-block);
+}
+
+/* An actual anchor, wearing the actual default anchor colour. It is the only
+ * colour on the page; if a second one appears, something has gone wrong. */
+.film-nav__home {
+  font-family: var(--film-serif);
+  font-size: 16px;
+  color: var(--film-link);
+  text-decoration: underline;
   white-space: nowrap;
 }
 
-.film-header__home {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-  border: 0;
-  background: transparent;
-  color: var(--film-fg);
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.film-header__home:hover {
-  opacity: 0.6;
-}
-
-.film-header__count {
+.film-nav__count {
+  font-family: var(--film-mono);
+  font-size: 13px;
   color: var(--film-muted);
+  white-space: nowrap;
+}
+
+.film-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--film-block);
+}
+
+.film-title {
+  margin: 0;
+  font-family: var(--film-serif);
+  font-size: 32px; /* the UA h1: 2em, bold, serif */
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+/* Measure = two grid columns + one gutter, so the paragraph is bounded by the
+ * grid instead of by an arbitrary max-width. It narrows as columns are added. */
+.film-desc {
+  margin: 0;
+  max-width: calc(
+    (100% - (var(--film-cols) - 1) * var(--film-margin)) / var(--film-cols) * 2 + var(--film-margin)
+  );
 }
 
 /* ------------------------------------------------------------------ grid -- */
 
-/*
- * Hairlines: the container draws top + left, each cell draws right + bottom.
- * `gap: 1px` over a rule-coloured container would paint the empty trailing
- * cells of the last row as a solid block — 75 photographs fill only the
- * five-column case exactly.
- */
 .film-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  border-top: 1px solid var(--film-rule);
-  border-left: 1px solid var(--film-rule);
+  grid-template-columns: repeat(var(--film-cols), 1fr);
+  gap: var(--film-margin);
 }
 
+/* 75 frames divide evenly only at 5 columns. With real gutters the trailing
+ * cells of the last row are simply absent — no filler, no special-casing. */
 @media (min-width: 641px) {
-  .film-grid {
-    grid-template-columns: repeat(3, 1fr);
+  .film-root,
+  .film-lightbox {
+    --film-cols: 3;
   }
 }
 
 @media (min-width: 1025px) {
-  .film-grid {
-    grid-template-columns: repeat(4, 1fr);
+  .film-root,
+  .film-lightbox {
+    --film-cols: 4;
   }
 }
 
 @media (min-width: 1441px) {
-  .film-grid {
-    grid-template-columns: repeat(5, 1fr);
+  .film-root,
+  .film-lightbox {
+    --film-cols: 5;
   }
 }
 
@@ -147,9 +184,7 @@ html[data-film-page] body {
   margin: 0;
   padding: 0;
   border: 0;
-  border-right: 1px solid var(--film-rule);
-  border-bottom: 1px solid var(--film-rule);
-  background: var(--film-bg);
+  background: var(--film-canvas);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -167,9 +202,11 @@ html[data-film-page] body {
   object-fit: cover;
 }
 
+/* The one place a hairline loses to accessibility: a 1px ring is too thin to
+ * meet the focus-visible bar, so this is 2px. */
 .film-cell:focus-visible {
-  outline: 2px solid var(--film-fg);
-  outline-offset: -3px;
+  outline: 2px solid var(--film-ink);
+  outline-offset: -4px;
 }
 
 /* Caption sits in a solid bar, not a scrim over the photograph: contrast is
@@ -181,11 +218,13 @@ html[data-film-page] body {
   left: 0;
   display: flex;
   align-items: center;
-  gap: 14px;
-  height: 44px;
-  padding: 0 14px;
-  background: var(--film-bg);
+  gap: var(--film-margin);
+  height: 32px;
+  padding: 0 var(--film-margin);
+  background: var(--film-canvas);
   border-top: 1px solid var(--film-rule);
+  font-family: var(--film-mono);
+  font-size: 13px;
   opacity: 0;
   transform: translateY(100%);
   transition:
@@ -201,36 +240,35 @@ html[data-film-page] body {
 
 .film-cell__index {
   flex: none;
-  font-size: 11px;
-  letter-spacing: 0.2em;
   color: var(--film-muted);
 }
 
+/* The location does not fit in a 278px cell. It lives in the lightbox. */
 .film-cell__title {
   overflow: hidden;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--film-fg);
+  color: var(--film-ink);
 }
 
 /* ---------------------------------------------------------------- footer -- */
 
+/* The rawest element there is. It gives the footer a reason to sit where it
+ * does, and `margin-top: auto` pins both to the bottom on a short viewport. */
+.film-hr {
+  height: 1px;
+  margin: auto 0 0;
+  border: 0;
+  background: var(--film-rule);
+}
+
 .film-footer {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
-  height: 64px;
-  margin-top: auto;
-  padding: 0 24px;
-  border-top: 1px solid var(--film-rule);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  gap: var(--film-block);
+  font-family: var(--film-mono);
+  font-size: 13px;
   color: var(--film-muted);
 }
 
@@ -242,50 +280,52 @@ html[data-film-page] body {
   z-index: 100;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: 24px;
-  padding: 32px;
-  background: var(--film-bg);
-  color: var(--film-fg);
-  font-family: var(--film-mono);
+  gap: var(--film-block);
+  padding: var(--film-margin);
+  background: var(--film-canvas);
+  color: var(--film-ink);
+  font-family: var(--film-serif);
+  font-size: 16px;
 }
 
 .film-lightbox__bar {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 16px;
+  gap: var(--film-block);
+}
+
+.film-lightbox__counter,
+.film-lightbox__close,
+.film-lightbox__step {
+  font-family: var(--film-mono);
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .film-lightbox__counter {
-  font-size: 11px;
-  letter-spacing: 0.2em;
   color: var(--film-muted);
 }
 
 .film-lightbox__close,
 .film-lightbox__step {
-  padding: 6px 0;
+  padding: 0;
   border: 0;
   background: transparent;
-  color: var(--film-fg);
-  font-family: var(--film-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  white-space: nowrap;
+  color: var(--film-ink);
   cursor: pointer;
 }
 
 .film-lightbox__close:hover,
-.film-lightbox__step:hover {
+.film-lightbox__step:hover,
+.film-nav__home:hover {
   opacity: 0.6;
 }
 
 .film-lightbox__close:focus-visible,
 .film-lightbox__step:focus-visible,
-.film-header__home:focus-visible {
-  outline: 2px solid var(--film-fg);
+.film-nav__home:focus-visible {
+  outline: 2px solid var(--film-ink);
   outline-offset: 3px;
 }
 
@@ -307,59 +347,52 @@ html[data-film-page] body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 32px;
+  gap: var(--film-section);
 }
 
 .film-lightbox__caption {
-  max-width: 62ch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--film-margin);
+  min-width: 0;
 }
 
 .film-lightbox__title {
   margin: 0;
+  font-family: var(--film-serif);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--film-ink);
+}
+
+.film-lightbox__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--film-block);
+  margin: 0;
   font-family: var(--film-mono);
-  font-size: clamp(20px, 2.4vw, 30px);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--film-fg);
-}
-
-.film-lightbox__loc {
-  margin: 10px 0 0;
-  font-size: 11px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--film-muted);
-}
-
-.film-lightbox__blurb {
-  margin: 10px 0 0;
   font-size: 13px;
-  line-height: 1.7;
-  color: var(--film-fg);
+  color: var(--film-muted);
 }
 
 .film-lightbox__nav {
   display: flex;
   flex: none;
-  gap: 40px;
+  gap: 32px;
 }
 
 @media (max-width: 640px) {
-  .film-lightbox {
-    gap: 16px;
-    padding: 20px;
-  }
-
   .film-lightbox__foot {
     flex-direction: column;
     align-items: stretch;
-    gap: 20px;
+    gap: var(--film-block);
   }
 
   .film-lightbox__nav {
     justify-content: space-between;
-    gap: 16px;
   }
 }
 

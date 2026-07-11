@@ -16,6 +16,12 @@ const PHOTOS = buildFilmPhotoLibrary();
 const GRID_SIZES =
   "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1440px) 25vw, 20vw";
 
+/* The count here is authored, not derived — "seventy-five" reads better than a
+ * numeral in a Times paragraph. The numeral beside it IS derived, so if the
+ * manifest grows, this sentence is the one thing that needs a human. */
+const DESCRIPTION =
+  "Seventy-five frames on 35mm and 110 — Ektar 400, Kodak Gold, unlabelled Fuji, one roll of Lomochrome. Scanned at home. In no order.";
+
 export default function Film() {
   const routeTransition = useRouteTransition();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -41,17 +47,31 @@ export default function Film() {
     }
   }, [openIndex]);
 
+  /* A real <a>, so it can be middle-clicked and copied, but routed through the
+   * CRT transition on a plain click. */
+  const goHome = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      routeTransition.goto("/");
+    },
+    [routeTransition],
+  );
+
   return (
     <main className="film-root">
-      <header className="film-header">
-        <button
-          type="button"
-          className="film-header__home"
-          onClick={() => routeTransition.goto("/")}
-        >
-          <span aria-hidden>←</span> Ajai Upadhyaya — Film
-        </button>
-        <span className="film-header__count">{String(PHOTOS.length).padStart(3, "0")} Frames</span>
+      <header className="film-masthead">
+        <nav className="film-nav">
+          <a href="/" className="film-nav__home" onClick={goHome}>
+            <span aria-hidden>←</span> ajaiupadhyaya.com
+          </a>
+          <span className="film-nav__count">{String(PHOTOS.length).padStart(3, "0")} frames</span>
+        </nav>
+
+        <div className="film-title-block">
+          <h1 className="film-title">Film</h1>
+          <p className="film-desc">{DESCRIPTION}</p>
+        </div>
       </header>
 
       <div className="film-grid">
@@ -77,9 +97,11 @@ export default function Film() {
         ))}
       </div>
 
+      <hr className="film-hr" />
+
       <footer className="film-footer">
-        <span>35mm · 110mm · Scanned</span>
-        <span>ajaiupadhyaya.com</span>
+        <span>35mm · 110 · scanned at home</span>
+        <span>ajai upadhyaya</span>
       </footer>
 
       {openIndex !== null ? (
