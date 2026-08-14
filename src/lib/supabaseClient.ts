@@ -1,13 +1,31 @@
-import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-const url = import.meta.env.VITE_SUPABASE_URL ?? import.meta.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY ?? import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { hasSupabaseConfig, supabaseAnonKey, supabaseUrl } from "./supabaseConfig";
 
-export const hasSupabaseConfig = Boolean(url && anonKey);
+export { hasSupabaseConfig } from "./supabaseConfig";
 
-export const supabase = hasSupabaseConfig
-  ? createClient(url!, anonKey!, {
-      auth: { persistSession: false },
-    })
-  : null;
+let clientPromise: Promise<SupabaseClient | null> | null = null;
+
+/**
+ * Lazily constructs (and then memoises) the Supabase client.
+ *
+ * The import is dynamic on purpose: the SDK is ~200 KB and is only needed once
+ * a visitor actually touches the shared photobook or the visitor log, which is
+ * long after first paint. Callers must handle `null` — that is the
+ * "no keys configured" case, and every integration degrades to local-only.
+ */
+export function getSupabase(): Promise<SupabaseClient | null> {
+  if (!hasSupabaseConfig) return Promise.resolve(null);
+  clientPromise ??= import("@supabase/supabase-js")
+    .then(({ createClient }) =>
+      createClient(supabaseUrl!, supabaseAnonKey!, {
+        auth: { persistSession: false },
+      }),
+    )
+    .catch((err) => {
+      console.warn("[supabase] client failed to load", err);
+      clientPromise = null; // let a later caller retry
+      return null;
+    });
+  return clientPromise;
+}

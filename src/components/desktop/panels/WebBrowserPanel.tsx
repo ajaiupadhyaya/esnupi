@@ -22,13 +22,35 @@ const BOOKMARKS: Array<{ label: string; url: string }> = [
   { label: "Wikipedia — Mac OS 8", url: "https://en.wikipedia.org/wiki/Mac_OS_8" },
 ];
 
+/**
+ * The frame runs with `allow-scripts allow-same-origin`, which is only safe as
+ * long as the framed document is cross-origin — a same-origin document under
+ * that pair can reach straight through `window.parent` into this page. So the
+ * one address the toy browser must refuse is our own.
+ */
+function isSameOrigin(url: string) {
+  try {
+    return new URL(url, window.location.href).origin === window.location.origin;
+  } catch {
+    return true; // unparseable → treat as unsafe
+  }
+}
+
 function normalizeBrowserUrl(input: string) {
   const raw = input.trim();
   if (!raw) return BROWSER_HOME;
   if (raw.toLowerCase() === "pong") return "esnupi:pong";
-  if (/^https?:\/\//i.test(raw)) return raw;
-  if (/^[a-z0-9-]+\.[a-z]{2,}/i.test(raw)) return `https://${raw}`;
-  return `https://duckduckgo.com/?q=${encodeURIComponent(raw)}`;
+
+  const asSearch = () => `https://duckduckgo.com/?q=${encodeURIComponent(raw)}`;
+
+  // Anything that isn't plainly http(s) — javascript:, data:, blob:, file: —
+  // falls through to a web search rather than being handed to the iframe.
+  let candidate: string | null = null;
+  if (/^https?:\/\//i.test(raw)) candidate = raw;
+  else if (/^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}([/?#]|$)/i.test(raw)) candidate = `https://${raw}`;
+  if (!candidate) return asSearch();
+
+  return isSameOrigin(candidate) ? asSearch() : candidate;
 }
 
 function originLabel(url: string) {

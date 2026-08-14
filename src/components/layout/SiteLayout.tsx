@@ -1,19 +1,39 @@
 import { HiddenSiteIdentity } from "@/components/seo/HiddenSiteIdentity";
 import { SiteSeoHead } from "@/components/seo/SiteSeoHead";
-import { HydraBackground } from "@/components/HydraBackground";
-import { P5MacBackground } from "@/components/P5MacBackground";
 import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
+import { useIdleMount } from "@/lib/useIdleMount";
+import { useMediaQuery } from "@/lib/useMediaQuery";
+import { Suspense, lazy } from "react";
 import { Outlet, useLocation } from "react-router-dom";
+
+/* The two live wallpapers are by far the heaviest code on the site (p5 alone is
+ * ~1 MB of JS, hydra-synth another ~180 KB) and they are pure decoration — so
+ * they are code-split and mounted only once the browser goes idle. Nothing
+ * above the fold waits on them. */
+const P5MacBackground = lazy(() =>
+  import("@/components/P5MacBackground").then((m) => ({ default: m.P5MacBackground })),
+);
+const HydraBackground = lazy(() =>
+  import("@/components/HydraBackground").then((m) => ({ default: m.HydraBackground })),
+);
 
 export function SiteLayout() {
   const { pathname } = useLocation();
 
+  /* Both wallpapers no-op on phones and for prefers-reduced-motion. Checking
+   * that here rather than inside them means those visitors never download the
+   * chunk in the first place. */
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const isPhone = useMediaQuery("(max-width: 640px)");
+  const idle = useIdleMount();
+  const wallpaperAllowed = idle && !reduceMotion && !isPhone;
+
   /** Classic Mac desktop uses p5 (one random sketch per visit). `/` and
    *  `/desktop` both mount `MacintoshDesktop`; other routes use opaque UIs
    *  so we skip the live wallpaper to save CPU/GPU. `/lab` uses Hydra instead. */
-  const showP5Mac = pathname === "/" || pathname.startsWith("/desktop");
+  const showP5Mac = wallpaperAllowed && (pathname === "/" || pathname.startsWith("/desktop"));
   const isLab = pathname.startsWith("/lab");
-  const showHydra = isLab;
+  const showHydra = wallpaperAllowed && isLab;
 
   /** Only /lab gets the readability scrim over Hydra. */
   const showScrim = pathname.startsWith("/lab");
@@ -33,12 +53,16 @@ export function SiteLayout() {
       <HiddenSiteIdentity />
       {showP5Mac && (
         <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
-          <P5MacBackground />
+          <Suspense fallback={null}>
+            <P5MacBackground />
+          </Suspense>
         </div>
       )}
       {showHydra && (
         <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
-          <HydraBackground />
+          <Suspense fallback={null}>
+            <HydraBackground />
+          </Suspense>
         </div>
       )}
       {!isBare && (

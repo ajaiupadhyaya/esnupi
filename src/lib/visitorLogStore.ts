@@ -1,4 +1,7 @@
-import { hasSupabaseConfig, supabase } from "./supabaseClient";
+import { getSupabase, hasSupabaseConfig } from "./supabaseClient";
+
+/** Guestbook names are free text from anyone on the internet — cap them. */
+const MAX_DISPLAY_NAME = 60;
 
 export type VisitorLogEntry = {
   id: string;
@@ -39,7 +42,7 @@ function notifyLocalListeners() {
 
 /** Records a visit (name gate). Best-effort: Supabase first, then local-only. */
 export async function registerVisitor(displayName: string): Promise<void> {
-  const trimmed = displayName.trim();
+  const trimmed = displayName.trim().slice(0, MAX_DISPLAY_NAME);
   if (!trimmed) return;
 
   const entry: VisitorLogEntry = {
@@ -48,7 +51,8 @@ export async function registerVisitor(displayName: string): Promise<void> {
     visited_at: new Date().toISOString(),
   };
 
-  if (supabase && hasSupabaseConfig) {
+  const supabase = await getSupabase();
+  if (supabase) {
     const { error } = await supabase.from("site_visitor_log").insert({
       display_name: trimmed,
       visited_at: entry.visited_at,
@@ -63,32 +67,49 @@ export async function registerVisitor(displayName: string): Promise<void> {
 
 export async function loadVisitorLog(limit = 500): Promise<VisitorLogEntry[]> {
   const local = readLocal().slice(0, limit);
-  if (supabase && hasSupabaseConfig) {
+  const supabase = await getSupabase();
+  if (supabase) {
     const { data, error } = await supabase
       .from("site_visitor_log")
       .select("id,display_name,visited_at")
       .order("visited_at", { ascending: false })
       .limit(limit);
-    if (!error && data) return data as VisitorLogEntry[];
+    if (!error && data) {
+      return (data as VisitorLogEntry[]).map((row) => ({
+        ...row,
+        display_name: String(row.display_name ?? "").slice(0, MAX_DISPLAY_NAME),
+      }));
+    }
   }
   return local;
 }
 
 export function subscribeVisitorLog(onChange: () => void): () => void {
-  const client = supabase;
-  if (client && hasSupabaseConfig) {
-    const channel = client
-      .channel("site-visitor-log")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "site_visitor_log" },
-        () => {
-          onChange();
-        },
-      )
-      .subscribe();
+  // Returns synchronously so it can be used directly as a useEffect cleanup,
+  // even though the Supabase client itself now loads lazily.
+  if (hasSupabaseConfig) {
+    let disposed = false;
+    let dispose: (() => void) | null = null;
+    void getSupabase().then((client) => {
+      if (!client) return;
+      const channel = client
+        .channel("site-visitor-log")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "site_visitor_log" },
+          () => {
+            onChange();
+          },
+        )
+        .subscribe();
+      dispose = () => {
+        void client.removeChannel(channel);
+      };
+      if (disposed) dispose();
+    });
     return () => {
-      void client.removeChannel(channel);
+      disposed = true;
+      dispose?.();
     };
   }
 

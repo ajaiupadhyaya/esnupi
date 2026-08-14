@@ -7,9 +7,8 @@ import {
   loadSharedPhotos,
   subscribeToSharedPhotos,
   type SharedPhoto,
-  unsubscribeSharedPhotos,
 } from "@/lib/photobookStore";
-import { hasSupabaseConfig } from "@/lib/supabaseClient";
+import { hasSupabaseConfig } from "@/lib/supabaseConfig";
 import {
   isMacSoundsMuted,
   playGlitchBurst,
@@ -382,22 +381,22 @@ function MacintoshDesktopInner() {
       return;
     }
     let cancelled = false;
-    let channel: ReturnType<typeof subscribeToSharedPhotos> = null;
+    let unsubscribe: (() => void) | null = null;
     void (async () => {
       const ok = await refreshPhotos();
       if (!ok || cancelled) return;
-      const ch = subscribeToSharedPhotos(() => {
+      const dispose = await subscribeToSharedPhotos(() => {
         void refreshPhotos();
       });
       if (cancelled) {
-        unsubscribeSharedPhotos(ch);
+        dispose();
         return;
       }
-      channel = ch;
+      unsubscribe = dispose;
     })();
     return () => {
       cancelled = true;
-      unsubscribeSharedPhotos(channel);
+      unsubscribe?.();
     };
   }, [refreshPhotos]);
 

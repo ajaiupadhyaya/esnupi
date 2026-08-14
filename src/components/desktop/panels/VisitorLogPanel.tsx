@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import { useCallback, useEffect, useState } from "react";
 
-import { hasSupabaseConfig } from "@/lib/supabaseClient";
+import { hasSupabaseConfig } from "@/lib/supabaseConfig";
 import {
   loadVisitorLog,
   subscribeVisitorLog,

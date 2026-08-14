@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "npm run headers:check && tsc -b && vite build",
+    "headers": "node scripts/security-headers.mjs",
+    "headers:check": "node scripts/security-headers.mjs --check",
+    "preview": "vite preview",
+    "preview:headers": "node scripts/serve-with-headers.mjs"
   },
   "dependencies": {
     "@mdx-js/react": "^3.1.1",

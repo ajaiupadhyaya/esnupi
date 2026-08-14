@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { hydraStage } from "@/lib/hydraStage";
-import { hasSupabaseConfig } from "@/lib/supabaseClient";
+import { hasSupabaseConfig } from "@/lib/supabaseConfig";
 import type { SharedPhoto } from "@/lib/photobookStore";
 import type { FilmPhoto } from "@/photography/library";
 import type { MusicTrack } from "./panels/MusicPlayerPanel";
