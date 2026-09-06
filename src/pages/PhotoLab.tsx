@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { useRouteTransition } from "@/components/layout/RouteTransition";
+import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
 import {
   BULK_DISCOUNT,
   CONTACT_MAILTO,
@@ -12,10 +13,15 @@ import {
   SCAN_ONLY_PRICING,
   STANDARD_TURNAROUND,
 } from "@/lib/photoLabData";
+import { buildFilmPhotoLibrary } from "@/photography/library";
 import "./photolab.css";
+
+const GALLERY_SIZES = "(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw";
 
 export default function PhotoLab() {
   const routeTransition = useRouteTransition();
+
+  const galleryPhotos = useMemo(() => buildFilmPhotoLibrary().slice(0, 8), []);
 
   const goHome = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -102,6 +108,21 @@ export default function PhotoLab() {
           </div>
         </div>
       </section>
+
+      {galleryPhotos.length > 0 && (
+        <section className="photolab-section">
+          <div className="photolab-container">
+            <h2 className="photolab-section__heading">Scans from the lab</h2>
+            <div className="photolab-gallery">
+              {galleryPhotos.map((photo) => (
+                <div className="photolab-gallery__cell" key={photo.id}>
+                  <ResponsivePicture image={photo.image} alt="" sizes={GALLERY_SIZES} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <footer className="photolab-footer">
         <div className="photolab-container">

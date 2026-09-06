@@ -200,3 +200,28 @@ a.photolab-cta {
   line-height: var(--leading-normal);
   margin: 0;
 }
+
+.photolab-gallery {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+@media (max-width: 1024px) {
+  .photolab-gallery { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .photolab-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+
+.photolab-gallery__cell {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: var(--border-light);
+}
+
+.photolab-gallery__cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
