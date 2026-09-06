@@ -3,8 +3,11 @@ import { useCallback, useMemo } from "react";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
 import {
+  ABOUT_COPY,
+  BEFORE_YOU_SEND,
   BULK_DISCOUNT,
   CONTACT_MAILTO,
+  FAQ,
   HERO,
   PRICING,
   PROCESS_STEPS,
@@ -123,6 +126,40 @@ export default function PhotoLab() {
           </div>
         </section>
       )}
+
+      <section className="photolab-section photolab-about">
+        <div className="photolab-container">
+          <h2 className="photolab-section__heading">{ABOUT_COPY.heading}</h2>
+          {ABOUT_COPY.paragraphs.map((paragraph, i) => (
+            <p key={i}>{paragraph}</p>
+          ))}
+        </div>
+      </section>
+
+      <section className="photolab-section">
+        <div className="photolab-container">
+          <h2 className="photolab-section__heading">Before you send film</h2>
+          <ul className="photolab-checklist">
+            {BEFORE_YOU_SEND.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="photolab-section">
+        <div className="photolab-container">
+          <h2 className="photolab-section__heading">FAQ</h2>
+          <div className="photolab-faq">
+            {FAQ.map((entry) => (
+              <div className="photolab-faq__item" key={entry.q}>
+                <h3 className="photolab-faq__q">{entry.q}</h3>
+                <p className="photolab-faq__a">{entry.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <footer className="photolab-footer">
         <div className="photolab-container">

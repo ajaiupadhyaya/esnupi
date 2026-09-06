@@ -225,3 +225,45 @@ a.photolab-cta {
   object-fit: cover;
   display: block;
 }
+
+.photolab-about p {
+  font-family: var(--mac-font-content);
+  font-size: var(--text-md);
+  line-height: var(--leading-loose);
+  max-width: 68ch;
+  margin: 0 0 var(--space-5);
+  color: var(--text-primary);
+}
+
+.photolab-checklist {
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+}
+.photolab-checklist li {
+  margin-bottom: var(--space-3);
+}
+
+.photolab-faq__item {
+  border-bottom: var(--border-light);
+  padding: var(--space-5) 0;
+}
+.photolab-faq__item:last-child {
+  border-bottom: none;
+}
+
+.photolab-faq__q {
+  font-family: var(--mac-font-content);
+  font-size: var(--text-md);
+  margin: 0 0 var(--space-2);
+}
+
+.photolab-faq__a {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  margin: 0;
+  max-width: 68ch;
+}
