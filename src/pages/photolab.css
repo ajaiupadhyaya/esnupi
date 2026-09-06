@@ -37,12 +37,12 @@
   color: var(--text-secondary);
 }
 
-.photolab-nav__home {
+a.photolab-nav__home {
   color: var(--text-primary);
   text-decoration: none;
 }
-.photolab-nav__home:hover,
-.photolab-nav__home:focus-visible {
+a.photolab-nav__home:hover,
+a.photolab-nav__home:focus-visible {
   color: var(--accent-select);
 }
 
