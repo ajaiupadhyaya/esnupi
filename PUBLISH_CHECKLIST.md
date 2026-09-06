@@ -32,6 +32,7 @@
   - `/gallery`
   - `/film`
   - `/feltmoon`
+  - `/photolab`
 - `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
   with no grain, vignette, or crosshair cursor.
 - Desktop interactions checked manually:
@@ -44,3 +45,13 @@
 - Build succeeds, but several image assets are very large (>4MB each).
 - For production, consider generating smaller responsive variants for gallery and archive media.
 - Keep GIF usage minimal; prefer MP4/WebM where possible for large animated assets.
+
+## Photolab page — before taking real orders
+
+- Confirm the pricing in `src/lib/photoLabData.ts` against actual costs. The numbers
+  shipped were proposed as a reasonable starting point, not owner-verified.
+- The FAQ says payment is by Venmo, PayPal, or Cash App but names no handles — decide
+  whether to add real handles to the page copy or keep collecting them by email only.
+- No street address is published anywhere on `/photolab` by design (it's the owner's
+  home). If a PO Box or UPS Store mailbox is set up later, add it to `photoLabData.ts`
+  and it can be printed on the page.
