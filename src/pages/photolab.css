@@ -110,3 +110,93 @@ a.photolab-cta {
   color: var(--text-secondary);
   letter-spacing: 0.04em;
 }
+
+.photolab-section {
+  padding: var(--space-8) 0;
+  border-bottom: var(--border-light);
+}
+
+.photolab-section__heading {
+  font-family: var(--mac-font-content);
+  font-size: var(--text-2xl);
+  margin: 0 0 var(--space-6);
+}
+
+.photolab-pricing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-sm);
+}
+
+.photolab-pricing-table caption {
+  text-align: left;
+  font-family: var(--mac-font-system);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.photolab-pricing-table th,
+.photolab-pricing-table td {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: var(--border-light);
+}
+
+.photolab-pricing-table th {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.photolab-pricing-table td:not(:first-child),
+.photolab-pricing-table th:not(:first-child) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.photolab-pricing-note {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.photolab-process {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 1024px) {
+  .photolab-process { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .photolab-process { grid-template-columns: 1fr; }
+}
+
+.photolab-process__step {
+  border: var(--border-light);
+  padding: var(--space-5);
+  background: var(--chrome-light);
+}
+
+.photolab-process__number {
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-lg);
+  color: var(--accent-select);
+  margin: 0 0 var(--space-3);
+}
+
+.photolab-process__title {
+  font-family: var(--mac-font-content);
+  font-size: var(--text-md);
+  margin: 0 0 var(--space-2);
+}
+
+.photolab-process__body {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: var(--leading-normal);
+  margin: 0;
+}

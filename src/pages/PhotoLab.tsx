@@ -1,7 +1,17 @@
 import { useCallback } from "react";
 
 import { useRouteTransition } from "@/components/layout/RouteTransition";
-import { CONTACT_MAILTO, HERO } from "@/lib/photoLabData";
+import {
+  BULK_DISCOUNT,
+  CONTACT_MAILTO,
+  HERO,
+  PRICING,
+  PROCESS_STEPS,
+  RUSH_FEE,
+  RUSH_TURNAROUND,
+  SCAN_ONLY_PRICING,
+  STANDARD_TURNAROUND,
+} from "@/lib/photoLabData";
 import "./photolab.css";
 
 export default function PhotoLab() {
@@ -37,6 +47,59 @@ export default function PhotoLab() {
           <a className="photolab-cta" href={CONTACT_MAILTO}>
             {HERO.ctaLabel}
           </a>
+        </div>
+      </section>
+
+      <section className="photolab-section">
+        <div className="photolab-container">
+          <h2 className="photolab-section__heading">Services &amp; pricing</h2>
+          <table className="photolab-pricing-table">
+            <caption>Prices are per roll. Turnaround: {STANDARD_TURNAROUND}.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Process</th>
+                <th scope="col">Format</th>
+                <th scope="col">Develop only</th>
+                <th scope="col">Develop + scan</th>
+              </tr>
+            </thead>
+            <tbody>
+              {PRICING.map((row) => (
+                <tr key={`${row.process}-${row.format}`}>
+                  <td>{row.label}</td>
+                  <td>{row.format}</td>
+                  <td>${row.developOnly}</td>
+                  <td>${row.developAndScan}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="photolab-pricing-note">
+            Already have negatives? Scan-only —{" "}
+            {SCAN_ONLY_PRICING.map((row, i) => (
+              <span key={row.format}>
+                {i > 0 ? ", " : ""}
+                {row.format}: ${row.price}
+              </span>
+            ))}
+            . Rush ({RUSH_TURNAROUND}): +${RUSH_FEE} per order. {BULK_DISCOUNT.minRolls}+
+            rolls in one order: {BULK_DISCOUNT.percentOff}% off developing.
+          </p>
+        </div>
+      </section>
+
+      <section className="photolab-section">
+        <div className="photolab-container">
+          <h2 className="photolab-section__heading">How it works</h2>
+          <div className="photolab-process">
+            {PROCESS_STEPS.map((step) => (
+              <article className="photolab-process__step" key={step.step}>
+                <p className="photolab-process__number">{String(step.step).padStart(2, "0")}</p>
+                <h3 className="photolab-process__title">{step.title}</h3>
+                <p className="photolab-process__body">{step.body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
