@@ -68,6 +68,25 @@ function websiteNode() {
   };
 }
 
+function photoLabNode() {
+  return {
+    "@type": "LocalBusiness",
+    "@id": `${SITE_OWNER_DOMAIN}photolab#business`,
+    name: "literaturevendingmachine photolab",
+    description:
+      "Film developing and scanning lab offering C-41, black & white, and ECN-2 processing for 35mm and 120 film, based in the Richmond/Midlothian, Virginia area with nationwide mail-in service.",
+    url: `${SITE_OWNER_DOMAIN}photolab`,
+    email: `mailto:${SITE_OWNER_EMAIL}`,
+    priceRange: "$9-$26",
+    founder: { "@id": PERSON_ID },
+    areaServed: [
+      { "@type": "City", name: "Richmond, VA" },
+      { "@type": "City", name: "Midlothian, VA" },
+      { "@type": "Country", name: "United States" },
+    ],
+  };
+}
+
 /** Route-aware JSON-LD for crawlers (injected client-side on navigation). */
 export function buildStructuredDataGraph(pathname: string) {
   const meta = resolveSeoMeta(pathname);
@@ -84,42 +103,49 @@ export function buildStructuredDataGraph(pathname: string) {
     });
   }
 
+  const normalized = pathname.replace(/\/+$/, "") || "/";
+  const graph: Record<string, unknown>[] = [
+    personNode(),
+    websiteNode(),
+    {
+      "@type": "ProfilePage",
+      "@id": `${SITE_OWNER_DOMAIN}#profile`,
+      url: SITE_OWNER_DOMAIN,
+      name: `${SITE_OWNER_FULL_NAME} — Official Portfolio`,
+      isPartOf: { "@id": WEBSITE_ID },
+      mainEntity: { "@id": PERSON_ID },
+      about: { "@id": PERSON_ID },
+    },
+    {
+      "@type": "WebPage",
+      "@id": pageId,
+      url: pageUrl,
+      name: meta.title,
+      description: meta.description,
+      isPartOf: { "@id": WEBSITE_ID },
+      about: { "@id": PERSON_ID },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: `${SITE_OWNER_DOMAIN}og-cover.png`,
+      },
+      breadcrumb: {
+        "@type": "BreadcrumbList",
+        itemListElement: breadcrumbItems.map((crumb, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: crumb.name,
+          item: crumb.item,
+        })),
+      },
+    },
+  ];
+
+  if (normalized === "/photolab") {
+    graph.push(photoLabNode());
+  }
+
   return {
     "@context": "https://schema.org",
-    "@graph": [
-      personNode(),
-      websiteNode(),
-      {
-        "@type": "ProfilePage",
-        "@id": `${SITE_OWNER_DOMAIN}#profile`,
-        url: SITE_OWNER_DOMAIN,
-        name: `${SITE_OWNER_FULL_NAME} — Official Portfolio`,
-        isPartOf: { "@id": WEBSITE_ID },
-        mainEntity: { "@id": PERSON_ID },
-        about: { "@id": PERSON_ID },
-      },
-      {
-        "@type": "WebPage",
-        "@id": pageId,
-        url: pageUrl,
-        name: meta.title,
-        description: meta.description,
-        isPartOf: { "@id": WEBSITE_ID },
-        about: { "@id": PERSON_ID },
-        primaryImageOfPage: {
-          "@type": "ImageObject",
-          url: `${SITE_OWNER_DOMAIN}og-cover.png`,
-        },
-        breadcrumb: {
-          "@type": "BreadcrumbList",
-          itemListElement: breadcrumbItems.map((crumb, index) => ({
-            "@type": "ListItem",
-            position: index + 1,
-            name: crumb.name,
-            item: crumb.item,
-          })),
-        },
-      },
-    ],
+    "@graph": graph,
   };
 }

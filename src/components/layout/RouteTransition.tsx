@@ -60,7 +60,8 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         path.startsWith("/gallery") ||
         path.startsWith("/archive") ||
         path.startsWith("/film") ||
-        path.startsWith("/feltmoon");
+        path.startsWith("/feltmoon") ||
+        path.startsWith("/photolab");
       const nextKind: TransitionKind = isSecondaryRoom && current === "/" ? "crt-collapse" : "boot";
       setKind(nextKind);
       setPhase("playing");

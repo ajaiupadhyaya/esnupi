@@ -1,0 +1,112 @@
+/* ==========================================================================
+   /photolab — literaturevendingmachine photolab advertising page
+   Uses the desktop's own "Platinum" design tokens (macintosh-desktop.css,
+   :root-scoped, loaded globally). No new color tokens are introduced here.
+   ========================================================================== */
+
+.photolab-root {
+  min-height: 100dvh;
+  background: var(--window-body);
+  color: var(--text-primary);
+  font-family: var(--mac-font-system);
+}
+
+.photolab-root a {
+  color: var(--accent-select);
+}
+
+.photolab-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 48px);
+}
+
+.photolab-masthead {
+  padding: var(--space-6) 0 var(--space-5);
+}
+
+.photolab-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.photolab-nav__home {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.photolab-nav__home:hover,
+.photolab-nav__home:focus-visible {
+  color: var(--accent-select);
+}
+
+.photolab-hero {
+  padding: var(--space-9) 0 var(--space-8);
+  border-bottom: var(--border-light);
+}
+
+.photolab-hero__name {
+  font-family: var(--mac-font-content);
+  font-size: clamp(32px, 6vw, var(--text-4xl));
+  line-height: var(--leading-tight);
+  margin: 0 0 var(--space-4);
+}
+
+.photolab-hero__tagline {
+  font-size: var(--text-lg);
+  color: var(--text-secondary);
+  max-width: 46ch;
+  margin: 0 0 var(--space-3);
+}
+
+.photolab-hero__area {
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-6);
+}
+
+a.photolab-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background: var(--accent-select);
+  color: var(--text-inverse);
+  font-family: var(--mac-font-system);
+  font-weight: 600;
+  text-decoration: none;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-window);
+  transition: transform 0.12s var(--ease-crisp), box-shadow 0.12s var(--ease-crisp);
+}
+.photolab-cta:hover,
+.photolab-cta:focus-visible {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #888480;
+}
+.photolab-cta:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 #888480;
+}
+
+.photolab-footer {
+  padding: var(--space-9) 0 var(--space-10);
+  text-align: center;
+}
+
+.photolab-footer__area {
+  margin-top: var(--space-5);
+  font-family: var(--mac-font-terminal);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
