@@ -19,7 +19,7 @@ export type PhotoManifestEntry = {
 export const PHOTO_MANIFEST: PhotoManifestEntry[] = [
   {
     file: "america.jpg",
-    title: "test",
+    title: "flag on the corner",
     location: "lower manhattan",
     blurb: "shot on Ektar 400 35mm film",
   },
