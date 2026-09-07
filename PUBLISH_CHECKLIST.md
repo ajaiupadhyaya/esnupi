@@ -55,3 +55,6 @@
 - No street address is published anywhere on `/photolab` by design (it's the owner's
   home). If a PO Box or UPS Store mailbox is set up later, add it to `photoLabData.ts`
   and it can be printed on the page.
+- Confirm the equipment claims in `ABOUT_COPY` (`src/lib/photoLabData.ts`) — the Contax
+  scanning setup, Negative Lab Pro, and in-house ECN-2 — are still accurate before launch;
+  these are asserted publicly on the page.

@@ -49,7 +49,7 @@ export function AboutPanel() {
             <h4 className="mac-type-metadata">Also</h4>
             <p>
               I develop and scan film through{" "}
-              <a href="/photolab" onClick={goToPhotoLab}>
+              <a href="/photolab" className="mac-about-panel__link" onClick={goToPhotoLab}>
                 literaturevendingmachine photolab
               </a>
               , open for local drop-off (Richmond/Midlothian, VA) and mail-in orders.

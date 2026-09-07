@@ -9,7 +9,7 @@ export const HERO = {
   ctaLabel: "Email your order",
 } as const;
 
-const MAILTO_SUBJECT = "Film developing order — literaturevendingmachine photolab";
+const MAILTO_SUBJECT = `Film developing order — ${LAB_NAME}`;
 export const CONTACT_EMAIL = SITE_OWNER_EMAIL;
 export const CONTACT_MAILTO = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(MAILTO_SUBJECT)}`;
 

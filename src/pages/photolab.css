@@ -56,6 +56,7 @@ a.photolab-nav__home:focus-visible {
   font-size: clamp(32px, 6vw, var(--text-4xl));
   line-height: var(--leading-tight);
   margin: 0 0 var(--space-4);
+  overflow-wrap: anywhere;
 }
 
 .photolab-hero__tagline {
@@ -143,6 +144,13 @@ a.photolab-cta {
   border-bottom: var(--border-light);
 }
 
+@media (max-width: 640px) {
+  .photolab-pricing-table th,
+  .photolab-pricing-table td {
+    padding: var(--space-3);
+  }
+}
+
 .photolab-pricing-table th {
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -151,8 +159,8 @@ a.photolab-cta {
   font-weight: 500;
 }
 
-.photolab-pricing-table td:not(:first-child),
-.photolab-pricing-table th:not(:first-child) {
+.photolab-pricing-table td:nth-child(n+3),
+.photolab-pricing-table th:nth-child(n+3) {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
