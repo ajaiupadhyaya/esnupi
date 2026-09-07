@@ -11,6 +11,7 @@ const Archive = lazy(() => import("@/pages/Archive"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
 const Film = lazy(() => import("@/pages/Film"));
 const Gallery = lazy(() => import("@/pages/Gallery"));
+const PhotoLab = lazy(() => import("@/pages/PhotoLab"));
 
 function RouteFallback() {
   return <div aria-hidden style={{ minHeight: "40vh" }} />;
@@ -38,6 +39,14 @@ export default function App() {
                 element={(
                   <Suspense fallback={<RouteFallback />}>
                     <Film />
+                  </Suspense>
+                )}
+              />
+              <Route
+                path="/photolab"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <PhotoLab />
                   </Suspense>
                 )}
               />

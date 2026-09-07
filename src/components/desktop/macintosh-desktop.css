@@ -1245,6 +1245,16 @@ body.mac-matrix-mode .mac-desktop-surface {
 }
 .mac-about-panel__block { margin-bottom: 12px; }
 .mac-about-panel__block h4 { margin: 0 0 6px; color: #000; }
+.mac-about-panel__link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.mac-about-panel__link:hover,
+.mac-about-panel__link:focus-visible {
+  color: #000;
+  border-bottom-color: #000;
+}
 .mac-about-panel__list { margin: 0; padding-left: 20px; }
 .mac-about-panel__foot { color: #444; }
 

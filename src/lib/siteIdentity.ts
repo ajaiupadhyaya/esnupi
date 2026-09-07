@@ -72,4 +72,9 @@ export const SITE_OWNER_SEO_PHRASES: readonly string[] = [
   `Ajai Upadhyaya felt moon`,
   `Ajai Upadhyaya official website`,
   `Ajai Upadhyaya ajaiupadhyaya.com`,
+  "literaturevendingmachine photolab",
+  "film developing Richmond Virginia",
+  "film developing Midlothian Virginia",
+  "C-41 developing Richmond Virginia",
+  `${SITE_OWNER_FULL_NAME} photolab`,
 ];

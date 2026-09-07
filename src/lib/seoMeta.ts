@@ -24,6 +24,7 @@ export const SITE_INDEXABLE_ROUTES = [
   { path: "/archive", label: `${SITE_OWNER_FULL_NAME} project archive` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
+  { path: "/photolab", label: `${SITE_OWNER_FULL_NAME} film developing lab` },
   { path: "/feltmoon", label: `${SITE_OWNER_FULL_NAME} felt moon room` },
 ] as const;
 
@@ -69,6 +70,17 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
       canonicalPath: "/film",
       ogType: "website",
       canonicalUrl: canonicalUrl("/film"),
+    };
+  }
+
+  if (normalized === "/photolab") {
+    return {
+      title: `literaturevendingmachine photolab — Film Developing & Scanning | ${SITE_BRAND}`,
+      description:
+        "C-41, black & white, and ECN-2 film developing and scanning, hand-processed in Richmond & Midlothian, Virginia. Mail-in orders welcome nationwide.",
+      canonicalPath: "/photolab",
+      ogType: "website",
+      canonicalUrl: canonicalUrl("/photolab"),
     };
   }
 

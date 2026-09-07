@@ -1,8 +1,9 @@
 import { DateTime } from "luxon";
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { hydraStage } from "@/lib/hydraStage";
 import { CASE_STUDY_GITHUB, CASE_STUDY_URL } from "@/lib/caseStudyUrl";
 import { PROJECTS_BY_KIND, type Project } from "@/lib/projectsData";
+import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { ScaffoldReveal } from "./ScaffoldReveal";
 
 /* -------------------------------------------------------------------------- */
@@ -11,6 +12,15 @@ import { ScaffoldReveal } from "./ScaffoldReveal";
 
 export function AboutPanel() {
   const year = useMemo(() => DateTime.now().year, []);
+  const routeTransition = useRouteTransition();
+  const goToPhotoLab = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+      e.preventDefault();
+      routeTransition.goto("/photolab");
+    },
+    [routeTransition],
+  );
   return (
     <article className="mac-about-panel" aria-label="About">
       <ScaffoldReveal>
@@ -35,6 +45,16 @@ export function AboutPanel() {
             </ul>
           </section>,
           <hr className="mac-about-panel__rule" key="r2" />,
+          <section className="mac-about-panel__block" key="photolab">
+            <h4 className="mac-type-metadata">Also</h4>
+            <p>
+              I develop and scan film through{" "}
+              <a href="/photolab" className="mac-about-panel__link" onClick={goToPhotoLab}>
+                literaturevendingmachine photolab
+              </a>
+              , open for local drop-off (Richmond/Midlothian, VA) and mail-in orders.
+            </p>
+          </section>,
           <p className="mac-type-metadata mac-about-panel__foot" key="foot">
             Ajai Upadhyaya, {year}
           </p>,
