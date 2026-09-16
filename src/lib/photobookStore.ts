@@ -16,6 +16,23 @@ export type LoadSharedPhotosResult = {
   failed: boolean;
 };
 
+/**
+ * Client-side mirror of the `museum_photos_image_url_shape` DB constraint in
+ * `supabase/harden_public_write_tables.sql`. The database is the real gate (the
+ * client can never be trusted), but validating here too gives fast feedback on
+ * write and defends the render path against any legacy/pre-constraint row: only
+ * https URLs or base64 raster-image data URLs, and nothing enormous. Notably
+ * this excludes `data:image/svg+xml` — SVG can carry script.
+ */
+export const MAX_IMAGE_URL_LENGTH = 6_000_000;
+const DATA_IMAGE_RE = /^data:image\/(png|jpeg|jpg|gif|webp|avif);base64,[A-Za-z0-9+/=]+$/;
+
+export function isSafeImageUrl(url: unknown): url is string {
+  if (typeof url !== "string") return false;
+  if (url.length === 0 || url.length > MAX_IMAGE_URL_LENGTH) return false;
+  return url.startsWith("https://") || DATA_IMAGE_RE.test(url);
+}
+
 function isLikelyNetworkFailure(err: { message?: string } | null): boolean {
   const m = (err?.message ?? "").toLowerCase();
   return (
@@ -27,6 +44,12 @@ function isLikelyNetworkFailure(err: { message?: string } | null): boolean {
   );
 }
 
+/** Drop any row whose image_url would not pass the DB constraint (legacy rows). */
+function safePhotos(rows: unknown): SharedPhoto[] {
+  if (!Array.isArray(rows)) return [];
+  return (rows as SharedPhoto[]).filter((p) => isSafeImageUrl(p?.image_url));
+}
+
 export async function loadSharedPhotos(limit = 200): Promise<LoadSharedPhotosResult> {
   if (!supabase) return { photos: [], failed: false };
   const wide = await supabase
@@ -34,7 +57,7 @@ export async function loadSharedPhotos(limit = 200): Promise<LoadSharedPhotosRes
     .select("id,image_url,created_at,visitor_name")
     .order("created_at", { ascending: false })
     .limit(limit);
-  if (!wide.error) return { photos: (wide.data ?? []) as SharedPhoto[], failed: false };
+  if (!wide.error) return { photos: safePhotos(wide.data), failed: false };
   if (isLikelyNetworkFailure(wide.error)) {
     return { photos: [], failed: true };
   }
@@ -43,13 +66,16 @@ export async function loadSharedPhotos(limit = 200): Promise<LoadSharedPhotosRes
     .select("id,image_url,created_at")
     .order("created_at", { ascending: false })
     .limit(limit);
-  if (!narrow.error) return { photos: (narrow.data ?? []) as SharedPhoto[], failed: false };
+  if (!narrow.error) return { photos: safePhotos(narrow.data), failed: false };
   return { photos: [], failed: true };
 }
 
 export async function addSharedPhoto(imageUrl: string): Promise<SharedPhoto> {
   if (!supabase) {
     throw new Error("Supabase is not configured.");
+  }
+  if (!isSafeImageUrl(imageUrl)) {
+    throw new Error("Unsupported image: only https URLs or base64 image data are allowed.");
   }
   const visitorName = getVisitorDisplayName();
   const payload: Record<string, string> = { image_url: imageUrl };
