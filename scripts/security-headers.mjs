@@ -9,10 +9,15 @@
  * the header and the HTML to drift apart silently, so:
  *
  *   npm run headers          rewrite vercel.json from this file
- *   npm run headers:check    fail if vercel.json is stale (runs in `build`)
+ *   npm run headers:check    fail if vercel.json is stale (local/CI check)
  *
- * If `npm run build` fails with "vercel.json is out of date", you edited an
- * inline script in index.html — run `npm run headers` and commit the result.
+ * After editing an inline <script> in index.html (which invalidates the CSP
+ * hash), run `npm run headers` and commit the result.
+ *
+ * NOTE: intentionally NOT wired into `npm run build`. Vercel's `vercel build`
+ * normalizes vercel.json before the build command runs, so a byte-exact
+ * `--check` reports a false "out of date" on Vercel even when the committed
+ * file is correct — gating the build on it breaks deploys. Run it locally.
  */
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
