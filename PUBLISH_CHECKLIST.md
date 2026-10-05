@@ -27,12 +27,14 @@
 
 - `npm run build` passes.
 - No broken internal routes:
-  - `/`
+  - `/` (home)
+  - `/desktop` (Mac desktop — also reachable from the home page's "Old desktop version" pill)
   - `/archive`
   - `/gallery`
   - `/film`
   - `/feltmoon`
   - `/photolab`
+- `/` renders with no grain, vignette, or crosshair cursor; the signature draws, Fig. 1 fills in and reseeds on click, film frames resolve from mosaic and turn colour on hover/tap, and the filter greys out non-matching rows.
 - `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
   with no grain, vignette, or crosshair cursor.
 - Desktop interactions checked manually:

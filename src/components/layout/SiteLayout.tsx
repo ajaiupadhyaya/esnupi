@@ -8,19 +8,19 @@ import { Outlet, useLocation } from "react-router-dom";
 export function SiteLayout() {
   const { pathname } = useLocation();
 
-  /** Classic Mac desktop uses p5 (one random sketch per visit). `/` and
-   *  `/desktop` both mount `MacintoshDesktop`; other routes use opaque UIs
+  /** Classic Mac desktop uses p5 (one random sketch per visit). Only
+   *  `/desktop` mounts `MacintoshDesktop`; other routes use opaque UIs
    *  so we skip the live wallpaper to save CPU/GPU. `/lab` uses Hydra instead. */
-  const showP5Mac = pathname === "/" || pathname.startsWith("/desktop");
+  const showP5Mac = pathname.startsWith("/desktop");
   const isLab = pathname.startsWith("/lab");
   const showHydra = isLab;
 
   /** Only /lab gets the readability scrim over Hydra. */
   const showScrim = pathname.startsWith("/lab");
 
-  /** /film is a bare field — no grain, vignette, topo, JPEG artifact, or
-   *  crosshair cursor. The photographs carry the page on their own. */
-  const isBare = pathname.startsWith("/film");
+  /** /film and the home page are bare fields — no grain, vignette, topo, JPEG
+   *  artifact, or crosshair cursor. They carry their own texture. */
+  const isBare = pathname === "/" || pathname.startsWith("/film");
 
   return (
     <div

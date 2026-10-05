@@ -30,13 +30,22 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
 
 ### Routing layer (thin)
 
-`src/App.tsx` is a small React Router shell. `MacintoshDesktop` at `/` and `/desktop` is **not** lazy; everything else (`/archive`, `/gallery`, `/film`, `/feltmoon`) is `React.lazy` + `Suspense`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
+`src/App.tsx` is a small React Router shell. `Home` (`src/pages/Home.tsx`) is at `/`. `MacintoshDesktop` is at `/desktop` and is **not** lazy — keep it eager: when it was lazy, its CSS chunk (`macintosh-desktop.css` `@import`s fonts.googleapis.com) made Vite's CSS preload throw on any network that blocks Google Fonts, and the whole route fell into `ErrorBoundary`. Everything else (`/archive`, `/gallery`, `/film`, `/feltmoon`) is `React.lazy` + `Suspense`. Rooms opened from the desktop (`/archive`, `/gallery`, `/feltmoon`, `/lab`) send their "← desktop" links to `/desktop`; `/film` and `/photolab` link "← ajaiupadhyaya.com" to `/`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
 
-`/film` (`src/pages/Film.tsx`) is the one route that opts out of the site's chrome: `SiteLayout` skips the grain/vignette/topo/JPEG overlays and the crosshair cursor when `pathname` starts with `/film` (the `isBare` branch), and the page sets `data-film-page` on `<html>` while mounted so the field, overscroll, and scrollbars follow `prefers-color-scheme` instead of the site's dark-only tokens. It is the only light-capable surface on the site. Its lightbox portals into `<body>` and carries `data-lenis-prevent` — the attribute `LenisGsapProvider` checks — so global smooth scroll doesn't drive the page behind the overlay.
+`/film` (`src/pages/Film.tsx`) and `/` (`src/pages/Home.tsx`) opt out of the site's chrome: `SiteLayout` skips the grain/vignette/topo/JPEG overlays and the crosshair cursor for them (the `isBare` branch). For `/film`, and the page sets `data-film-page` on `<html>` while mounted so the field, overscroll, and scrollbars follow `prefers-color-scheme` instead of the site's dark-only tokens. It is the only light-capable surface on the site. Its lightbox portals into `<body>` and carries `data-lenis-prevent` — the attribute `LenisGsapProvider` checks — so global smooth scroll doesn't drive the page behind the overlay.
 
-### Desktop is the product
+### Home page (`/`)
 
-`src/components/desktop/MacintoshDesktop.tsx` (~1.2k lines) is the real application surface — a simulated Mac OS 8 desktop with draggable windows, icons, dock, menu bar, ambient audio, and overlays. Most "pages" on this site are panels rendered inside windows, not routes. When asked to add a feature, default to adding a panel/window unless the user explicitly wants a top-level route.
+`src/pages/Home.tsx` + `src/pages/home.css` (all classes prefixed `ajh-`) + `src/components/home/` (`Signature`, `MonteCarloFigure`, `MosaicPhoto`). It is deliberately plain: system Helvetica/Arial and system mono, no web fonts, no grain/vignette overlays, no gradients, no shadows, no rounded cards. Its look comes from five reference sites (brutalistwebsites.com/raw, arrc.site, stu-b-io.com, adamclarkecolour.com, fromouterspace.it); the header comment in `home.css` maps each feature to its reference. Don't "polish" it toward a template look.
+
+- Content is data-driven: the work index renders `PROJECTS` from `src/lib/projectsData.ts`; the blue film section renders the files listed in `HOME_FRAMES` (in `Home.tsx`) from the photography manifest, captioned with each entry's title/location/blurb.
+- `MosaicPhoto` draws the image into a canvas with the destination-rect form of `drawImage`. Don't switch to source-rect cropping: with `srcset`, `naturalWidth` is density-corrected and source-rect crops land on the wrong pixels.
+- The page sets `data-home-page` on `<html>` while mounted (light background), the same pattern as `/film`.
+- Every animation has a `prefers-reduced-motion` fallback; keep it that way.
+
+### The desktop (`/desktop`)
+
+`src/components/desktop/MacintoshDesktop.tsx` (~1.2k lines) is the main interactive surface — a simulated Mac OS 8 desktop with draggable windows, icons, dock, menu bar, ambient audio, and overlays. Most "pages" on this site are panels rendered inside windows, not routes. When asked to add a feature, default to adding a panel/window unless the user explicitly wants a top-level route.
 
 The window system has three coupled files — change them together:
 

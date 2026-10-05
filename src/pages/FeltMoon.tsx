@@ -284,7 +284,7 @@ export default function FeltMoon() {
         <button
           type="button"
           className="fm-bar__back"
-          onClick={() => routeTransition.goto("/")}
+          onClick={() => routeTransition.goto("/desktop")}
           aria-label="Back to desktop"
         >
           ← desktop
@@ -341,7 +341,7 @@ export default function FeltMoon() {
                 <button
                   type="button"
                   className="fm-colophon__back"
-                  onClick={() => routeTransition.goto("/")}
+                  onClick={() => routeTransition.goto("/desktop")}
                 >
                   return to desktop ↗
                 </button>

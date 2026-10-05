@@ -100,7 +100,7 @@ export default function Archive() {
   }, [filteredProjects]);
 
   const handleBack = useCallback(() => {
-    routeTransition.goto("/");
+    routeTransition.goto("/desktop");
   }, [routeTransition]);
 
   useEffect(() => {

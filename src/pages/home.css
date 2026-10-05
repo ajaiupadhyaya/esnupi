@@ -1,0 +1,574 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * Home (/). The PSD's two columns, dressed in the references:
+ *   RAW (brutalistwebsites.com/raw)  electric blue, mono 3-line captions,
+ *                                    B&W prints, the noise-texture cover
+ *   arrc.site                        hand signature over the text, a plain
+ *                                    italic-title CV index, education + bio
+ *   stu-b-io.com                     greyed-out "sold" rows (here: filtered)
+ *   adamclarkecolour.com             hairline column rules, tight caps stack,
+ *                                    the "+" toggle
+ *   fromouterspace.it                ○/● radio nav, outlined pill, mosaic
+ *                                    pixelation
+ * No web fonts, no overlays. System Helvetica/Arial and the system mono.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+html[data-home-page],
+html[data-home-page] body {
+  background: #ffffff;
+  color-scheme: light;
+}
+
+.site-fusion-shell[data-bare] {
+  cursor: auto;
+}
+
+.ajh-root {
+  --ajh-blue: #160bff;
+  --ajh-grey: #a3a3a3;
+  --ajh-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --ajh-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+  --ajh-panel: clamp(300px, 34.6vw, 520px);
+
+  display: grid;
+  grid-template-columns: var(--ajh-panel) minmax(0, 1fr);
+  min-height: 100dvh;
+  background: #fff;
+  color: #000;
+  font-family: var(--ajh-sans);
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+.ajh-root h1,
+.ajh-root h2,
+.ajh-root p {
+  font-family: inherit;
+}
+
+.ajh-root a {
+  color: inherit;
+}
+
+.ajh-root :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ajh-root .ajh-cap {
+  margin: 0;
+  font-family: var(--ajh-mono);
+  font-size: 12px;
+  line-height: 1.38;
+}
+
+/* ── Old desktop pill (fromouterspace COOKIES tag) ────────────────────── */
+.ajh-legacy {
+  position: fixed;
+  z-index: 30;
+  top: max(12px, env(safe-area-inset-top, 0px));
+  right: 12px;
+  padding: 3px 11px 2px;
+  border: 1px solid #000;
+  border-radius: 999px;
+  background: #fff;
+  color: #000 !important;
+  font-size: 12px;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.ajh-legacy:hover,
+.ajh-legacy:focus-visible {
+  background: #000;
+  color: #fff !important;
+}
+
+/* ── Blue panel ────────────────────────────────────────────────────────── */
+.ajh-panel {
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px 22px;
+  overflow: hidden;
+  background: var(--ajh-blue);
+  color: #fff;
+}
+
+.ajh-mark {
+  width: max-content;
+  margin: 0 0 10px -3px;
+  font-size: 84px;
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.055em;
+  cursor: default;
+  user-select: none;
+}
+
+.ajh-panel .ajh-cap a {
+  text-underline-offset: 2px;
+}
+
+/* Fig. 1 */
+.ajh-fig {
+  margin: 0;
+  width: 240px;
+}
+
+.ajh-fig__cap {
+  margin-bottom: 10px;
+  min-height: calc(3 * 1.38em);
+  font-variant-numeric: tabular-nums;
+}
+
+.ajh-fig__plate {
+  position: relative;
+  display: block;
+  width: 240px;
+  height: 264px;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  cursor: crosshair;
+}
+
+.ajh-fig__plate canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.ajh-fig__x {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ajh-blue);
+  pointer-events: none;
+}
+
+.ajh-fig__x i {
+  position: absolute;
+  left: -6px;
+  width: 13px;
+  height: 3px;
+  margin-top: -1px;
+  background: var(--ajh-blue);
+  box-shadow: 0 0 0 1px #fff;
+}
+
+/* ○ / ● nav */
+.ajh-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ajh-nav a,
+.ajh-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #fff;
+  font: inherit;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ajh-dot {
+  flex: none;
+  width: 0.34em;
+  height: 0.34em;
+  margin-top: 0.06em;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  transition: background-color 0.12s;
+}
+
+.ajh-nav a:hover .ajh-dot,
+.ajh-nav a:focus-visible .ajh-dot,
+.ajh-nav button:hover .ajh-dot,
+.ajh-nav button:focus-visible .ajh-dot,
+.ajh-nav [aria-expanded="true"] .ajh-dot {
+  background: currentColor;
+}
+
+/* ── White sheet ───────────────────────────────────────────────────────── */
+.ajh-sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  align-content: start;
+  min-width: 0;
+}
+
+.ajh-main {
+  position: relative;
+  min-height: 100dvh;
+  max-width: 760px;
+  padding: 96px 28px 56px 22px;
+}
+
+.ajh-sig {
+  position: absolute;
+  top: 12px;
+  left: 8px;
+  width: 232px;
+  height: auto;
+  color: #000;
+  pointer-events: none;
+  transform: rotate(-4deg);
+}
+
+.ajh-sig path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation-name: ajh-draw;
+  animation-timing-function: cubic-bezier(0.5, 0.1, 0.4, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes ajh-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.ajh-h1 {
+  position: relative;
+  margin: 0 0 12px;
+  color: var(--ajh-blue);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.ajh-roles p {
+  margin: 0 0 4px;
+}
+
+.ajh-h2 {
+  margin: 30px 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.ajh-index {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ajh-index li {
+  margin: 0 0 9px;
+}
+
+.ajh-index a {
+  color: #000;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color 0.35s;
+}
+
+.ajh-index a:hover {
+  color: var(--ajh-blue);
+}
+
+/* stu-b-io's sold items: still there, just grey */
+.ajh-index li.is-out a {
+  color: var(--ajh-grey);
+  pointer-events: none;
+}
+
+/* ACC "+" */
+.ajh-contact {
+  margin-top: 30px;
+}
+
+.ajh-plus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ajh-plus span {
+  display: inline-block;
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 0.8;
+  color: var(--ajh-blue);
+  transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.ajh-plus[aria-expanded="true"] span {
+  transform: rotate(45deg);
+}
+
+.ajh-drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+
+.ajh-drawer > div {
+  overflow: hidden;
+}
+
+.ajh-drawer.is-open {
+  grid-template-rows: 1fr;
+}
+
+.ajh-drawer p {
+  margin: 0 0 3px;
+}
+
+.ajh-drawer > div > p:first-child {
+  margin-top: 10px;
+}
+
+.ajh-bio-name {
+  margin-top: 12px !important;
+}
+
+/* ACC hairline column + caps stack */
+.ajh-side {
+  border-left: 1px solid #000;
+  padding: 96px 12px 24px 8px;
+}
+
+.ajh-filter {
+  position: sticky;
+  top: 96px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ajh-filter button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.ajh-filter button:hover {
+  color: var(--ajh-blue);
+}
+
+.ajh-filter button[aria-pressed="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.ajh-filter--inline {
+  display: none;
+}
+
+.ajh-filter sup {
+  margin-left: 2px;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+/* ── RAW sheet ─────────────────────────────────────────────────────────── */
+.ajh-film {
+  grid-column: 1 / -1;
+  padding: 120px 22px 28px;
+  background: var(--ajh-blue);
+  color: #fff;
+}
+
+.ajh-film__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 250px);
+  column-gap: clamp(48px, 15vw, 240px);
+  row-gap: 120px;
+}
+
+.ajh-frame {
+  margin: 0;
+}
+
+.ajh-frame__cap {
+  margin-bottom: 18px;
+}
+
+.ajh-frame__print {
+  position: relative;
+  display: block;
+  width: 250px;
+  aspect-ratio: 25 / 27;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+}
+
+.ajh-frame__print picture,
+.ajh-frame__print img,
+.ajh-frame__print canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.ajh-frame__print img,
+.ajh-frame__print canvas {
+  filter: grayscale(1) contrast(1.12);
+}
+
+.ajh-frame__print img {
+  object-fit: cover;
+  opacity: 0;
+  transition: filter 0.7s ease, opacity 0.2s;
+}
+
+.ajh-frame__print canvas {
+  image-rendering: pixelated;
+  transition: opacity 0.2s;
+}
+
+.ajh-frame__print.is-resolved img {
+  opacity: 1;
+}
+
+.ajh-frame__print.is-resolved canvas {
+  opacity: 0;
+}
+
+.ajh-frame__print:hover img,
+.ajh-frame__print:focus-visible img,
+.ajh-frame__print.is-developed img {
+  filter: none;
+}
+
+.ajh-film__foot {
+  margin-top: 120px;
+}
+
+.ajh-film__colophon {
+  margin-top: 64px;
+  max-width: 60ch;
+  opacity: 0.85;
+}
+
+/* ── Small screens: the panel stacks on top ───────────────────────────── */
+@media (max-width: 900px) {
+  .ajh-root {
+    grid-template-columns: 1fr;
+  }
+
+  .ajh-panel {
+    position: static;
+    height: auto;
+    gap: 28px;
+    padding: 56px 18px 22px;
+  }
+
+  .ajh-mark {
+    font-size: 72px;
+  }
+
+  .ajh-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 18px;
+  }
+
+  .ajh-nav a,
+  .ajh-nav button {
+    font-size: 24px;
+  }
+
+  .ajh-sheet {
+    grid-template-columns: 1fr;
+  }
+
+  .ajh-side {
+    display: none;
+  }
+
+  .ajh-filter--inline {
+    position: static;
+    display: flex;
+    gap: 16px;
+    margin: 0 0 12px;
+    padding: 6px 0;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+  }
+
+  .ajh-main {
+    min-height: 0;
+    padding: 92px 18px 48px;
+  }
+
+  .ajh-sig {
+    left: 4px;
+    width: 210px;
+  }
+
+  .ajh-film {
+    padding: 72px 18px 24px;
+  }
+
+  .ajh-film__grid {
+    grid-template-columns: minmax(0, 300px);
+    row-gap: 72px;
+  }
+
+  .ajh-frame__print {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ajh-sig path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .ajh-drawer,
+  .ajh-plus span,
+  .ajh-frame__print img,
+  .ajh-index a {
+    transition: none;
+  }
+}

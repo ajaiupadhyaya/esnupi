@@ -4,6 +4,7 @@ import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
+import Home from "@/pages/Home";
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -24,7 +25,8 @@ export default function App() {
         <RouteTransitionProvider>
           <Routes>
             <Route element={<SiteLayout />}>
-              <Route path="/" element={<MacintoshDesktop />} />
+              <Route path="/" element={<Home />} />
+              {/* The Mac desktop sim lives here now; "/" is the plain home page. */}
               <Route path="/desktop" element={<MacintoshDesktop />} />
               <Route
                 path="/gallery"
