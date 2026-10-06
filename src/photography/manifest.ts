@@ -279,7 +279,7 @@ export const PHOTO_MANIFEST: PhotoManifestEntry[] = [
     file: "newjpmg.jpg",
     title: "New JP Morgan Building",
     location: "midtown east / park ave",
-    blurb: "I am in love with this building, I will work at JPMG after masters",
+    blurb: "270 Park Avenue, looking up",
   },
   {
     file: "nyc subway.jpg",

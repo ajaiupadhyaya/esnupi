@@ -24,8 +24,8 @@ function personNode() {
     url: SITE_OWNER_DOMAIN,
     email: `mailto:${SITE_OWNER_EMAIL}`,
     image: `${SITE_OWNER_DOMAIN}og-cover.png`,
-    jobTitle: "Computer Science & Economics Student",
-    description: `Official portfolio of ${SITE_OWNER_FULL_NAME} — developer, photographer, and writer.`,
+    jobTitle: "Finance",
+    description: `Official portfolio of ${SITE_OWNER_FULL_NAME} — finance, film photography, and writing.`,
     sameAs: [SITE_OWNER_GITHUB, SITE_OWNER_LINKEDIN, SITE_OWNER_SUBSTACK],
     alumniOf: {
       "@type": "CollegeOrUniversity",
@@ -33,9 +33,9 @@ function personNode() {
       url: "https://www.virginia.edu/",
     },
     knowsAbout: [
-      "Computer Science",
+      "Finance",
+      "Quantitative Finance",
       "Economics",
-      "Software Engineering",
       "Film Photography",
       "Private Credit",
     ],

@@ -26,7 +26,7 @@ export function AboutPanel() {
       <ScaffoldReveal>
         {[
           <p className="mac-about-panel__statement" key="stmt">
-            Ajai Upadhyaya is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, Private Credit or find my thoughts on Substack! (click the red heart button)
+            Ajai Upadhyaya works on finance and quantitative projects in Richmond, Virginia. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, Private Credit or find my thoughts on Substack! (click the red heart button)
           </p>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="cur">

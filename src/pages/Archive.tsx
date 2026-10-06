@@ -99,9 +99,12 @@ export default function Archive() {
     });
   }, [filteredProjects]);
 
+  /** Return to whichever front door the visitor came through: the home page
+   *  (`/`) or the Mac desktop. Direct landings go home. */
+  const [backTo] = useState(() => (routeTransition.previousPath()?.startsWith("/desktop") ? "/desktop" : "/"));
   const handleBack = useCallback(() => {
-    routeTransition.goto("/desktop");
-  }, [routeTransition]);
+    routeTransition.goto(backTo);
+  }, [routeTransition, backTo]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -206,7 +209,7 @@ export default function Archive() {
         <span className="archive-bar__meta">{PROJECTS.length} entries</span>
         <span className="archive-bar__meta">{accessionRange}</span>
         <button type="button" className="archive-bar__back" onClick={handleBack}>
-          Back to desktop
+          {backTo === "/desktop" ? "Back to desktop" : "Back"}
         </button>
       </header>
 

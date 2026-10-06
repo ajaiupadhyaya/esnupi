@@ -96,7 +96,7 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
 
   return {
     title: `${SITE_OWNER_FULL_NAME} — Official Portfolio | ${SITE_BRAND}`,
-    description: `${SITE_OWNER_FULL_NAME} is a UVA computer science and economics student. Official personal site: projects, photography, writing, and contact for ${SITE_OWNER_FULL_NAME}.`,
+    description: `${SITE_OWNER_FULL_NAME}: finance and quantitative work, film photography, and writing. Richmond, VA.`,
     canonicalPath: "/",
     ogType: "profile",
     canonicalUrl: canonicalUrl("/"),

@@ -6,6 +6,8 @@ type Phase = "idle" | "playing" | "settling";
 
 type RouteTransitionCtx = {
   goto: (path: string) => void;
+  /** Pathname the last in-app `goto` left from; null on a direct landing. */
+  previousPath: () => string | null;
   phase: Phase;
   kind: TransitionKind | null;
 };
@@ -24,6 +26,8 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
   const [kind, setKind] = useState<TransitionKind | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const previousPathRef = useRef<string | null>(null);
+  const previousPath = useCallback(() => previousPathRef.current, []);
 
   /* After every route change, let a boot play briefly before hiding. */
   const initialMountRef = useRef(true);
@@ -44,6 +48,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
     (path: string) => {
       const current = window.location.pathname;
       if (current === path) return;
+      previousPathRef.current = current;
 
       // Skip the CRT/boot overlay animation entirely when the user prefers
       // reduced motion — navigate synchronously with no fullscreen flash.
@@ -80,7 +85,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
     [navigate],
   );
 
-  const value = useMemo(() => ({ goto, phase, kind }), [goto, phase, kind]);
+  const value = useMemo(() => ({ goto, previousPath, phase, kind }), [goto, previousPath, phase, kind]);
 
   return (
     <Ctx.Provider value={value}>

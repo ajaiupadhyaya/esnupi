@@ -117,7 +117,7 @@ export default function Home() {
             AJ
           </p>
           <p className="ajh-cap">
-            Financial Engineering, 2027
+            Finance, 2027
             <br />
             <a href="https://ajaiupadhyaya.com">http://ajaiupadhyaya.com</a>
           </p>
@@ -136,7 +136,7 @@ export default function Home() {
             <li>
               <a href={CASE_STUDY_URL}>
                 <span className="ajh-dot" aria-hidden />
-                Data
+                Dashboard
               </a>
             </li>
             <li>
@@ -148,7 +148,7 @@ export default function Home() {
             <li>
               <a href={SITE_OWNER_SUBSTACK}>
                 <span className="ajh-dot" aria-hidden />
-                BASIS
+                Writing
               </a>
             </li>
           </ul>
@@ -159,7 +159,7 @@ export default function Home() {
       <main className="ajh-sheet">
         <div className="ajh-main">
           <Signature runKey={sigRun} className="ajh-sig" />
-          <h1 className="ajh-h1">2027 Financial Engineering Graduate</h1>
+          <h1 className="ajh-h1">2027 Finance Graduate</h1>
           <div className="ajh-roles">
             <p>
               <b>Previous roles</b> Accounting, Financial Management, Software Development, Dev-Ops
