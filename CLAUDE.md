@@ -38,10 +38,14 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
 
 `src/pages/Home.tsx` + `src/pages/home.css` (all classes prefixed `ajh-`) + `src/components/home/` (`Signature`, `MonteCarloFigure`, `MosaicPhoto`). It is deliberately plain: system Helvetica/Arial and system mono, no web fonts, no grain/vignette overlays, no gradients, no shadows, no rounded cards. Its look comes from five reference sites (brutalistwebsites.com/raw, arrc.site, stu-b-io.com, adamclarkecolour.com, fromouterspace.it); the header comment in `home.css` maps each feature to its reference. Don't "polish" it toward a template look.
 
-- Content is data-driven: the work index renders `PROJECTS` from `src/lib/projectsData.ts`; the blue film section renders the files listed in `HOME_FRAMES` (in `Home.tsx`) from the photography manifest, captioned with each entry's title/location/blurb.
+- Content is data-driven: the work index renders `HOME_INDEX` from `src/lib/homeIndex.ts`, which combines `PROJECTS` (Works/Experiments, shared with `/archive`) with public GitHub repos, writing, and experience. Add new work there, taken from real READMEs/résumé; never invent entries, and list public repos only. The blue film section renders the files listed in `HOME_FRAMES` (in `Home.tsx`) from the photography manifest, captioned with each entry's title/location/blurb.
 - `MosaicPhoto` draws the image into a canvas with the destination-rect form of `drawImage`. Don't switch to source-rect cropping: with `srcset`, `naturalWidth` is density-corrected and source-rect crops land on the wrong pixels.
 - The page sets `data-home-page` on `<html>` while mounted (light background), the same pattern as `/film`.
 - Every animation has a `prefers-reduced-motion` fallback; keep it that way.
+
+### BASIS (`/basis`)
+
+The weekly market monitor. `src/pages/Basis.tsx` + `basis.css` (classes prefixed `bas-`), same plain rules as the home page. Each issue is an MDX file in `src/content/basis/` exporting `meta` (`number`, `title`, `date`, optional `dek`); `src/lib/basisIssues.ts` globs them (files starting with `_` are ignored, so `_template.mdx` never ships) and the issue renders at `/basis/<filename>`. MDX runs with `remark-gfm` so issues can use Markdown tables. `/basis` is bare like `/` and `/film`.
 
 ### The desktop (`/desktop`)
 

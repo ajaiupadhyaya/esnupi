@@ -31,7 +31,7 @@ export function AboutPanel() {
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="cur">
             <h4 className="mac-type-metadata">Currently</h4>
-            <p>I am preparing to start a Masters Program in Business Administration, concentration in Corporate Finance and Financial Engineering at Virginia Commonwealth University in Fall 2026</p>
+            <p>I am in a Financial Engineering program at Virginia Commonwealth University and will graduate in May 2027.</p>
           </section>,
           <section className="mac-about-panel__block" key="prev">
             <h4 className="mac-type-metadata">Previously</h4>

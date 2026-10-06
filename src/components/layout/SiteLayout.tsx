@@ -20,7 +20,7 @@ export function SiteLayout() {
 
   /** /film and the home page are bare fields — no grain, vignette, topo, JPEG
    *  artifact, or crosshair cursor. They carry their own texture. */
-  const isBare = pathname === "/" || pathname.startsWith("/film");
+  const isBare = pathname === "/" || pathname.startsWith("/film") || pathname.startsWith("/basis");
 
   return (
     <div

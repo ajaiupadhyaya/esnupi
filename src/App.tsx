@@ -9,6 +9,7 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 const Archive = lazy(() => import("@/pages/Archive"));
+const Basis = lazy(() => import("@/pages/Basis"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
 const Film = lazy(() => import("@/pages/Film"));
 const Gallery = lazy(() => import("@/pages/Gallery"));
@@ -68,6 +69,18 @@ export default function App() {
                   </Suspense>
                 )}
               />
+              {/* BASIS, the weekly market monitor: issue list and one issue per slug. */}
+              {["/basis", "/basis/:slug"].map((path) => (
+                <Route
+                  key={path}
+                  path={path}
+                  element={(
+                    <Suspense fallback={<RouteFallback />}>
+                      <Basis />
+                    </Suspense>
+                  )}
+                />
+              ))}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Route>
           </Routes>

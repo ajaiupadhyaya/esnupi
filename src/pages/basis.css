@@ -1,0 +1,256 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * BASIS (/basis), the weekly market monitor. Same rules as the home page:
+ * system Helvetica/Arial and system mono, the home page's electric blue,
+ * hairline rules, no web fonts, no overlays. Classes are prefixed `bas-`.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+html[data-basis-page],
+html[data-basis-page] body {
+  background: #ffffff;
+  color-scheme: light;
+}
+
+.bas-root {
+  --bas-blue: #160bff;
+  --bas-grey: #a3a3a3;
+  --bas-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --bas-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+
+  min-height: 100dvh;
+  background: #fff;
+  color: #000;
+  font-family: var(--bas-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bas-root h1,
+.bas-root h2,
+.bas-root h3,
+.bas-root p {
+  font-family: inherit;
+}
+
+.bas-root a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.bas-root a:hover {
+  color: var(--bas-blue);
+}
+
+.bas-root :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.bas-root .bas-cap {
+  margin: 0;
+  font-family: var(--bas-mono);
+  font-size: 12px;
+  line-height: 1.38;
+}
+
+/* ── Masthead: a blue band, like the home page's panel ─────────────────── */
+.bas-head {
+  padding: 18px 22px 28px;
+  background: var(--bas-blue);
+  color: #fff;
+}
+
+.bas-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+  font-size: 13px;
+}
+
+.bas-root .bas-head a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.bas-mark {
+  display: block;
+  font-size: clamp(72px, 16vw, 220px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  text-decoration: none;
+}
+
+.bas-head .bas-cap {
+  margin-top: 18px;
+}
+
+/* ── Body ──────────────────────────────────────────────────────────────── */
+.bas-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: clamp(56px, 10vh, 120px) 22px 96px;
+}
+
+.bas-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.bas-list li {
+  border-bottom: 1px solid #000;
+}
+
+.bas-list a {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  text-decoration: none;
+}
+
+.bas-list a:hover b {
+  color: var(--bas-blue);
+}
+
+.bas-list__dek {
+  color: #000;
+}
+
+.bas-empty {
+  padding: 18px 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.bas-empty__lede {
+  margin: 10px 0 6px;
+  color: var(--bas-blue);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.bas-empty p {
+  margin-bottom: 0;
+}
+
+/* ── Issue ─────────────────────────────────────────────────────────────── */
+.bas-issue__title {
+  margin: 14px 0 8px;
+  color: var(--bas-blue);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.bas-issue__dek {
+  margin: 0 0 36px;
+  font-size: 18px;
+}
+
+.bas-prose {
+  border-top: 1px solid #000;
+  padding-top: 8px;
+}
+
+.bas-prose h2 {
+  margin: 36px 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.bas-prose h3 {
+  margin: 24px 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bas-prose p,
+.bas-prose ul,
+.bas-prose ol {
+  margin: 0 0 14px;
+}
+
+.bas-prose ul,
+.bas-prose ol {
+  padding-left: 20px;
+}
+
+.bas-prose ul {
+  list-style: disc;
+}
+
+.bas-prose ol {
+  list-style: decimal;
+}
+
+.bas-prose blockquote {
+  margin: 18px 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--bas-blue);
+}
+
+.bas-prose table {
+  width: 100%;
+  margin: 18px 0;
+  border-collapse: collapse;
+  font-family: var(--bas-mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.bas-prose th,
+.bas-prose td {
+  padding: 5px 8px 5px 0;
+  border-bottom: 1px solid #000;
+  text-align: left;
+}
+
+.bas-prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+.bas-prose code {
+  font-family: var(--bas-mono);
+  font-size: 0.9em;
+}
+
+.bas-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 56px;
+  padding-top: 12px;
+  border-top: 1px solid #000;
+  font-size: 13px;
+}
+
+.bas-root .bas-foot {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 22px 32px;
+  color: var(--bas-grey);
+}
+
+@media (max-width: 640px) {
+  .bas-list a {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .bas-bar {
+    margin-bottom: 32px;
+  }
+
+  .bas-pager {
+    flex-direction: column;
+  }
+}

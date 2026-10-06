@@ -4,7 +4,8 @@ import { MosaicPhoto } from "@/components/home/MosaicPhoto";
 import { Signature } from "@/components/home/Signature";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { CASE_STUDY_URL } from "@/lib/caseStudyUrl";
-import { PROJECTS, type ProjectKind } from "@/lib/projectsData";
+import { BASIS_ISSUES, formatIssueNumber } from "@/lib/basisIssues";
+import { HOME_INDEX, INDEX_SECTIONS, type IndexEntry, type IndexKind } from "@/lib/homeIndex";
 import {
   SITE_OWNER_EMAIL,
   SITE_OWNER_GITHUB,
@@ -29,12 +30,20 @@ const FRAMES = HOME_FRAMES.map((f) => LIBRARY.find((p) => p.file === f)).filter(
   (p): p is NonNullable<typeof p> => Boolean(p),
 );
 
-type Filter = "all" | ProjectKind;
+type Filter = "all" | IndexKind;
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "drive", label: "Works" },
-  { id: "kext", label: "Experiments" },
+  ...INDEX_SECTIONS.map((s) => ({ id: s.kind, label: s.label })),
 ];
+
+const STATUS_SUFFIX: Record<NonNullable<IndexEntry["status"]>, string> = {
+  complete: "",
+  ongoing: ", ongoing",
+  idea: ", idea",
+  upcoming: ", coming soon",
+};
+
+const LATEST_BASIS = BASIS_ISSUES[0];
 
 function FilterList({
   filter,
@@ -89,8 +98,9 @@ export default function Home() {
   }, []);
 
   const counts = useMemo(() => {
-    const c: Record<Filter, number> = { all: PROJECTS.length, drive: 0, kext: 0 };
-    for (const p of PROJECTS) c[p.kind] += 1;
+    const c = { all: HOME_INDEX.length } as Record<Filter, number>;
+    for (const s of INDEX_SECTIONS) c[s.kind] = 0;
+    for (const e of HOME_INDEX) c[e.kind] += 1;
     return c;
   }, []);
 
@@ -117,7 +127,7 @@ export default function Home() {
             AJ
           </p>
           <p className="ajh-cap">
-            Finance, 2027
+            Financial Engineering, 2027
             <br />
             <a href="https://ajaiupadhyaya.com">http://ajaiupadhyaya.com</a>
           </p>
@@ -146,6 +156,12 @@ export default function Home() {
               </a>
             </li>
             <li>
+              <a href="/basis" onClick={go("/basis")}>
+                <span className="ajh-dot" aria-hidden />
+                BASIS
+              </a>
+            </li>
+            <li>
               <a href={SITE_OWNER_SUBSTACK}>
                 <span className="ajh-dot" aria-hidden />
                 Writing
@@ -159,7 +175,7 @@ export default function Home() {
       <main className="ajh-sheet">
         <div className="ajh-main">
           <Signature runKey={sigRun} className="ajh-sig" />
-          <h1 className="ajh-h1">2027 Finance Graduate</h1>
+          <h1 className="ajh-h1">2027 Financial Engineering Graduate</h1>
           <div className="ajh-roles">
             <p>
               <b>Previous roles</b> Accounting, Financial Management, Software Development, Dev-Ops
@@ -170,22 +186,53 @@ export default function Home() {
             </p>
           </div>
 
-          <h2 className="ajh-h2">Works + Experiments</h2>
+          <a className="ajh-basis" href="/basis" onClick={go("/basis")}>
+            <b>BASIS</b> A weekly market monitor.{" "}
+            {LATEST_BASIS
+              ? `${formatIssueNumber(LATEST_BASIS.number)}: ${LATEST_BASIS.title}`
+              : `${formatIssueNumber(1)} coming soon`}{" "}
+            →
+          </a>
+
           <FilterList filter={filter} counts={counts} onPick={setFilter} className="ajh-filter--inline" />
-          <ul className="ajh-index">
-            {PROJECTS.map((p) => {
-              const out = filter !== "all" && p.kind !== filter;
-              const href = `/archive#project-${p.id}`;
-              return (
-                <li key={p.id} className={out ? "is-out" : undefined}>
-                  <a href={href} onClick={go(href)} tabIndex={out ? -1 : undefined}>
-                    <i>{p.title}</i> {p.blurb.replace(/\.$/, "")}
-                    {p.status === "ongoing" ? ", ongoing" : ""}. {p.year}
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+          {INDEX_SECTIONS.map((section) => {
+            const entries = HOME_INDEX.filter((e) => e.kind === section.kind);
+            const out = filter !== "all" && filter !== section.kind;
+            return (
+              <section key={section.kind} className="ajh-section" aria-label={section.label}>
+                <h2 className={`ajh-h2${out ? " is-out" : ""}`}>
+                  {section.label}
+                  <sup>{entries.length}</sup>
+                </h2>
+                <ul className="ajh-index">
+                  {entries.map((e) => {
+                    const text = (
+                      <>
+                        <i>{e.title}</i> {e.blurb.replace(/\.$/, "")}
+                        {e.status ? STATUS_SUFFIX[e.status] : ""}. {e.year}
+                      </>
+                    );
+                    const internal = e.href?.startsWith("/");
+                    return (
+                      <li key={e.id} className={out ? "is-out" : undefined}>
+                        {!e.href ? (
+                          <span>{text}</span>
+                        ) : internal ? (
+                          <a href={e.href} onClick={go(e.href)} tabIndex={out ? -1 : undefined}>
+                            {text}
+                          </a>
+                        ) : (
+                          <a href={e.href} target="_blank" rel="noopener noreferrer" tabIndex={out ? -1 : undefined}>
+                            {text}
+                          </a>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </section>
+            );
+          })}
 
           <div className="ajh-contact" ref={contactRef}>
             <button
@@ -199,7 +246,7 @@ export default function Home() {
             </button>
             <div id="ajh-contact" className={`ajh-drawer${contactOpen ? " is-open" : ""}`}>
               <div>
-                <p>2027, Finance, Virginia Commonwealth University, Richmond, VA</p>
+                <p>May 2027, Financial Engineering, Virginia Commonwealth University, Richmond, VA</p>
                 <p>Previously, Computer Science and Economics, University of Virginia, Charlottesville, VA</p>
                 <p className="ajh-bio-name">
                   <b>AJ</b>

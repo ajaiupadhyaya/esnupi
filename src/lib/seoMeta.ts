@@ -22,6 +22,7 @@ const BASE = SITE_OWNER_DOMAIN.replace(/\/$/, "");
 export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
   { path: "/archive", label: `${SITE_OWNER_FULL_NAME} project archive` },
+  { path: "/basis", label: `BASIS, a weekly market monitor by ${SITE_OWNER_FULL_NAME}` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
   { path: "/photolab", label: `${SITE_OWNER_FULL_NAME} film developing lab` },
@@ -50,6 +51,16 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
       canonicalPath: "/archive",
       ogType: "website",
       canonicalUrl: canonicalUrl("/archive"),
+    };
+  }
+
+  if (normalized === "/basis" || normalized.startsWith("/basis/")) {
+    return {
+      title: `BASIS — Weekly Market Monitor | ${SITE_OWNER_FULL_NAME}`,
+      description: `BASIS is a weekly market monitor by ${SITE_OWNER_FULL_NAME}: rates, credit, equities, and what moved.`,
+      canonicalPath: normalized,
+      ogType: "website",
+      canonicalUrl: canonicalUrl(normalized),
     };
   }
 

@@ -1,6 +1,7 @@
 import path from "node:path";
 import react from "@vitejs/plugin-react";
 import mdx from "@mdx-js/rollup";
+import remarkGfm from "remark-gfm";
 import { imagetools } from "vite-imagetools";
 import { defineConfig } from "vite";
 import type { PluginOption } from "vite";
@@ -32,7 +33,8 @@ export default defineConfig({
     chunkSizeWarningLimit: 800,
   },
   plugins: [
-    mdx(),
+    // GFM adds tables, strikethrough and autolinks (BASIS issues use tables).
+    mdx({ remarkPlugins: [remarkGfm] }),
     // MDX must be handled only by @mdx-js/rollup — do not pass .mdx/.md through react-babel.
     react({ include: /\.(jsx|js|tsx|ts)$/ }),
     imagetools({

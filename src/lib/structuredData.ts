@@ -24,7 +24,7 @@ function personNode() {
     url: SITE_OWNER_DOMAIN,
     email: `mailto:${SITE_OWNER_EMAIL}`,
     image: `${SITE_OWNER_DOMAIN}og-cover.png`,
-    jobTitle: "Finance",
+    jobTitle: "Financial Engineering Student",
     description: `Official portfolio of ${SITE_OWNER_FULL_NAME} — finance, film photography, and writing.`,
     sameAs: [SITE_OWNER_GITHUB, SITE_OWNER_LINKEDIN, SITE_OWNER_SUBSTACK],
     alumniOf: {

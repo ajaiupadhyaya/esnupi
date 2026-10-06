@@ -28,6 +28,8 @@ html[data-home-page] body {
   --ajh-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
   --ajh-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
   --ajh-panel: clamp(300px, 34.6vw, 520px);
+  /* Where the sheet's text starts: well down the page, not hugging the top. */
+  --ajh-top: clamp(150px, 24vh, 260px);
 
   display: grid;
   grid-template-columns: var(--ajh-panel) minmax(0, 1fr);
@@ -215,16 +217,20 @@ html[data-home-page] body {
   min-width: 0;
 }
 
+/* Centred in the white column, with room above it. */
 .ajh-main {
   position: relative;
+  justify-self: center;
+  width: 100%;
+  min-width: 0;
   min-height: 100dvh;
   max-width: 760px;
-  padding: 96px 28px 56px 22px;
+  padding: var(--ajh-top) 28px 96px;
 }
 
 .ajh-sig {
   position: absolute;
-  top: 12px;
+  top: calc(var(--ajh-top) - 84px);
   left: 8px;
   width: 232px;
   height: auto;
@@ -267,9 +273,41 @@ html[data-home-page] body {
 }
 
 .ajh-h2 {
-  margin: 30px 0 8px;
+  margin: 34px 0 8px;
   font-size: 14px;
   font-weight: 700;
+  transition: color 0.35s;
+}
+
+.ajh-h2 sup {
+  margin-left: 2px;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.ajh-h2.is-out {
+  color: var(--ajh-grey);
+}
+
+/* BASIS: one line under the roles, pointing at /basis */
+.ajh-root a.ajh-basis {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 6px 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.35s;
+}
+
+.ajh-root a.ajh-basis:hover {
+  color: var(--ajh-blue);
+}
+
+.ajh-basis b {
+  margin-right: 6px;
+  color: var(--ajh-blue);
 }
 
 .ajh-index {
@@ -294,6 +332,11 @@ html[data-home-page] body {
 }
 
 /* stu-b-io's sold items: still there, just grey */
+.ajh-index li > span {
+  transition: color 0.35s;
+}
+
+.ajh-index li.is-out > span,
 .ajh-index li.is-out a {
   color: var(--ajh-grey);
   pointer-events: none;
@@ -359,12 +402,12 @@ html[data-home-page] body {
 /* ACC hairline column + caps stack */
 .ajh-side {
   border-left: 1px solid #000;
-  padding: 96px 12px 24px 8px;
+  padding: var(--ajh-top) 12px 24px 8px;
 }
 
 .ajh-filter {
   position: sticky;
-  top: 96px;
+  top: 48px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -528,7 +571,8 @@ html[data-home-page] body {
   .ajh-filter--inline {
     position: static;
     display: flex;
-    gap: 16px;
+    flex-wrap: wrap;
+    gap: 4px 16px;
     margin: 0 0 12px;
     padding: 6px 0;
     border-top: 1px solid #000;
@@ -541,6 +585,7 @@ html[data-home-page] body {
   }
 
   .ajh-sig {
+    top: 8px;
     left: 4px;
     width: 210px;
   }

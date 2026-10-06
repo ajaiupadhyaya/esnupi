@@ -34,6 +34,7 @@
   - `/film`
   - `/feltmoon`
   - `/photolab`
+  - `/basis` (and `/basis/<issue>` once an issue exists)
 - `/` renders with no grain, vignette, or crosshair cursor; the signature draws, Fig. 1 fills in and reseeds on click, film frames resolve from mosaic and turn colour on hover/tap, and the filter greys out non-matching rows.
 - `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
   with no grain, vignette, or crosshair cursor.
