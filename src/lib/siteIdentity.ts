@@ -64,7 +64,6 @@ export const SITE_OWNER_SEO_PHRASES: readonly string[] = [
   `Ajai Upadhyaya YugabyteDB intern`,
   `Ajai Upadhyaya VITA Finance`,
   `Ajai Upadhyaya UVIMCO`,
-  `Ajai Upadhyaya archive`,
   `Ajai Upadhyaya gallery`,
   `Ajai Upadhyaya felt moon`,
   `Ajai Upadhyaya official website`,

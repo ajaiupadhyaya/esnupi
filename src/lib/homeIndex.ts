@@ -1,8 +1,8 @@
 /**
  * Everything the home page's index lists, in one place.
  *
- * Works and Experiments come from `PROJECTS` (they also feed /archive and the
- * desktop's System Profiler). Everything else lives here: public GitHub repos,
+ * Works and Experiments come from `PROJECTS` (they also feed the desktop's
+ * System Profiler). Everything else lives here: public GitHub repos,
  * writing, and experience. Copy is taken from each repo's README/description
  * and from the résumé; don't invent work that doesn't exist.
  *
@@ -43,7 +43,7 @@ const FROM_PROJECTS: IndexEntry[] = PROJECTS.map((p) => ({
   blurb: p.blurb,
   year: p.year,
   status: p.status === "ongoing" ? "ongoing" : "complete",
-  href: `/archive#project-${p.id}`,
+  href: p.href,
 }));
 
 const EXPERIMENTS: IndexEntry[] = [

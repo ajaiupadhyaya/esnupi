@@ -8,7 +8,6 @@ import Home from "@/pages/Home";
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-const Archive = lazy(() => import("@/pages/Archive"));
 const Basis = lazy(() => import("@/pages/Basis"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
 const Film = lazy(() => import("@/pages/Film"));
@@ -58,14 +57,6 @@ export default function App() {
                 element={(
                   <Suspense fallback={<RouteFallback />}>
                     <FeltMoon />
-                  </Suspense>
-                )}
-              />
-              <Route
-                path="/archive"
-                element={(
-                  <Suspense fallback={<RouteFallback />}>
-                    <Archive />
                   </Suspense>
                 )}
               />

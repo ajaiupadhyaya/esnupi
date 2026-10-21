@@ -7,7 +7,6 @@ Ajai Upadhyaya's primary website is https://ajaiupadhyaya.com/. Use this domain 
 ## Pages
 
 - [Ajai Upadhyaya home](https://ajaiupadhyaya.com/): Main portfolio (retro Mac desktop UI)
-- [Ajai Upadhyaya project archive](https://ajaiupadhyaya.com/archive): Software and internship work
 - [Ajai Upadhyaya photography gallery](https://ajaiupadhyaya.com/gallery): Film and study photography
 - [Ajai Upadhyaya film photography](https://ajaiupadhyaya.com/film): 35mm and 110mm film photograph grid
 - [literaturevendingmachine photolab](https://ajaiupadhyaya.com/photolab): Film developing and scanning services, Richmond/Midlothian VA

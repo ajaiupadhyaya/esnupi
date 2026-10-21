@@ -219,13 +219,6 @@ function MacintoshDesktopInner() {
     routeTransition.goto("/feltmoon");
   }, [routeTransition]);
 
-  const navigateToArchive = useCallback(
-    (projectId?: string) => {
-      routeTransition.goto(projectId ? `/archive#project-${projectId}` : "/archive");
-    },
-    [routeTransition],
-  );
-
   /* --- Persist icon positions ------------------------------------------- */
   useEffect(() => {
     localStorage.setItem(ICON_STORAGE_KEY, JSON.stringify(iconPositions));
@@ -743,7 +736,6 @@ function MacintoshDesktopInner() {
         getInfoTarget={getInfoTarget}
         setGetInfoTarget={setGetInfoTarget}
         onOpenWindow={openWindow}
-        onNavigateArchive={navigateToArchive}
         onNavigateGallery={navigateToGallery}
         onNavigateFeltMoon={navigateToFeltMoon}
         onAddPhoto={addPhoto}
@@ -910,7 +902,6 @@ function MacintoshDesktopInner() {
                   musicLibrary={MUSIC_LIBRARY}
                   filmItems={FILM_PHOTO_ITEMS}
                   onOpenWindow={openWindow}
-                  onNavigateArchive={navigateToArchive}
                   onNavigateGallery={navigateToGallery}
                   onNavigateFeltMoon={navigateToFeltMoon}
                   onAddPhoto={addPhoto}

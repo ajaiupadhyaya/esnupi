@@ -79,7 +79,6 @@ export type MacintoshWindowPanelContentProps = {
   musicLibrary: MusicTrack[];
   filmItems: FilmPhoto[];
   onOpenWindow: (id: AnyWindowId, anchor?: { x: number; y: number }) => void;
-  onNavigateArchive: (projectId?: string) => void;
   onNavigateGallery: () => void;
   onNavigateFeltMoon: () => void;
   onAddPhoto: (src: string) => void | Promise<void>;
@@ -98,7 +97,6 @@ export function MacintoshWindowPanelContent({
   musicLibrary,
   filmItems,
   onOpenWindow,
-  onNavigateArchive,
   onNavigateGallery,
   onNavigateFeltMoon,
   onAddPhoto,
@@ -109,7 +107,7 @@ export function MacintoshWindowPanelContent({
   return (
     <>
       {id === "about" && <NewAboutPanel />}
-      {id === "projects" && <WorkPanel onOpenArchive={onNavigateArchive} />}
+      {id === "projects" && <WorkPanel />}
       {id === "contact" && (
         <FindPanel
           onOpenStudy={onNavigateGallery}

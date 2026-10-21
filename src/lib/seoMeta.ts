@@ -21,7 +21,6 @@ const BASE = SITE_OWNER_DOMAIN.replace(/\/$/, "");
 /** Indexable public routes (used for sitemap + internal SEO nav). */
 export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
-  { path: "/archive", label: `${SITE_OWNER_FULL_NAME} project archive` },
   { path: "/basis", label: `BASIS, a weekly market monitor by ${SITE_OWNER_FULL_NAME}` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
@@ -43,16 +42,6 @@ function canonicalUrl(path: string) {
 
 export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: string } {
   const normalized = pathname.replace(/\/+$/, "") || "/";
-
-  if (normalized === "/archive") {
-    return {
-      title: `${SITE_OWNER_FULL_NAME} — Project Archive | ${SITE_BRAND}`,
-      description: `Selected software, design, and internship work by ${SITE_OWNER_FULL_NAME}. Official project archive on ajaiupadhyaya.com.`,
-      canonicalPath: "/archive",
-      ogType: "website",
-      canonicalUrl: canonicalUrl("/archive"),
-    };
-  }
 
   if (normalized === "/basis" || normalized.startsWith("/basis/")) {
     return {

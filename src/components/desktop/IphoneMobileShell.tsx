@@ -17,7 +17,6 @@ export type IphoneMobileShellProps = {
   getInfoTarget: AnyWindowId | null;
   setGetInfoTarget: (id: AnyWindowId | null) => void;
   onOpenWindow: (id: AnyWindowId, anchor?: { x: number; y: number }) => void;
-  onNavigateArchive: (projectId?: string) => void;
   onNavigateGallery: () => void;
   onNavigateFeltMoon: () => void;
   onAddPhoto: (src: string) => void | Promise<void>;
@@ -36,7 +35,6 @@ export function IphoneMobileShell({
   getInfoTarget,
   setGetInfoTarget,
   onOpenWindow,
-  onNavigateArchive,
   onNavigateGallery,
   onNavigateFeltMoon,
   onAddPhoto,
@@ -193,7 +191,6 @@ export function IphoneMobileShell({
                   musicLibrary={MUSIC_LIBRARY}
                   filmItems={FILM_PHOTO_ITEMS}
                   onOpenWindow={openInPhone}
-                  onNavigateArchive={onNavigateArchive}
                   onNavigateGallery={onNavigateGallery}
                   onNavigateFeltMoon={onNavigateFeltMoon}
                   onAddPhoto={onAddPhoto}

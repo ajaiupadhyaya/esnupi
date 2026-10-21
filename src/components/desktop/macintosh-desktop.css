@@ -1469,20 +1469,6 @@ body.mac-matrix-mode .mac-desktop-surface {
 .mac-profiler__cta:hover .mac-profiler__cta-arrow {
   transform: translate(2px, -2px);
 }
-.mac-profiler__archive-link {
-  display: inline-block;
-  margin-top: 12px;
-  padding: 6px 10px;
-  border: 1px dashed #777;
-  background: transparent;
-  color: #333;
-  font-family: ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.mac-profiler__archive-link:hover { border-color: #000; color: #000; background: #f0f0f0; }
 .mac-profiler__case-meta {
   display: flex;
   flex-wrap: wrap;

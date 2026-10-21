@@ -67,10 +67,8 @@ export function AboutPanel() {
 /* -------------------------------------------------------------------------- */
 /* Work — System Profiler                                                      */
 /*                                                                             */
-/*   Pulls from the canonical list in @/lib/projectsData so every entry on     */
-/*   the /archive page is discoverable here too. Clicking a row surfaces a     */
-/*   short wall-label; a prominent CTA deep-links the user into the full       */
-/*   case study on the new /archive route.                                     */
+/*   Pulls from the canonical list in @/lib/projectsData. Clicking a row       */
+/*   surfaces a short wall-label with links to where the work lives.           */
 /* -------------------------------------------------------------------------- */
 
 /** DISK0, DISK1, … for drives; KEXT.A, KEXT.B, … for kernel extensions. */
@@ -79,11 +77,7 @@ function volumeLabel(p: Project, indexWithinKind: number) {
   return `KEXT.${String.fromCharCode(65 + indexWithinKind)}`;
 }
 
-export function WorkPanel({
-  onOpenArchive,
-}: {
-  onOpenArchive?: (projectId?: string) => void;
-}) {
+export function WorkPanel() {
   const [sel, setSel] = useState<Project | null>(null);
 
   const drives = PROJECTS_BY_KIND.drive;
@@ -125,15 +119,6 @@ export function WorkPanel({
           {drives.map(renderItem)}
           <div className="mac-profiler__group-label">Kernel extensions</div>
           {kexts.map(renderItem)}
-          {onOpenArchive ? (
-            <button
-              type="button"
-              className="mac-profiler__archive-link"
-              onClick={() => onOpenArchive()}
-            >
-              Open full archive ↗
-            </button>
-          ) : null}
         </div>
         <div className="mac-profiler__detail">
           {sel ? (
@@ -174,37 +159,10 @@ export function WorkPanel({
                     ))}
                   </div>
                 ) : null}
-                {onOpenArchive ? (
-                  <button
-                    type="button"
-                    className="mac-profiler__cta"
-                    onClick={() => onOpenArchive(sel.id)}
-                  >
-                    <span>Open full project</span>
-                    <span className="mac-profiler__cta-arrow" aria-hidden>
-                      &#8599;
-                    </span>
-                  </button>
-                ) : null}
               </div>
             </>
           ) : (
-            <>
-              <p className="mac-profiler__placeholder">Select a volume or extension.</p>
-              {onOpenArchive ? (
-                <button
-                  type="button"
-                  className="mac-profiler__cta"
-                  onClick={() => onOpenArchive()}
-                  style={{ marginTop: 16 }}
-                >
-                  <span>Browse full archive</span>
-                  <span className="mac-profiler__cta-arrow" aria-hidden>
-                    &#8599;
-                  </span>
-                </button>
-              ) : null}
-            </>
+            <p className="mac-profiler__placeholder">Select a volume or extension.</p>
           )}
         </div>
       </div>
@@ -224,7 +182,6 @@ const CONTACT_METHODS: Array<{ label: string; value: string; href: string }> = [
 ];
 
 const CONTACT_LINKS: Array<{ label: string; href: string }> = [
-  { label: "Portfolio / Archive", href: "/archive" },
   { label: "Case study dashboard", href: CASE_STUDY_URL },
   { label: "GitHub", href: "https://github.com/ajaiupadhyaya" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/ajai-u/" },
@@ -451,7 +408,6 @@ const WORKSITE_LINKS: Array<{
     href: CASE_STUDY_URL,
   },
   { title: "case-study repo", category: "GitHub", year: "2026", href: CASE_STUDY_GITHUB },
-  { title: "Undergrad Econ Research", category: "Research", year: "2026", href: "/archive" },
   { title: "Undergrad CS Research", category: "Research", year: "2026", href: "/gallery" },
   { title: "Excel Models & Dashboards", category: "Notes", year: "2026", href: "/feltmoon" },
   { title: "YugabyteDB Intern Work", category: "Internship Work", year: "2026", href: "https://github.com/ajaiupadhyaya" },

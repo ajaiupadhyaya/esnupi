@@ -150,12 +150,6 @@ export default function Home() {
               </a>
             </li>
             <li>
-              <a href="/archive" onClick={go("/archive")}>
-                <span className="ajh-dot" aria-hidden />
-                Work
-              </a>
-            </li>
-            <li>
               <a href="/basis" onClick={go("/basis")}>
                 <span className="ajh-dot" aria-hidden />
                 BASIS

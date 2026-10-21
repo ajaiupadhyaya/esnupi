@@ -63,7 +63,6 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
       const isSecondaryRoom =
         path.startsWith("/lab") ||
         path.startsWith("/gallery") ||
-        path.startsWith("/archive") ||
         path.startsWith("/basis") ||
         path.startsWith("/film") ||
         path.startsWith("/feltmoon") ||

@@ -29,7 +29,6 @@
 - No broken internal routes:
   - `/` (home)
   - `/desktop` (Mac desktop — also reachable from the home page's "Old desktop version" pill)
-  - `/archive`
   - `/gallery`
   - `/film`
   - `/feltmoon`
@@ -46,7 +45,7 @@
 ## Performance notes
 
 - Build succeeds, but several image assets are very large (>4MB each).
-- For production, consider generating smaller responsive variants for gallery and archive media.
+- For production, consider generating smaller responsive variants for gallery media.
 - Keep GIF usage minimal; prefer MP4/WebM where possible for large animated assets.
 
 ## Photolab page — before taking real orders

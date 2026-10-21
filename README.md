@@ -47,7 +47,6 @@ For the `Photobooth`/`Photobook` desktop apps to store a truly shared museum col
 - `src/components/HydraBackground.tsx` — Hydra canvas
 - `src/lib/randomHydraSketch.ts` — random Hydra programs
 - `src/components/desktop/MacintoshDesktop.tsx` — primary desktop experience
-- `src/pages/Archive.tsx` — long-form archive room
 - `src/pages/Gallery.tsx` — study/gallery route
 - `src/pages/FeltMoon.tsx` — horizontal scroll gallery route
 - `src/content/hello.mdx` — sample MDX

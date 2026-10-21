@@ -23,8 +23,8 @@ export function LenisGsapProvider({ children }: { children: ReactNode }) {
       // their windows/panels rely on native overflow scroll. Left global, Lenis
       // preventDefault()s those wheel/touch events and the panels can't scroll.
       // Opt those subtrees (and any explicit data-lenis-prevent) out of smoothing
-      // so native scroll takes over there; smooth scroll still drives /archive,
-      // /gallery, /feltmoon, /lab.
+      // so native scroll takes over there; smooth scroll still drives /gallery,
+      // /feltmoon, /lab.
       prevent: (node) =>
         node.closest(".mac-desktop-root, .ios-retro-root, [data-lenis-prevent]") !== null,
     });
