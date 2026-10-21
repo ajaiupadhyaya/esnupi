@@ -388,8 +388,17 @@ const WRITING: IndexEntry[] = [
     title: "BASIS",
     blurb: "A weekly market monitor",
     year: "2026",
-    status: "upcoming",
+    status: "ongoing",
     href: "/basis",
+  },
+  {
+    id: "basis-001-liquid-compute",
+    kind: "writing",
+    title: "Liquid Compute: what the grid could earn",
+    blurb: "BASIS No. 001. An outside-in model of a regulated exchange for GPU compute, with an interactive scenario model and a Monte Carlo of the tenor trade",
+    year: "2026",
+    status: "complete",
+    href: "/basis/001-liquid-compute",
   },
   {
     id: "substack",

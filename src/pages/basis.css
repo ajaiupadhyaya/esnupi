@@ -254,3 +254,12 @@ html[data-basis-page] body {
     flex-direction: column;
   }
 }
+
+/* Wide tables scroll inside the column on phones instead of widening the page. */
+@media (max-width: 640px) {
+  .bas-prose table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

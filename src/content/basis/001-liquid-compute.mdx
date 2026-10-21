@@ -1,0 +1,124 @@
+export const meta = {
+  number: 1,
+  title: "Liquid Compute: what the grid could earn",
+  date: "2026-10-21",
+  dek: "An outside-in model of a regulated exchange for GPU compute, and why its physical order book matters more than its futures contract.",
+};
+
+Liquid Compute's edge is not the futures contract. CME and ICE will list those. The edge is the physical order book underneath, which in my base case earns about 64% of 2032 revenue and is the only layer that reduces a holder's re-let risk. Everything here is built from public sources, so treat every company number as an estimate to be corrected.
+
+**[Open the interactive model →](/basis/liquid-compute/model.html)** Every assumption below is a slider there.
+
+## Summary
+
+- **What it is.** A four-layer stack for GPU compute: reference indices, a physical order book, an exchange and clearinghouse (PMEX Markets, CFTC application pending), and compute credit. A $15M seed closed September 15, 2026; a $250M prepayment facility with K8 Capital followed on October 6.
+- **The market is moving fast.** CME (with Silicon Data) and ICE (with Ornn) both announced cash-settled GPU futures in May 2026, and the CFTC opened a public comment period on compute derivatives in August. Liquid Compute is the only one of the three building physical delivery and credit under the contract.
+- **What the model says.** Base case revenue reaches about $61M in 2030 and $171M in 2032, EBITDA turns positive in 2030, and cash bottoms about $16M below zero in 2029. The seed does not reach breakeven on its own, so a Series A is part of the plan.
+- **What has to be true.** Approval by 2028, roughly one-in-six share of intermediated GPU spend by 2031, and derivatives volume around 1× physical spend five years after approval. The plan is far more sensitive to physical share than to approval: halving share more than doubles the funding gap to $36M, while a two-year approval delay adds about $4M.
+
+## 1. What Liquid Compute is
+
+Each layer feeds the next. Physical trades on the order book produce prices; prices become the index; the index settles cash futures; and the futures plus a liquidation venue make compute something a lender can advance against.
+
+| Item | Detail |
+| --- | --- |
+| Founders | Ronit Jain (CEO) and Aarav Patel; met as engineering students at UC Berkeley |
+| Former name | Pluto; Y Combinator company |
+| Headquarters | New York, with roles in New York and San Francisco |
+| Regulated entities | PMEX Markets (DCM) and PMEX Clearing (DCO), both pending at the CFTC |
+| Seed | $15M, September 15, 2026; co-led by Chemistry and FirstMark with K8 Capital, Night Capital, TrueBridge, Brainchild, UFO Holdings, Y Combinator and Dmitry Balyasny |
+| Partners | Trading and data licensing with Susquehanna, BGC Group and Wintermute |
+| Credit | $250M prepayment facility with K8 Capital; draws secured by prepaid capacity LC verifies |
+| Indices | US indices for A100, H100, H200, B200 and B300, licensed to institutions |
+
+Physical brokerage is live and blocks are trading today, so the company has revenue before any CFTC decision.
+
+## 2. Why compute needs a market
+
+Compute already trades on a curve, and the shape of that curve is a risk premium someone gets paid to carry.
+
+1. **Owners must sell term.** Lenders size GPU loans to contracted revenue, so operators sell one to three years forward to borrow at all. Term buyers are scarce, so term clears at a discount.
+2. **Compute cannot be stored.** An unsold hour expires. With no cash-and-carry arbitrage, the forward price is expectation plus risk premium, the same structure as power.
+3. **Prices jump.** Hardware loses value on release dates, not smoothly. Residual value plays the role recovery plays in single-name credit.
+
+![B300 price falls from $5.97 on demand to $4.25 for a 36-month commitment](/basis/liquid-compute/term-structure.svg)
+
+The index history shows why hedging matters. LCI-H100-US printed $2.95 at the end of June 2025, fell 38% to $1.84 by late December as Blackwell supply arrived, then rose 40% to $2.57 by August 29, 2026 as inference demand absorbed legacy supply. The same chip paid the short in 2025 and the long in 2026. Silicon Data put H100 at $2.53 to $2.81 and B200 at $5.45 to $6.01 per GPU-hour in mid-October 2026, with both forward curves in backwardation.
+
+## 3. Competitive landscape
+
+The cash-settled futures contract will be a crowded, incumbent-led product; physical delivery, verification and credit are not.
+
+| Player | Building | Index | Physical | Credit |
+| --- | --- | --- | --- | --- |
+| CME + Silicon Data | H100 and B200 futures on NYMEX, 730 GPU-hours each | Silicon Data | No | No |
+| ICE + Ornn | Futures on H100, H200, B200, RTX 5090 | Ornn (transaction-based) | Ornn Exchange | No |
+| Architect (AX) | Perpetual futures on GPU and DRAM prices, live offshore | Ornn | No | No |
+| SF Compute | Resellable cluster order book; $40M Series A | Own book | Yes | No |
+| Kalshi, Polymarket US | Event contracts on GPU prices | Third-party | No | No |
+| **Liquid Compute** | Order book, indices, DCM/DCO, credit | LCI, five chips | **Yes, verified** | **Yes** |
+
+If CME's contract becomes the reference price, Liquid Compute's index becomes a second opinion. The defense is plain: a cash future cannot deliver a cluster, verify one, or be lent against without someone who can repossess and re-let the capacity. The best outcome may be to clear physical against whichever cash contract wins, the way exchange-for-physical works in energy.
+
+## 4. The revenue model
+
+Each layer is modeled from its own driver, on a GPU rental market of $35.2B in 2026 (a Mordor Intelligence estimate of neocloud spend) growing 45% in 2027 and slowing to 18% by 2032.
+
+| Layer | Driver | Base case | Anchor |
+| --- | --- | --- | --- |
+| Order book | Market × intermediated share × LC share × take rate | 3% → 12% intermediated; LC 4% → 18% of that; 3% take | SF Compute charges about 10% on resale |
+| Exchange | Notional ÷ (730 GPU-hr × price) × fee | Approval mid-2028; churn to 1.0× in five years; 18% share; $2.00 per contract | CME averaged $0.696 per contract in 2025 |
+| Indices | Licensees × annual fee | 12 → 100 licensees; $60K → $135K | CME market data: $803M in 2025 |
+| Credit | Facility outstanding × fee | $80M → $2.0B; 1.0% | $250M K8 facility, Oct 2026 |
+
+![Base case revenue by layer, 2027 to 2032, with the order book at 64% of 2032 revenue](/basis/liquid-compute/revenue-by-layer.svg)
+
+Exchange fees reach only 14% of revenue in 2030 because derivatives volume takes years to build after approval and the base case shares it with CME and ICE.
+
+## 5. Funding and value
+
+| Scenario | 2030 revenue | 2032 revenue | EBITDA positive | Cash trough | 2032 value | Today at 35% |
+| --- | --- | --- | --- | --- | --- | --- |
+| Bear (approval 2030) | $8M | $17M | after 2032 | −$71M by 2032 | $74M | $12M |
+| Base (approval mid-2028) | $61M | $171M | 2030 | −$16M in 2029 | $1.1B | $186M |
+| Bull (approval mid-2027) | $240M | $654M | 2028 | none | $6.1B | $1.0B |
+
+![Cumulative cash by scenario: the base case bottoms at minus $15.6M in 2029](/basis/liquid-compute/cash.svg)
+
+Value applies 15× to exchange and data revenue, 4× to brokerage and 3× to credit in the base case, discounted six years at a 35% venture hurdle. Those multiples are assumptions, not verified comps. A DCO must also hold capital against member defaults, which this model does not include, so the real raise is larger than the cash gap shown.
+
+## 6. A quant look at the tenor trade
+
+I extended Liquid Compute's own worked example into a simulation, and it supports their thesis: placement risk moves the outcome more than price risk. Selling every hour roughly doubles expected P&L, from $0.62M to $1.23M, while a one-third price hedge trims the downside but leaves the chance of a loss at 44%.
+
+The setup: 64 B300 GPUs bought for 36 months at $4.25 with 30% prepaid ($2.14M), re-let monthly from a $5.30 start. The deterministic grid reproduces their note (+$589K a year at full fill, +$292K at 90%, −$6K at 80%). The simulation adds lognormal price moves at 6% monthly volatility, a −10% release-date jump about every two years, fill that falls when price falls, and $0.15 of basis noise between the index and the holder's own price. The mean month-12 price comes out at $5.11, above the $4.85 forward; selling forward pays that gap as a risk premium, which is why every hedged mean sits below the unhedged one.
+
+![Mean P&L and 5th to 95th percentile range by hedge and placement case](/basis/liquid-compute/tenor-trade.svg)
+
+1. **Placement is the bigger lever.** Full fill adds about $0.61M of expected P&L. No price hedge adds expected value; it only narrows the range. That is the case for the brokerage desk.
+2. **Wrong-way correlation is the hidden cost.** Making fill independent of price lifts the mean by $0.19M and cuts the chance of loss from 44% to 36%.
+3. **Hedging needs the long end of the curve.** A full 36-month hedge cuts the chance of loss to 14%, but dealers quote mainly in one-to-two-year tenors.
+
+## 7. Risks
+
+| Risk | What I'd watch |
+| --- | --- |
+| CFTC timing (DCM reviews have run from about 6 months to over 4 years) | Outcome of the August 2026 request for comment |
+| Benchmark capture by NYMEX GPU1/GPU2 | Open interest on CME and ICE contracts |
+| Index integrity in a thin physical book | Share of index inputs from LC's own fills |
+| Basis between index and a holder's book | Hedge effectiveness by customer type |
+| First-of-kind credit losses | Draw concentration by offtaker tier; re-let time on any default |
+| Obsolescence jumps | Spread between adjacent chip generations around launches |
+| Clearing capital | Series A size relative to the guarantee fund |
+
+## 8. What I'd build next
+
+1. **Basis study.** Minimum-variance hedge ratios and residual basis in dollars per GPU-hour for three archetypes: an inference company on H100s, an operator long unsold B200s, and a lender marked to residual value.
+2. **Residual-value model.** A curve by chip and region, with jumps on release dates, as the missing input for compute credit.
+3. **Pricing tool.** For any block offered: breakeven fill, the P&L distribution, and the hedge that keeps the 5th percentile above a set loss.
+
+## Sources
+
+Company: [liquidcompute.com](https://liquidcompute.com/), the [seed announcement](https://liquidcompute.com/announcements/compute-is-a-grid-not-a-barrel), the [$250M facility](https://liquidcompute.com/announcements/announcing-250m-prepayment-facility), and research notes [Compute Is Already Trading](https://liquidcompute.com/research/compute-is-already-trading), [Hedging Compute Prices](https://liquidcompute.com/research/hedging-compute-prices), [The Tenor Trade](https://liquidcompute.com/research/the-tenor-trade) and [The GPU Offtaker Credit Map](https://liquidcompute.com/research/gpu-offtaker-credit-map). Market: [CME and Silicon Data](https://www.cmegroup.com/media-room/press-releases/2026/8/11/cme_group_and_silicondatatolaunchcomputefuturesonoctober5tounloc.html), [CME forward curves](https://cryptobriefing.com/cme-group-gpu-rental-forward-curve-pricing/), [ICE and Ornn](https://finance.yahoo.com/markets/options/articles/ice-ornn-launch-gpu-compute-142609556.html), [SF Compute](https://www.datacenterdynamics.com/en/news/sf-compute-raises-40m-for-ai-compute-marketplace-offering/), [CFTC request for comment](https://www.marketsmedia.com/cftc-seeks-comment-on-listing-compute-derivatives/), [CME Group 2025 10-K](https://www.sec.gov/Archives/edgar/data/1156375/000115637526000009/cme-20251231.htm), [DCM approval times](https://defirate.com/news/17-dcm-filings-signal-faster-cftc-approvals-swelling-prediction-market-pipeline/), and the Mordor Intelligence neocloud estimate as reported by [Century](https://www.century.ae/en/investment-insights/neocloud-buildout-scaling-ais-compute-frontier/).
+
+This is an outside-in model with no access to company financials, quote logs or fee schedules. Scenario inputs, multiples, the discount rate and simulation parameters are mine and meant to be argued with.

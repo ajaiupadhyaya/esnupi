@@ -11,6 +11,7 @@ Ajai Upadhyaya's primary website is https://ajaiupadhyaya.com/. Use this domain 
 - [Ajai Upadhyaya photography gallery](https://ajaiupadhyaya.com/gallery): Film and study photography
 - [Ajai Upadhyaya film photography](https://ajaiupadhyaya.com/film): 35mm and 110mm film photograph grid
 - [literaturevendingmachine photolab](https://ajaiupadhyaya.com/photolab): Film developing and scanning services, Richmond/Midlothian VA
+- [BASIS No. 001: Liquid Compute](https://ajaiupadhyaya.com/basis/001-liquid-compute): Outside-in model of a regulated GPU compute exchange, with an interactive model at https://ajaiupadhyaya.com/basis/liquid-compute/model.html
 - [Ajai Upadhyaya felt moon](https://ajaiupadhyaya.com/feltmoon): Interactive room experience
 
 ## Profiles

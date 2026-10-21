@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Liquid Compute Model · BASIS · Ajai Upadhyaya</title>
+<meta name="description" content="An outside-in operating model of Liquid Compute's four layers, with scenarios and a Monte Carlo of the GPU tenor trade.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+html, body { margin: 0; }
+/* Layout: a term sheet. A narrow spec rail (labels, units, sources) beside a wide working column; controls sit directly above the chart they move. */
+:root {
+  --bg: #ffffff; --panel: #ffffff; --ink: #000000; --ink-2: #3d3d3d; --muted: #6b6b6b;
+  --rule: #e2e2e2; --axis: #000000; --accent: #160bff; --accent-wash: #eceaff;
+  --s1: #160bff; --s2: #000000; --s3: #8a8a8a; --s4: #c4c4c4;
+  --good: #006300; --bad: #c8102e;
+  --f-display: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-body: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 48px); line-height: 1.05; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 16px; }
+p { margin: 0; max-width: 66ch; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+a { color: var(--accent); }
+
+/* Masthead: a contract-spec strip, the way an exchange lists a product */
+.mast { padding-block: 40px 28px; border-bottom: 1px solid var(--ink); display: grid; gap: 18px; }
+.mast .lede { color: var(--ink-2); font-size: 17px; }
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--rule); }
+.spec div { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 2px; min-width: 0; }
+.spec dt { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.spec dd { margin: 0; font-family: var(--f-mono); font-size: 13px; }
+
+section { padding-block: 44px 8px; display: grid; gap: 20px; }
+.sec-head { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
+.sec-head .eyebrow { padding-top: 6px; }
+.sec-head > div { display: grid; gap: 8px; min-width: 0; }
+.sec-head p { color: var(--ink-2); }
+.body-grid { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+.body-grid > * { min-width: 0; }
+.rail { font-size: 12.5px; color: var(--muted); display: grid; gap: 12px; align-content: start; }
+.rail b { color: var(--ink-2); font-weight: 500; }
+
+/* Controls */
+.controls { display: grid; gap: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; width: max-content; }
+.seg button { font: 500 13px var(--f-mono); padding: 7px 16px; background: transparent; color: var(--ink); border: 0; border-right: 1px solid var(--ink); cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible, .knob input:focus-visible, .reset:focus-visible, .tbl-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 22px; }
+.knob { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: baseline; }
+.knob label { font-size: 12.5px; color: var(--ink-2); }
+.knob output { font: 500 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+.knob input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+.ctl-row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.reset { font: 12px var(--f-mono); color: var(--accent); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Readouts */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.ro { padding: 14px 14px 14px 0; display: grid; gap: 4px; min-width: 0; }
+.ro + .ro { padding-left: 14px; border-left: 1px solid var(--rule); }
+.ro .v { font-family: var(--f-display); font-size: 28px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ro .k { font-size: 12px; color: var(--muted); }
+.ro .v.neg { color: var(--bad); }
+.ro .v.sm { font-size: 21px; }
+
+/* Charts */
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: baseline; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.legend i.line { height: 2px; width: 14px; border-radius: 0; }
+.tick { font: 11px var(--f-mono); fill: var(--muted); }
+.lbl { font: 500 11.5px var(--f-mono); fill: var(--ink); }
+.lbl2 { font: 11px var(--f-mono); fill: var(--ink-2); }
+.grid line { stroke: var(--rule); stroke-width: 1; }
+.baseline { stroke: var(--axis); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px var(--f-mono); padding: 8px 10px; border-radius: 3px; min-width: 150px; opacity: 0; transition: opacity .1s; z-index: 5; line-height: 1.5; }
+.tip b { font-weight: 500; }
+.tip .r { display: flex; justify-content: space-between; gap: 14px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.two > * { min-width: 0; }
+.note { font-size: 13px; color: var(--ink-2); }
+.callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; font-size: 14px; color: var(--ink); max-width: 70ch; }
+
+/* Table */
+.tbl-toggle { font: 12px var(--f-mono); background: none; border: 1px solid var(--rule); color: var(--ink-2); padding: 5px 10px; border-radius: 3px; cursor: pointer; width: max-content; }
+.tbl-wrap { overflow-x: auto; border-top: 1px solid var(--ink); }
+table { border-collapse: collapse; width: 100%; font: 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; font-family: var(--f-body); }
+thead th { font-weight: 500; color: var(--muted); }
+tr.sum td { font-weight: 500; border-top: 1px solid var(--axis); }
+td.neg { color: var(--bad); }
+
+/* Heatmap */
+.hm { display: grid; grid-template-columns: 64px repeat(6, minmax(0, 1fr)); gap: 2px; font: 11.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+.hm div { padding: 9px 4px; text-align: center; border-radius: 2px; }
+.hm .h { color: var(--muted); background: none; }
+.hm .c { color: var(--ink); }
+.foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--ink); display: grid; gap: 10px; font-size: 12.5px; color: var(--ink-2); }
+.foot ol { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+.lc-band { background: var(--accent); color: #fff; margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.lc-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-block: 14px; font-size: 13px; }
+.lc-nav a { color: #fff; text-decoration: none; }
+.lc-nav a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .sec-head, .body-grid, .two { grid-template-columns: 1fr; gap: 14px; }
+  .ro + .ro { border-left: 0; padding-left: 0; }
+  .ro { border-bottom: 1px solid var(--rule); }
+  .hm { font-size: 10.5px; grid-template-columns: 48px repeat(6, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="lc-band"><div class="wrap">
+  <nav class="lc-nav" aria-label="Site">
+    <a href="/basis/001-liquid-compute">← BASIS No. 001: the full write-up</a>
+    <a href="/">ajaiupadhyaya.com</a>
+  </nav>
+</div></div>
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">Outside-in operating model · prepared by AJ Upadhyaya · October 2026</div>
+    <h1>Liquid Compute: what the grid could earn</h1>
+    <p class="lede">A transparent model of the four businesses on the stack: physical order book, exchange and clearing, reference indices, and compute credit. Every number below comes from public sources or from an assumption you can move. None of it is company data.</p>
+    <dl class="spec">
+      <div><dt>Entity</dt><dd>Liquid Compute (fka Pluto)</dd></div>
+      <div><dt>Venue / DCO</dt><dd>PMEX Markets · PMEX Clearing</dd></div>
+      <div><dt>CFTC status</dt><dd>DCM + DCO pending</dd></div>
+      <div><dt>Seed</dt><dd>$15M · Sep 15, 2026</dd></div>
+      <div><dt>Credit</dt><dd>$250M prepay facility · K8</dd></div>
+      <div><dt>Unit</dt><dd>730 GPU-hr / contract</dd></div>
+    </dl>
+  </header>
+
+  <!-- ================= OPERATING MODEL ================= -->
+  <section id="model" aria-labelledby="h-model">
+    <div class="sec-head">
+      <div class="eyebrow">01 · Operating model</div>
+      <div>
+        <h2 id="h-model">Revenue by layer, 2027–2032</h2>
+        <p>Pick a scenario, then move the levers that matter most. The physical order book carries the early years; exchange fees arrive only after CFTC approval and take years to build volume.</p>
+      </div>
+    </div>
+    <div class="body-grid">
+      <div class="rail">
+        <div><b>Market base.</b> Neocloud spend of $35.2B in 2026 (Mordor Intelligence estimate), grown at the scenario's rate.</div>
+        <div><b>Exchange volume.</b> Derivatives notional as a multiple ("churn") of physical spend, ramped over five years from approval. Power markets treat a churn of 3× as the floor for a liquid market.</div>
+        <div><b>Cash.</b> Starts from the $15M seed. A negative balance is the funding the plan still needs.</div>
+      </div>
+      <div class="controls">
+        <div class="ctl-row">
+          <div class="seg" role="group" aria-label="Scenario">
+            <button type="button" id="sc-bear" data-sc="bear" aria-pressed="false">Bear</button>
+            <button type="button" id="sc-base" data-sc="base" aria-pressed="true">Base</button>
+            <button type="button" id="sc-bull" data-sc="bull" aria-pressed="false">Bull</button>
+          </div>
+          <button type="button" class="reset" id="reset">Reset levers to scenario</button>
+        </div>
+        <div class="knobs">
+          <div class="knob"><label for="k-approval">CFTC approval year</label><output id="o-approval"></output><input type="range" id="k-approval" min="2027" max="2031" step="1"></div>
+          <div class="knob"><label for="k-share">Share of intermediated market (× scenario)</label><output id="o-share"></output><input type="range" id="k-share" min="0.25" max="2" step="0.05"></div>
+          <div class="knob"><label for="k-take">Physical take rate</label><output id="o-take"></output><input type="range" id="k-take" min="0.01" max="0.08" step="0.0025"></div>
+          <div class="knob"><label for="k-churn">Derivatives churn at maturity</label><output id="o-churn"></output><input type="range" id="k-churn" min="0.1" max="4" step="0.1"></div>
+          <div class="knob"><label for="k-dshare">Share of compute futures volume</label><output id="o-dshare"></output><input type="range" id="k-dshare" min="0.02" max="0.6" step="0.01"></div>
+          <div class="knob"><label for="k-fee">Fee per contract (both sides)</label><output id="o-fee"></output><input type="range" id="k-fee" min="0.5" max="6" step="0.25"></div>
+          <div class="knob"><label for="k-growth">Market growth (× scenario)</label><output id="o-growth"></output><input type="range" id="k-growth" min="0.5" max="1.5" step="0.05"></div>
+          <div class="knob"><label for="k-credit">Credit book size (× scenario)</label><output id="o-credit"></output><input type="range" id="k-credit" min="0.25" max="3" step="0.05"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">2032 revenue</span><span class="v" id="r-rev32"></span></div>
+      <div class="ro"><span class="k">2030 revenue</span><span class="v" id="r-rev30"></span></div>
+      <div class="ro"><span class="k">First EBITDA-positive year</span><span class="v" id="r-be"></span></div>
+      <div class="ro"><span class="k">Funding needed beyond the seed</span><span class="v" id="r-gap"></span></div>
+      <div class="ro"><span class="k">Implied value in 2032</span><span class="v" id="r-ev"></span></div>
+      <div class="ro"><span class="k">That value discounted to today at 35%</span><span class="v" id="r-pv"></span></div>
+    </div>
+
+    <div class="two">
+      <div class="chart" id="c-rev">
+        <div class="chart-title"><h3>Revenue by layer vs. operating cost, $M</h3>
+          <div class="legend"><span><i style="background:var(--s1)"></i>Order book</span><span><i style="background:var(--s2)"></i>Exchange</span><span><i style="background:var(--s3)"></i>Indices</span><span><i style="background:var(--s4)"></i>Credit</span><span><i class="line" style="background:var(--ink)"></i>Opex</span></div>
+        </div>
+      </div>
+      <div class="chart" id="c-cash">
+        <div class="chart-title"><h3>Cumulative cash from the $15M seed, $M</h3>
+          <div class="legend"><span><i class="line" style="background:var(--s3)"></i>Bear</span><span><i class="line" style="background:var(--s1)"></i>Base</span><span><i class="line" style="background:var(--s2)"></i>Bull</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="callout" id="insight"></p>
+    <button type="button" class="tbl-toggle" id="tbl-toggle" aria-expanded="false" aria-controls="tbl">Show the full P&amp;L table</button>
+    <div class="tbl-wrap" id="tbl" hidden></div>
+  </section>
+
+  <!-- ================= TERM STRUCTURE ================= -->
+  <section id="curve" aria-labelledby="h-curve">
+    <div class="sec-head">
+      <div class="eyebrow">02 · The curve</div>
+      <div>
+        <h2 id="h-curve">One chip, six prices</h2>
+        <p>Liquid Compute's own B300 quotes show a steep discount for commitment. Financed operators must sell term to borrow, so term trades below spot. That structural seller is the reason a market here pays a risk premium.</p>
+      </div>
+    </div>
+    <div class="two">
+      <div class="chart" id="c-curve">
+        <div class="chart-title"><h3>B300 price by commitment, $/GPU-hr</h3><span class="eyebrow">Source: LC index data, Sep 2026</span></div>
+      </div>
+      <div class="chart" id="c-h100">
+        <div class="chart-title"><h3>LCI-H100-US prints, $/GPU-hr</h3><span class="eyebrow">Source: LC research, Aug 2026</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TENOR TRADE ================= -->
+  <section id="tenor" aria-labelledby="h-tenor">
+    <div class="sec-head">
+      <div class="eyebrow">03 · The tenor trade</div>
+      <div>
+        <h2 id="h-tenor">Buy three years, sell by the month</h2>
+        <p>The grid reproduces Liquid Compute's worked example: 64 B300 GPUs bought at a fixed cost and re-let monthly. Cells show annual gross in $K. The simulation below asks what the grid can't: how often the trade loses money once price and fill move together.</p>
+      </div>
+    </div>
+    <div class="body-grid">
+      <div class="rail">
+        <div class="knob"><label for="k-cost">Contracted cost</label><output id="o-cost"></output><input type="range" id="k-cost" min="3.75" max="4.75" step="0.05"></div>
+        <div>Cells at or below zero are shaded red. The contour between is breakeven fill: cost ÷ re-let price.</div>
+      </div>
+      <div><div class="hm" id="hm" role="table" aria-label="Annual gross by re-let price and fill"></div></div>
+    </div>
+
+    <div class="body-grid">
+      <div class="rail">
+        <div><b>Model.</b> 4,000 monthly price paths over 36 months: lognormal moves plus release-date jumps. Fill drops as price drops, so bad months hit twice. The hedge sells a cash-settled forward on part of the book against an index with basis noise.</div>
+        <div><b>Calibration.</b> Start $5.30; mean month-12 price ≈ $5.11, above LC's quoted $4.85 forward. Selling forward at $4.85 pays that gap as a risk premium, so hedged means sit below unhedged ones.</div>
+      </div>
+      <div class="controls">
+        <div class="knobs">
+          <div class="knob"><label for="m-hedge">Hedge ratio, first 24 months</label><output id="mo-hedge"></output><input type="range" id="m-hedge" min="0" max="1" step="0.05"></div>
+          <div class="knob"><label for="m-fill">Base fill rate</label><output id="mo-fill"></output><input type="range" id="m-fill" min="0.75" max="1" step="0.01"></div>
+          <div class="knob"><label for="m-beta">Wrong-way fill sensitivity</label><output id="mo-beta"></output><input type="range" id="m-beta" min="0" max="1" step="0.05"></div>
+          <div class="knob"><label for="m-vol">Monthly price volatility</label><output id="mo-vol"></output><input type="range" id="m-vol" min="0.02" max="0.15" step="0.005"></div>
+          <div class="knob"><label for="m-jump">Release jumps per year</label><output id="mo-jump"></output><input type="range" id="m-jump" min="0" max="2" step="0.1"></div>
+          <div class="knob"><label for="m-basis">Index basis noise, $/hr</label><output id="mo-basis"></output><input type="range" id="m-basis" min="0" max="0.6" step="0.05"></div>
+        </div>
+        <div class="readouts">
+          <div class="ro"><span class="k">Mean 36-mo P&amp;L, unhedged</span><span class="v" id="mr-mu"></span></div>
+          <div class="ro"><span class="k">Mean, hedged</span><span class="v" id="mr-mh"></span></div>
+          <div class="ro"><span class="k">5th percentile, unhedged → hedged</span><span class="v sm" id="mr-p5"></span></div>
+          <div class="ro"><span class="k">Chance of a loss, unhedged → hedged</span><span class="v sm" id="mr-pl"></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="two">
+      <div class="chart" id="c-paths">
+        <div class="chart-title"><h3>40 sample re-let price paths, $/GPU-hr</h3><div class="legend"><span><i class="line" style="background:var(--bad)"></i>Contract cost</span><span><i class="line" style="background:var(--s1)"></i>Paths</span></div></div>
+      </div>
+      <div class="chart" id="c-hist">
+        <div class="chart-title"><h3>Distribution of 36-month P&amp;L, $M</h3><div class="legend"><span><i class="line" style="background:var(--s1)"></i>Unhedged</span><span><i class="line" style="background:var(--s2)"></i>Hedged</span></div></div>
+      </div>
+    </div>
+    <p class="callout" id="mc-insight"></p>
+  </section>
+
+  <footer class="foot">
+    <div class="eyebrow">Sources and limits</div>
+    <ol>
+      <li>Company facts: liquidcompute.com announcements (Sep 15 and Oct 6, 2026) and research notes "Compute Is Already Trading", "Hedging Compute Prices", "The Tenor Trade" (Aug–Sep 2026).</li>
+      <li>Market size: Mordor Intelligence neocloud estimate ($35.22B in 2026), as reported in secondary coverage. Treat as a third-party estimate.</li>
+      <li>Exchange benchmarks: CME Group FY2025 10-K (average rate per contract $0.696; market data revenue $803M). CME/Silicon Data GPU1 and GPU2 contract size of 730 GPU-hours.</li>
+      <li>Competitors: CME + Silicon Data, ICE + Ornn, Architect (AX), SF Compute — press releases and coverage, May–Oct 2026.</li>
+      <li>All scenario inputs, multiples and the 35% discount rate are my assumptions. This is an outside-in model with no access to company financials.</li>
+    </ol>
+  </footer>
+</div>
+
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
