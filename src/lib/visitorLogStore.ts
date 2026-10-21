@@ -39,7 +39,7 @@ function notifyLocalListeners() {
 
 /** Records a visit (name gate). Best-effort: Supabase first, then local-only. */
 export async function registerVisitor(displayName: string): Promise<void> {
-  const trimmed = displayName.trim();
+  const trimmed = displayName.trim().slice(0, 60);
   if (!trimmed) return;
 
   const entry: VisitorLogEntry = {
@@ -51,7 +51,6 @@ export async function registerVisitor(displayName: string): Promise<void> {
   if (supabase && hasSupabaseConfig) {
     const { error } = await supabase.from("site_visitor_log").insert({
       display_name: trimmed,
-      visited_at: entry.visited_at,
     });
     if (!error) return;
   }

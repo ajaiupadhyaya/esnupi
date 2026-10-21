@@ -24,6 +24,17 @@ const DEFAULT_STATE: ShaderLabState = {
   params: { ...SHADER_LAB_DEFAULTS },
 };
 
+/** Storage is untrusted; only finite slider values may enter generated code. */
+export function normalizeShaderLabParams(value: unknown): ShaderLabParams {
+  const input = value && typeof value === "object" ? value as Record<string, unknown> : {};
+  const bounded = (key: keyof ShaderLabParams) => {
+    const v = input[key];
+    return typeof v === "number" && Number.isFinite(v)
+      ? Math.max(0, Math.min(1, v)) : SHADER_LAB_DEFAULTS[key];
+  };
+  return { speed: bounded("speed"), noise: bounded("noise"), kaleid: bounded("kaleid") };
+}
+
 export function loadShaderLabState(): ShaderLabState {
   if (typeof window === "undefined") return { ...DEFAULT_STATE };
   try {
@@ -32,7 +43,7 @@ export function loadShaderLabState(): ShaderLabState {
     const parsed = JSON.parse(raw) as Partial<ShaderLabState>;
     return {
       engaged: Boolean(parsed.engaged),
-      params: { ...SHADER_LAB_DEFAULTS, ...parsed.params },
+      params: normalizeShaderLabParams(parsed?.params),
     };
   } catch {
     return { ...DEFAULT_STATE };
@@ -62,6 +73,7 @@ const MOOD_RGB: Record<HydraMoodId, [number, number, number]> = {
  * “overclock” the wallpaper while keeping a palette per mood.
  */
 export function buildShaderLabSketch(mood: HydraMoodId, p: ShaderLabParams): string {
+  p = normalizeShaderLabParams(p);
   const [cr, cg, cb] = MOOD_RGB[mood];
   const spd = 12 + p.speed * 48;
   const nz = 2 + Math.floor(p.noise * 22);
