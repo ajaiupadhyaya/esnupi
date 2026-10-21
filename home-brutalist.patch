@@ -1,0 +1,1456 @@
+From 5e62d06201ec84b03c9d3f1453f761f8ab3c60aa Mon Sep 17 00:00:00 2001
+From: AJ <ajaiupad@gmail.com>
+Date: Mon, 5 Oct 2026 04:06:14 +0000
+Subject: [PATCH] feat(home): plain brutalist front page at /, Mac desktop
+ moves to /desktop
+
+- New Home page (src/pages/Home.tsx, home.css, components/home/*): blue
+  panel + white sheet from the Photoshop comp, hand-drawn signature, 1-bit
+  Monte Carlo figure (hover readout, click to reseed), work index from
+  projectsData with Works/Experiments filter, contact drawer, and a
+  blue film section of six frames that resolve from mosaic and develop
+  to colour on hover/tap.
+- Routing: Home at /, MacintoshDesktop at /desktop (kept eager).
+  'Old desktop version' pill links there via the boot transition.
+- SiteLayout: / is bare like /film; p5 wallpaper only on /desktop.
+- RouteTransition: CRT collapse when leaving / or /desktop.
+- Desktop rooms (archive, gallery, feltmoon, lab) link back to /desktop.
+- CLAUDE.md + PUBLISH_CHECKLIST.md updated for the new routes.
+---
+ CLAUDE.md                                 |  17 +-
+ PUBLISH_CHECKLIST.md                      |   4 +-
+ src/App.tsx                               |   4 +-
+ src/components/home/MonteCarloFigure.tsx  | 237 +++++++++
+ src/components/home/MosaicPhoto.tsx       | 118 +++++
+ src/components/home/Signature.tsx         |  27 +
+ src/components/layout/RouteTransition.tsx |   2 +-
+ src/components/layout/SiteLayout.tsx      |  12 +-
+ src/pages/Archive.tsx                     |   2 +-
+ src/pages/FeltMoon.tsx                    |   4 +-
+ src/pages/Gallery.tsx                     |   2 +-
+ src/pages/Home.tsx                        | 250 ++++++++++
+ src/pages/MdxLab.tsx                      |   2 +-
+ src/pages/home.css                        | 574 ++++++++++++++++++++++
+ 14 files changed, 1237 insertions(+), 18 deletions(-)
+ create mode 100644 src/components/home/MonteCarloFigure.tsx
+ create mode 100644 src/components/home/MosaicPhoto.tsx
+ create mode 100644 src/components/home/Signature.tsx
+ create mode 100644 src/pages/Home.tsx
+ create mode 100644 src/pages/home.css
+
+diff --git a/CLAUDE.md b/CLAUDE.md
+index 653f04d..acbf876 100644
+--- a/CLAUDE.md
++++ b/CLAUDE.md
+@@ -30,13 +30,22 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
+ 
+ ### Routing layer (thin)
+ 
+-`src/App.tsx` is a small React Router shell. `MacintoshDesktop` at `/` and `/desktop` is **not** lazy; everything else (`/archive`, `/gallery`, `/film`, `/feltmoon`) is `React.lazy` + `Suspense`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
++`src/App.tsx` is a small React Router shell. `Home` (`src/pages/Home.tsx`) is at `/`. `MacintoshDesktop` is at `/desktop` and is **not** lazy — keep it eager: when it was lazy, its CSS chunk (`macintosh-desktop.css` `@import`s fonts.googleapis.com) made Vite's CSS preload throw on any network that blocks Google Fonts, and the whole route fell into `ErrorBoundary`. Everything else (`/archive`, `/gallery`, `/film`, `/feltmoon`) is `React.lazy` + `Suspense`. Rooms opened from the desktop (`/archive`, `/gallery`, `/feltmoon`, `/lab`) send their "← desktop" links to `/desktop`; `/film` and `/photolab` link "← ajaiupadhyaya.com" to `/`. The whole tree is wrapped in `ErrorBoundary` → `RouteTransitionProvider` (GSAP route fades) → `LenisGsapProvider` (smooth scroll + GSAP registration, registered once in `main.tsx`).
+ 
+-`/film` (`src/pages/Film.tsx`) is the one route that opts out of the site's chrome: `SiteLayout` skips the grain/vignette/topo/JPEG overlays and the crosshair cursor when `pathname` starts with `/film` (the `isBare` branch), and the page sets `data-film-page` on `<html>` while mounted so the field, overscroll, and scrollbars follow `prefers-color-scheme` instead of the site's dark-only tokens. It is the only light-capable surface on the site. Its lightbox portals into `<body>` and carries `data-lenis-prevent` — the attribute `LenisGsapProvider` checks — so global smooth scroll doesn't drive the page behind the overlay.
++`/film` (`src/pages/Film.tsx`) and `/` (`src/pages/Home.tsx`) opt out of the site's chrome: `SiteLayout` skips the grain/vignette/topo/JPEG overlays and the crosshair cursor for them (the `isBare` branch). For `/film`, and the page sets `data-film-page` on `<html>` while mounted so the field, overscroll, and scrollbars follow `prefers-color-scheme` instead of the site's dark-only tokens. It is the only light-capable surface on the site. Its lightbox portals into `<body>` and carries `data-lenis-prevent` — the attribute `LenisGsapProvider` checks — so global smooth scroll doesn't drive the page behind the overlay.
+ 
+-### Desktop is the product
++### Home page (`/`)
+ 
+-`src/components/desktop/MacintoshDesktop.tsx` (~1.2k lines) is the real application surface — a simulated Mac OS 8 desktop with draggable windows, icons, dock, menu bar, ambient audio, and overlays. Most "pages" on this site are panels rendered inside windows, not routes. When asked to add a feature, default to adding a panel/window unless the user explicitly wants a top-level route.
++`src/pages/Home.tsx` + `src/pages/home.css` (all classes prefixed `ajh-`) + `src/components/home/` (`Signature`, `MonteCarloFigure`, `MosaicPhoto`). It is deliberately plain: system Helvetica/Arial and system mono, no web fonts, no grain/vignette overlays, no gradients, no shadows, no rounded cards. Its look comes from five reference sites (brutalistwebsites.com/raw, arrc.site, stu-b-io.com, adamclarkecolour.com, fromouterspace.it); the header comment in `home.css` maps each feature to its reference. Don't "polish" it toward a template look.
++
++- Content is data-driven: the work index renders `PROJECTS` from `src/lib/projectsData.ts`; the blue film section renders the files listed in `HOME_FRAMES` (in `Home.tsx`) from the photography manifest, captioned with each entry's title/location/blurb.
++- `MosaicPhoto` draws the image into a canvas with the destination-rect form of `drawImage`. Don't switch to source-rect cropping: with `srcset`, `naturalWidth` is density-corrected and source-rect crops land on the wrong pixels.
++- The page sets `data-home-page` on `<html>` while mounted (light background), the same pattern as `/film`.
++- Every animation has a `prefers-reduced-motion` fallback; keep it that way.
++
++### The desktop (`/desktop`)
++
++`src/components/desktop/MacintoshDesktop.tsx` (~1.2k lines) is the main interactive surface — a simulated Mac OS 8 desktop with draggable windows, icons, dock, menu bar, ambient audio, and overlays. Most "pages" on this site are panels rendered inside windows, not routes. When asked to add a feature, default to adding a panel/window unless the user explicitly wants a top-level route.
+ 
+ The window system has three coupled files — change them together:
+ 
+diff --git a/PUBLISH_CHECKLIST.md b/PUBLISH_CHECKLIST.md
+index b1254c3..a25c716 100644
+--- a/PUBLISH_CHECKLIST.md
++++ b/PUBLISH_CHECKLIST.md
+@@ -27,12 +27,14 @@
+ 
+ - `npm run build` passes.
+ - No broken internal routes:
+-  - `/`
++  - `/` (home)
++  - `/desktop` (Mac desktop — also reachable from the home page's "Old desktop version" pill)
+   - `/archive`
+   - `/gallery`
+   - `/film`
+   - `/feltmoon`
+   - `/photolab`
++- `/` renders with no grain, vignette, or crosshair cursor; the signature draws, Fig. 1 fills in and reseeds on click, film frames resolve from mosaic and turn colour on hover/tap, and the filter greys out non-matching rows.
+ - `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
+   with no grain, vignette, or crosshair cursor.
+ - Desktop interactions checked manually:
+diff --git a/src/App.tsx b/src/App.tsx
+index ab994a1..9b66b46 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -4,6 +4,7 @@ import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
+ import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
+ import { SiteLayout } from "@/components/layout/SiteLayout";
+ import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
++import Home from "@/pages/Home";
+ import { lazy, Suspense } from "react";
+ import { Navigate, Route, Routes } from "react-router-dom";
+ 
+@@ -24,7 +25,8 @@ export default function App() {
+         <RouteTransitionProvider>
+           <Routes>
+             <Route element={<SiteLayout />}>
+-              <Route path="/" element={<MacintoshDesktop />} />
++              <Route path="/" element={<Home />} />
++              {/* The Mac desktop sim lives here now; "/" is the plain home page. */}
+               <Route path="/desktop" element={<MacintoshDesktop />} />
+               <Route
+                 path="/gallery"
+diff --git a/src/components/home/MonteCarloFigure.tsx b/src/components/home/MonteCarloFigure.tsx
+new file mode 100644
+index 0000000..f589551
+--- /dev/null
++++ b/src/components/home/MonteCarloFigure.tsx
+@@ -0,0 +1,237 @@
++import { useCallback, useEffect, useRef, useState } from "react";
++
++/**
++ * Fig. 1 on the home panel. Six hundred geometric Brownian motion paths are
++ * rasterised into a density field, then printed 1-bit with a per-pixel random
++ * threshold, so the fan reads like the photocopied static on the RAW covers
++ * rather than a chart. Hover reads the 5th/95th percentile at that day; click
++ * (or Enter) pixelates the plate away and runs a new seed.
++ */
++
++const W = 240;
++const H = 264;
++const N = 600;
++const BATCH = 6;
++const LO = Math.log(50);
++const HI = Math.log(195);
++const INK = 0.07;
++const DAYS = 252;
++
++type Params = { seed: number; vol: number; drift: number };
++
++function rng(seed: number) {
++  let a = seed >>> 0;
++  return () => {
++    a = (a + 0x6d2b79f5) | 0;
++    let t = Math.imul(a ^ (a >>> 15), 1 | a);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
++
++function yOf(price: number) {
++  return (1 - (Math.log(price) - LO) / (HI - LO)) * (H - 1);
++}
++
++function simulate({ seed, vol, drift }: Params) {
++  const r = rng(seed);
++  const gauss = () => {
++    const u = 1 - r();
++    const v = r();
++    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
++  };
++  const dt = 1 / (W - 1);
++  const mu = (drift - 0.5 * vol * vol) * dt;
++  const sd = vol * Math.sqrt(dt);
++  const paths = new Float32Array(N * W);
++  for (let i = 0; i < N; i++) {
++    let s = 100;
++    paths[i * W] = s;
++    for (let x = 1; x < W; x++) {
++      s *= Math.exp(mu + sd * gauss());
++      paths[i * W + x] = s;
++    }
++  }
++  // Threshold plate: uniform noise plus a little photocopier dust.
++  const thresh = new Float32Array(W * H);
++  for (let i = 0; i < thresh.length; i++) thresh[i] = r() < 0.006 ? -1 : r();
++  return { paths, thresh };
++}
++
++function caption(p: Params) {
++  return `seed ${p.seed}, vol ${Math.round(p.vol * 100)}%`;
++}
++
++export function MonteCarloFigure() {
++  const canvasRef = useRef<HTMLCanvasElement>(null);
++  const sim = useRef<{ paths: Float32Array; thresh: Float32Array; density: Float32Array; drawn: number } | null>(null);
++  const raf = useRef(0);
++  const timers = useRef<number[]>([]);
++  const busy = useRef(false);
++  const [params, setParams] = useState<Params>({ seed: 2027, vol: 0.22, drift: 0.06 });
++  const [hover, setHover] = useState<{ left: number; y5: number; y95: number; text: string } | null>(null);
++
++  const paint = useCallback(() => {
++    const canvas = canvasRef.current;
++    const s = sim.current;
++    const ctx = canvas?.getContext("2d");
++    if (!canvas || !s || !ctx) return;
++    const img = ctx.createImageData(W, H);
++    const px = img.data;
++    for (let i = 0; i < W * H; i++) {
++      const tone = 1 - Math.exp(-s.density[i] * INK);
++      const v = tone > s.thresh[i] ? 0 : 255;
++      const o = i * 4;
++      px[o] = v;
++      px[o + 1] = v;
++      px[o + 2] = v;
++      px[o + 3] = 255;
++    }
++    ctx.putImageData(img, 0, 0);
++  }, []);
++
++  const inkPaths = useCallback((from: number, to: number) => {
++    const s = sim.current;
++    if (!s) return;
++    for (let i = from; i < to; i++) {
++      let prev = Math.round(yOf(s.paths[i * W]));
++      for (let x = 1; x < W; x++) {
++        const y = Math.round(yOf(s.paths[i * W + x]));
++        const a = Math.max(0, Math.min(prev, y));
++        const b = Math.min(H - 1, Math.max(prev, y));
++        for (let yy = a; yy <= b; yy++) s.density[yy * W + x] += 1;
++        prev = y;
++      }
++    }
++    s.drawn = to;
++  }, []);
++
++  const run = useCallback(
++    (p: Params) => {
++      cancelAnimationFrame(raf.current);
++      const { paths, thresh } = simulate(p);
++      sim.current = { paths, thresh, density: new Float32Array(W * H), drawn: 0 };
++      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
++        inkPaths(0, N);
++        paint();
++        busy.current = false;
++        return;
++      }
++      const step = () => {
++        const s = sim.current;
++        if (!s) return;
++        inkPaths(s.drawn, Math.min(N, s.drawn + BATCH));
++        paint();
++        if (s.drawn < N) raf.current = requestAnimationFrame(step);
++        else busy.current = false;
++      };
++      raf.current = requestAnimationFrame(step);
++    },
++    [inkPaths, paint],
++  );
++
++  useEffect(() => {
++    busy.current = true;
++    run(params);
++    const pending = timers.current;
++    return () => {
++      cancelAnimationFrame(raf.current);
++      pending.forEach((t) => window.clearTimeout(t));
++    };
++    // First plate only; reseeds are driven by `reseed`.
++    // eslint-disable-next-line react-hooks/exhaustive-deps
++  }, []);
++
++  const reseed = useCallback(() => {
++    if (busy.current) return;
++    busy.current = true;
++    const r = Math.random;
++    const next: Params = {
++      seed: 1000 + Math.floor(r() * 9000),
++      vol: 0.12 + r() * 0.42,
++      drift: -0.04 + r() * 0.16,
++    };
++    const canvas = canvasRef.current;
++    const ctx = canvas?.getContext("2d");
++    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
++    if (!canvas || !ctx || reduce) {
++      setParams(next);
++      run(next);
++      return;
++    }
++    // Pixelate the current plate away (the From outer Space mosaic), then run.
++    const snap = document.createElement("canvas");
++    snap.width = W;
++    snap.height = H;
++    snap.getContext("2d")?.drawImage(canvas, 0, 0);
++    const small = document.createElement("canvas");
++    const sctx = small.getContext("2d");
++    [3, 6, 12, 20, 32].forEach((b, i) => {
++      timers.current.push(
++        window.setTimeout(() => {
++          if (!sctx) return;
++          small.width = Math.ceil(W / b);
++          small.height = Math.ceil(H / b);
++          sctx.drawImage(snap, 0, 0, small.width, small.height);
++          ctx.imageSmoothingEnabled = false;
++          ctx.drawImage(small, 0, 0, small.width, small.height, 0, 0, small.width * b, small.height * b);
++        }, i * 50),
++      );
++    });
++    timers.current.push(
++      window.setTimeout(() => {
++        ctx.fillStyle = "#fff";
++        ctx.fillRect(0, 0, W, H);
++        setParams(next);
++        run(next);
++      }, 280),
++    );
++  }, [run]);
++
++  const onMove = useCallback((e: React.PointerEvent<HTMLButtonElement>) => {
++    const s = sim.current;
++    if (!s || s.drawn < 20) return;
++    const rect = e.currentTarget.getBoundingClientRect();
++    const col = Math.max(0, Math.min(W - 1, Math.floor(((e.clientX - rect.left) / rect.width) * W)));
++    const vals = new Float32Array(s.drawn);
++    for (let i = 0; i < s.drawn; i++) vals[i] = s.paths[i * W + col];
++    vals.sort();
++    const p5 = vals[Math.floor(0.05 * (s.drawn - 1))];
++    const p95 = vals[Math.floor(0.95 * (s.drawn - 1))];
++    const day = Math.round((col / (W - 1)) * DAYS);
++    setHover({
++      left: (col / W) * 100,
++      y5: (yOf(p5) / H) * 100,
++      y95: (yOf(p95) / H) * 100,
++      text: `day ${day}: 5% ${p5.toFixed(1)}, 95% ${p95.toFixed(1)}`,
++    });
++  }, []);
++
++  return (
++    <figure className="ajh-fig">
++      <figcaption className="ajh-cap ajh-fig__cap">
++        Fig. 1: Monte Carlo,
++        <br />
++        {N} price paths, one year
++        <br />
++        {hover ? hover.text : caption(params)}
++      </figcaption>
++      <button
++        type="button"
++        className="ajh-fig__plate"
++        onClick={reseed}
++        onPointerMove={onMove}
++        onPointerLeave={() => setHover(null)}
++        aria-label={`Monte Carlo simulation, ${caption(params)}. Press to run a new seed.`}
++      >
++        <canvas ref={canvasRef} width={W} height={H} />
++        {hover && (
++          <span className="ajh-fig__x" style={{ left: `${hover.left}%` }} aria-hidden>
++            <i style={{ top: `${hover.y95}%` }} />
++            <i style={{ top: `${hover.y5}%` }} />
++          </span>
++        )}
++      </button>
++    </figure>
++  );
++}
+diff --git a/src/components/home/MosaicPhoto.tsx b/src/components/home/MosaicPhoto.tsx
+new file mode 100644
+index 0000000..43da7e6
+--- /dev/null
++++ b/src/components/home/MosaicPhoto.tsx
+@@ -0,0 +1,118 @@
++import { useEffect, useRef, useState } from "react";
++import { ResponsivePicture } from "@/components/ui/ResponsivePicture";
++import type { FilmPhoto } from "@/photography/library";
++
++/** Block sizes, coarse to fine — the From outer Space pixelation, run once. */
++const STEPS = [40, 26, 16, 10, 6, 3];
++const STEP_MS = 110;
++
++/**
++ * One frame in the RAW-style grid: a three-line mono caption over a
++ * black-and-white print. When it scrolls into view it resolves from big
++ * mosaic blocks to the real photograph; hover, focus or a tap develops it to
++ * the colour on the negative.
++ */
++export function MosaicPhoto({ photo, n }: { photo: FilmPhoto; n: number }) {
++  const boxRef = useRef<HTMLButtonElement>(null);
++  const canvasRef = useRef<HTMLCanvasElement>(null);
++  const [resolved, setResolved] = useState(false);
++  const [developed, setDeveloped] = useState(false);
++
++  useEffect(() => {
++    const box = boxRef.current;
++    const canvas = canvasRef.current;
++    const img = box?.querySelector("img");
++    if (!box || !canvas || !img) return;
++    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
++      setResolved(true);
++      return;
++    }
++
++    let cancelled = false;
++    const timers: number[] = [];
++
++    const play = () => {
++      if (cancelled) return;
++      const w = box.clientWidth;
++      const h = box.clientHeight;
++      const ctx = canvas.getContext("2d");
++      const small = document.createElement("canvas");
++      const sctx = small.getContext("2d");
++      if (!w || !h || !img.naturalWidth || !ctx || !sctx) {
++        setResolved(true);
++        return;
++      }
++      canvas.width = w;
++      canvas.height = h;
++      // Same placement as object-fit: cover, in destination space. (With a
++      // srcset, naturalWidth is density-corrected, so source-rect crops in
++      // natural units would land on the wrong bitmap pixels.)
++      const scale = Math.max(w / img.naturalWidth, h / img.naturalHeight);
++      const dw = img.naturalWidth * scale;
++      const dh = img.naturalHeight * scale;
++      const dx = (w - dw) / 2;
++      const dy = (h - dh) / 2;
++      STEPS.forEach((b, i) => {
++        timers.push(
++          window.setTimeout(() => {
++            const tw = Math.max(1, Math.ceil(w / b));
++            const th = Math.max(1, Math.ceil(h / b));
++            small.width = tw;
++            small.height = th;
++            sctx.drawImage(img, dx / b, dy / b, dw / b, dh / b);
++            ctx.imageSmoothingEnabled = false;
++            ctx.clearRect(0, 0, w, h);
++            ctx.drawImage(small, 0, 0, tw, th, 0, 0, tw * b, th * b);
++          }, i * STEP_MS),
++        );
++      });
++      timers.push(window.setTimeout(() => setResolved(true), STEPS.length * STEP_MS + 30));
++    };
++
++    const start = () => {
++      if (img.complete && img.naturalWidth) play();
++      else img.addEventListener("load", play, { once: true });
++    };
++
++    const io = new IntersectionObserver(
++      (entries) => {
++        if (entries.some((e) => e.isIntersecting)) {
++          io.disconnect();
++          start();
++        }
++      },
++      { rootMargin: "0px 0px -12% 0px" },
++    );
++    io.observe(box);
++
++    return () => {
++      cancelled = true;
++      io.disconnect();
++      timers.forEach((t) => window.clearTimeout(t));
++      img.removeEventListener("load", play);
++    };
++  }, []);
++
++  return (
++    <figure className="ajh-frame">
++      <figcaption className="ajh-cap ajh-frame__cap">
++        Frame {String(n).padStart(2, "0")}: {photo.title}
++        <br />
++        {photo.location || "\u00a0"}
++        <br />
++        {photo.blurb || "\u00a0"}
++      </figcaption>
++      <button
++        ref={boxRef}
++        type="button"
++        className={`ajh-frame__print${resolved ? " is-resolved" : ""}${developed ? " is-developed" : ""}`}
++        aria-pressed={developed}
++        aria-label={`${photo.title}. Show in colour`}
++        onClick={() => setDeveloped((d) => !d)}
++      >
++        <ResponsivePicture image={photo.image} alt={photo.title} sizes="(max-width: 900px) 80vw, 260px" />
++        <canvas ref={canvasRef} aria-hidden />
++      </button>
++    </figure>
++  );
++}
+diff --git a/src/components/home/Signature.tsx b/src/components/home/Signature.tsx
+new file mode 100644
+index 0000000..5e5ae9e
+--- /dev/null
++++ b/src/components/home/Signature.tsx
+@@ -0,0 +1,27 @@
++/**
++ * A hand-drawn "AJ" signature, drawn on like arrc.site's scribble over its own
++ * link. Three pen strokes; each animates its dash offset in sequence. Bump
++ * `runKey` to remount the strokes and draw it again.
++ */
++const STROKES = [
++  { d: "M8.0 100.0 C10.0 96.3 15.7 86.7 20.0 78.0 C24.3 69.3 29.7 57.3 34.0 48.0 C38.3 38.7 43.0 28.0 46.0 22.0 C49.0 16.0 50.3 13.0 52.0 12.0 C53.7 11.0 55.0 12.3 56.0 16.0 C57.0 19.7 57.0 26.3 58.0 34.0 C59.0 41.7 60.7 53.0 62.0 62.0 C63.3 71.0 64.7 81.0 66.0 88.0 C67.3 95.0 70.7 103.7 70.0 104.0 C69.3 104.3 65.7 95.3 62.0 90.0 C58.3 84.7 53.3 76.0 48.0 72.0 C42.7 68.0 35.0 66.3 30.0 66.0 C25.0 65.7 19.0 68.0 18.0 70.0 C17.0 72.0 19.7 77.3 24.0 78.0 C28.3 78.7 36.3 76.3 44.0 74.0 C51.7 71.7 61.3 68.0 70.0 64.0 C78.7 60.0 89.0 55.0 96.0 50.0 C103.0 45.0 107.7 39.3 112.0 34.0 C116.3 28.7 119.7 21.7 122.0 18.0 C124.3 14.3 126.0 13.3 126.0 12.0 C126.0 10.7 123.7 9.3 122.0 10.0 C120.3 10.7 116.7 12.7 116.0 16.0 C115.3 19.3 117.0 24.0 118.0 30.0 C119.0 36.0 121.0 44.3 122.0 52.0 C123.0 59.7 124.3 68.3 124.0 76.0 C123.7 83.7 122.3 92.0 120.0 98.0 C117.7 104.0 114.0 109.3 110.0 112.0 C106.0 114.7 99.7 115.0 96.0 114.0 C92.3 113.0 88.3 109.0 88.0 106.0 C87.7 103.0 90.0 99.0 94.0 96.0 C98.0 93.0 104.7 90.7 112.0 88.0 C119.3 85.3 131.3 83.0 138.0 80.0 C144.7 77.0 148.3 73.7 152.0 70.0 C155.7 66.3 159.0 57.7 160.0 58.0 C161.0 58.3 157.0 68.3 158.0 72.0 C159.0 75.7 163.0 81.3 166.0 80.0 C169.0 78.7 173.3 68.3 176.0 64.0 C178.7 59.7 180.7 53.3 182.0 54.0 C183.3 54.7 182.3 64.0 184.0 68.0 C185.7 72.0 188.7 79.0 192.0 78.0 C195.3 77.0 200.7 66.7 204.0 62.0 C207.3 57.3 210.3 49.3 212.0 50.0 C213.7 50.7 212.3 61.7 214.0 66.0 C215.7 70.3 218.3 76.3 222.0 76.0 C225.7 75.7 230.3 67.7 236.0 64.0 C241.7 60.3 247.7 57.0 256.0 54.0 C264.3 51.0 275.7 48.3 286.0 46.0 C296.3 43.7 312.7 41.0 318.0 40.0", dur: 1.25, delay: 0.2 },
++  { d: "M236.0 26.0 C237.0 31.3 239.7 46.0 242.0 58.0 C244.3 70.0 248.7 91.3 250.0 98.0", dur: 0.2, delay: 1.5 },
++  { d: "M180.0 100.0 C190.0 100.7 216.3 101.0 240.0 104.0 C263.7 107.0 308.3 115.7 322.0 118.0", dur: 0.32, delay: 1.72 },
++] as const;
++
++export function Signature({ runKey, className }: { runKey: number; className?: string }) {
++  return (
++    <svg className={className} viewBox="0 0 330 124" aria-hidden="true" focusable="false">
++      <g key={runKey}>
++        {STROKES.map((s, i) => (
++          <path
++            key={i}
++            d={s.d}
++            pathLength={1}
++            style={{ animationDuration: `${s.dur}s`, animationDelay: `${s.delay}s` }}
++          />
++        ))}
++      </g>
++    </svg>
++  );
++}
+diff --git a/src/components/layout/RouteTransition.tsx b/src/components/layout/RouteTransition.tsx
+index bfb1873..99f4c32 100644
+--- a/src/components/layout/RouteTransition.tsx
++++ b/src/components/layout/RouteTransition.tsx
+@@ -62,7 +62,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
+         path.startsWith("/film") ||
+         path.startsWith("/feltmoon") ||
+         path.startsWith("/photolab");
+-      const nextKind: TransitionKind = isSecondaryRoom && current === "/" ? "crt-collapse" : "boot";
++      const nextKind: TransitionKind = isSecondaryRoom && (current === "/" || current.startsWith("/desktop")) ? "crt-collapse" : "boot";
+       setKind(nextKind);
+       setPhase("playing");
+ 
+diff --git a/src/components/layout/SiteLayout.tsx b/src/components/layout/SiteLayout.tsx
+index 9a16b7d..a100bb2 100644
+--- a/src/components/layout/SiteLayout.tsx
++++ b/src/components/layout/SiteLayout.tsx
+@@ -8,19 +8,19 @@ import { Outlet, useLocation } from "react-router-dom";
+ export function SiteLayout() {
+   const { pathname } = useLocation();
+ 
+-  /** Classic Mac desktop uses p5 (one random sketch per visit). `/` and
+-   *  `/desktop` both mount `MacintoshDesktop`; other routes use opaque UIs
++  /** Classic Mac desktop uses p5 (one random sketch per visit). Only
++   *  `/desktop` mounts `MacintoshDesktop`; other routes use opaque UIs
+    *  so we skip the live wallpaper to save CPU/GPU. `/lab` uses Hydra instead. */
+-  const showP5Mac = pathname === "/" || pathname.startsWith("/desktop");
++  const showP5Mac = pathname.startsWith("/desktop");
+   const isLab = pathname.startsWith("/lab");
+   const showHydra = isLab;
+ 
+   /** Only /lab gets the readability scrim over Hydra. */
+   const showScrim = pathname.startsWith("/lab");
+ 
+-  /** /film is a bare field — no grain, vignette, topo, JPEG artifact, or
+-   *  crosshair cursor. The photographs carry the page on their own. */
+-  const isBare = pathname.startsWith("/film");
++  /** /film and the home page are bare fields — no grain, vignette, topo, JPEG
++   *  artifact, or crosshair cursor. They carry their own texture. */
++  const isBare = pathname === "/" || pathname.startsWith("/film");
+ 
+   return (
+     <div
+diff --git a/src/pages/Archive.tsx b/src/pages/Archive.tsx
+index 158cbab..c26c707 100644
+--- a/src/pages/Archive.tsx
++++ b/src/pages/Archive.tsx
+@@ -100,7 +100,7 @@ export default function Archive() {
+   }, [filteredProjects]);
+ 
+   const handleBack = useCallback(() => {
+-    routeTransition.goto("/");
++    routeTransition.goto("/desktop");
+   }, [routeTransition]);
+ 
+   useEffect(() => {
+diff --git a/src/pages/FeltMoon.tsx b/src/pages/FeltMoon.tsx
+index 91b3b88..e181608 100644
+--- a/src/pages/FeltMoon.tsx
++++ b/src/pages/FeltMoon.tsx
+@@ -284,7 +284,7 @@ export default function FeltMoon() {
+         <button
+           type="button"
+           className="fm-bar__back"
+-          onClick={() => routeTransition.goto("/")}
++          onClick={() => routeTransition.goto("/desktop")}
+           aria-label="Back to desktop"
+         >
+           ← desktop
+@@ -341,7 +341,7 @@ export default function FeltMoon() {
+                 <button
+                   type="button"
+                   className="fm-colophon__back"
+-                  onClick={() => routeTransition.goto("/")}
++                  onClick={() => routeTransition.goto("/desktop")}
+                 >
+                   return to desktop ↗
+                 </button>
+diff --git a/src/pages/Gallery.tsx b/src/pages/Gallery.tsx
+index 516e1d2..e12e0be 100644
+--- a/src/pages/Gallery.tsx
++++ b/src/pages/Gallery.tsx
+@@ -266,7 +266,7 @@ export default function Gallery() {
+       </section>
+ 
+       <footer className="gallery-foot">
+-        <button type="button" className="gallery-foot__back" onClick={() => routeTransition.goto("/")}>
++        <button type="button" className="gallery-foot__back" onClick={() => routeTransition.goto("/desktop")}>
+           ← Desktop
+         </button>
+         <p className="gallery-foot__note">
+diff --git a/src/pages/Home.tsx b/src/pages/Home.tsx
+new file mode 100644
+index 0000000..ed62099
+--- /dev/null
++++ b/src/pages/Home.tsx
+@@ -0,0 +1,250 @@
++import { useCallback, useEffect, useMemo, useRef, useState } from "react";
++import { MonteCarloFigure } from "@/components/home/MonteCarloFigure";
++import { MosaicPhoto } from "@/components/home/MosaicPhoto";
++import { Signature } from "@/components/home/Signature";
++import { useRouteTransition } from "@/components/layout/RouteTransition";
++import { CASE_STUDY_URL } from "@/lib/caseStudyUrl";
++import { PROJECTS, type ProjectKind } from "@/lib/projectsData";
++import {
++  SITE_OWNER_EMAIL,
++  SITE_OWNER_GITHUB,
++  SITE_OWNER_LINKEDIN,
++  SITE_OWNER_SUBSTACK,
++} from "@/lib/siteIdentity";
++import { buildFilmPhotoLibrary } from "@/photography/library";
++import "./home.css";
++
++/** Frames shown on the blue RAW-style sheet, in order. Filenames from ./photography/images. */
++const HOME_FRAMES = [
++  "newjpmg.jpg",
++  "nyc subway.jpg",
++  "schoooolbus.jpg",
++  "nyc2026.jpg",
++  "cornernyc.jpg",
++  "lovethisplace.jpg",
++];
++
++const LIBRARY = buildFilmPhotoLibrary();
++const FRAMES = HOME_FRAMES.map((f) => LIBRARY.find((p) => p.file === f)).filter(
++  (p): p is NonNullable<typeof p> => Boolean(p),
++);
++
++type Filter = "all" | ProjectKind;
++const FILTERS: { id: Filter; label: string }[] = [
++  { id: "all", label: "All" },
++  { id: "drive", label: "Works" },
++  { id: "kext", label: "Experiments" },
++];
++
++function FilterList({
++  filter,
++  counts,
++  onPick,
++  className,
++}: {
++  filter: Filter;
++  counts: Record<Filter, number>;
++  onPick: (f: Filter) => void;
++  className: string;
++}) {
++  return (
++    <ul className={`ajh-filter ${className}`}>
++      {FILTERS.map((f) => (
++        <li key={f.id}>
++          <button type="button" aria-pressed={filter === f.id} onClick={() => onPick(f.id)}>
++            {f.label}
++            <sup>{counts[f.id]}</sup>
++          </button>
++        </li>
++      ))}
++    </ul>
++  );
++}
++
++/** A plain click goes through the site's route transition; modified clicks stay native. */
++function useInternalLink() {
++  const routeTransition = useRouteTransition();
++  return useCallback(
++    (path: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
++      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
++      e.preventDefault();
++      routeTransition.goto(path);
++    },
++    [routeTransition],
++  );
++}
++
++export default function Home() {
++  const go = useInternalLink();
++  const [filter, setFilter] = useState<Filter>("all");
++  const [contactOpen, setContactOpen] = useState(false);
++  const [sigRun, setSigRun] = useState(0);
++  const contactRef = useRef<HTMLDivElement>(null);
++
++  /* Light field behind the page (the shell is dark-only), same trick as /film. */
++  useEffect(() => {
++    const el = document.documentElement;
++    el.setAttribute("data-home-page", "");
++    return () => el.removeAttribute("data-home-page");
++  }, []);
++
++  const counts = useMemo(() => {
++    const c: Record<Filter, number> = { all: PROJECTS.length, drive: 0, kext: 0 };
++    for (const p of PROJECTS) c[p.kind] += 1;
++    return c;
++  }, []);
++
++  const openContact = useCallback(() => {
++    setContactOpen((open) => {
++      const next = !open;
++      if (next) {
++        window.setTimeout(() => contactRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 60);
++      }
++      return next;
++    });
++  }, []);
++
++  return (
++    <div className="ajh-root">
++      <a className="ajh-legacy" href="/desktop" onClick={go("/desktop")}>
++        Old desktop version
++      </a>
++
++      {/* ── Blue panel: the PSD's left column ───────────────────────────── */}
++      <aside className="ajh-panel">
++        <div>
++          <p className="ajh-mark" onMouseEnter={() => setSigRun((r) => r + 1)}>
++            AJ
++          </p>
++          <p className="ajh-cap">
++            Financial Engineering, 2027
++            <br />
++            <a href="https://ajaiupadhyaya.com">http://ajaiupadhyaya.com</a>
++          </p>
++        </div>
++
++        <MonteCarloFigure />
++
++        <nav className="ajh-nav" aria-label="Sections">
++          <ul>
++            <li>
++              <button type="button" aria-expanded={contactOpen} aria-controls="ajh-contact" onClick={openContact}>
++                <span className="ajh-dot" aria-hidden />
++                Contact
++              </button>
++            </li>
++            <li>
++              <a href={CASE_STUDY_URL}>
++                <span className="ajh-dot" aria-hidden />
++                Data
++              </a>
++            </li>
++            <li>
++              <a href="/archive" onClick={go("/archive")}>
++                <span className="ajh-dot" aria-hidden />
++                Work
++              </a>
++            </li>
++            <li>
++              <a href={SITE_OWNER_SUBSTACK}>
++                <span className="ajh-dot" aria-hidden />
++                BASIS
++              </a>
++            </li>
++          </ul>
++        </nav>
++      </aside>
++
++      {/* ── White sheet ─────────────────────────────────────────────────── */}
++      <main className="ajh-sheet">
++        <div className="ajh-main">
++          <Signature runKey={sigRun} className="ajh-sig" />
++          <h1 className="ajh-h1">2027 Financial Engineering Graduate</h1>
++          <div className="ajh-roles">
++            <p>
++              <b>Previous roles</b> Accounting, Financial Management, Software Development, Dev-Ops
++            </p>
++            <p>
++              <b>Relevant experience</b> Actuary/Quantitative Finance, Investment Banking, Corporate Accounting,
++              Machine Learning, Computer Vision
++            </p>
++          </div>
++
++          <h2 className="ajh-h2">Works + Experiments</h2>
++          <FilterList filter={filter} counts={counts} onPick={setFilter} className="ajh-filter--inline" />
++          <ul className="ajh-index">
++            {PROJECTS.map((p) => {
++              const out = filter !== "all" && p.kind !== filter;
++              const href = `/archive#project-${p.id}`;
++              return (
++                <li key={p.id} className={out ? "is-out" : undefined}>
++                  <a href={href} onClick={go(href)} tabIndex={out ? -1 : undefined}>
++                    <i>{p.title}</i> {p.blurb.replace(/\.$/, "")}
++                    {p.status === "ongoing" ? ", ongoing" : ""}. {p.year}
++                  </a>
++                </li>
++              );
++            })}
++          </ul>
++
++          <div className="ajh-contact" ref={contactRef}>
++            <button
++              type="button"
++              className="ajh-plus"
++              aria-expanded={contactOpen}
++              aria-controls="ajh-contact"
++              onClick={() => setContactOpen((o) => !o)}
++            >
++              <span aria-hidden>+</span> Contact
++            </button>
++            <div id="ajh-contact" className={`ajh-drawer${contactOpen ? " is-open" : ""}`}>
++              <div>
++                <p>2027, Finance, Virginia Commonwealth University, Richmond, VA</p>
++                <p>Previously, Computer Science and Economics, University of Virginia, Charlottesville, VA</p>
++                <p className="ajh-bio-name">
++                  <b>AJ</b>
++                </p>
++                <p>A student who lives and works in Richmond, Virginia.</p>
++                <p>
++                  <a href={`mailto:${SITE_OWNER_EMAIL}`}>{SITE_OWNER_EMAIL}</a>
++                </p>
++                <p>
++                  <a href={SITE_OWNER_LINKEDIN}>LinkedIn</a> <a href={SITE_OWNER_GITHUB}>GitHub</a>{" "}
++                  <a href={SITE_OWNER_SUBSTACK}>Substack</a>
++                </p>
++              </div>
++            </div>
++          </div>
++        </div>
++
++        <aside className="ajh-side" aria-label="Filter works">
++          <FilterList filter={filter} counts={counts} onPick={setFilter} className="ajh-filter--side" />
++        </aside>
++
++        {/* ── The RAW page: film frames on blue ─────────────────────────── */}
++        <section className="ajh-film" aria-label="Film photographs">
++          <div className="ajh-film__grid">
++            {FRAMES.map((photo, i) => (
++              <MosaicPhoto key={photo.id} photo={photo} n={i + 1} />
++            ))}
++          </div>
++          <p className="ajh-cap ajh-film__foot">
++            {LIBRARY.length} frames on 35mm and 110, scanned at home.
++            <br />
++            <a href="/film" onClick={go("/film")}>
++              http://ajaiupadhyaya.com/film
++            </a>
++          </p>
++          <p className="ajh-cap ajh-film__colophon">
++            ©{new Date().getFullYear()} AJ. Set in whatever Helvetica your computer has. The old desktop is still
++            running at{" "}
++            <a href="/desktop" onClick={go("/desktop")}>
++              /desktop
++            </a>
++            .
++          </p>
++        </section>
++      </main>
++    </div>
++  );
++}
+diff --git a/src/pages/MdxLab.tsx b/src/pages/MdxLab.tsx
+index 0f31884..a4db04e 100644
+--- a/src/pages/MdxLab.tsx
++++ b/src/pages/MdxLab.tsx
+@@ -204,7 +204,7 @@ export default function MdxLab() {
+           <button
+             type="button"
+             className="mdx-lab__back"
+-            onClick={() => routeTransition.goto("/")}
++            onClick={() => routeTransition.goto("/desktop")}
+           >
+             &larr; return to desktop
+           </button>
+diff --git a/src/pages/home.css b/src/pages/home.css
+new file mode 100644
+index 0000000..9de969d
+--- /dev/null
++++ b/src/pages/home.css
+@@ -0,0 +1,574 @@
++/* ──────────────────────────────────────────────────────────────────────────
++ * Home (/). The PSD's two columns, dressed in the references:
++ *   RAW (brutalistwebsites.com/raw)  electric blue, mono 3-line captions,
++ *                                    B&W prints, the noise-texture cover
++ *   arrc.site                        hand signature over the text, a plain
++ *                                    italic-title CV index, education + bio
++ *   stu-b-io.com                     greyed-out "sold" rows (here: filtered)
++ *   adamclarkecolour.com             hairline column rules, tight caps stack,
++ *                                    the "+" toggle
++ *   fromouterspace.it                ○/● radio nav, outlined pill, mosaic
++ *                                    pixelation
++ * No web fonts, no overlays. System Helvetica/Arial and the system mono.
++ * ────────────────────────────────────────────────────────────────────────── */
++
++html[data-home-page],
++html[data-home-page] body {
++  background: #ffffff;
++  color-scheme: light;
++}
++
++.site-fusion-shell[data-bare] {
++  cursor: auto;
++}
++
++.ajh-root {
++  --ajh-blue: #160bff;
++  --ajh-grey: #a3a3a3;
++  --ajh-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
++  --ajh-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
++  --ajh-panel: clamp(300px, 34.6vw, 520px);
++
++  display: grid;
++  grid-template-columns: var(--ajh-panel) minmax(0, 1fr);
++  min-height: 100dvh;
++  background: #fff;
++  color: #000;
++  font-family: var(--ajh-sans);
++  font-size: 14px;
++  line-height: 1.45;
++  -webkit-font-smoothing: antialiased;
++}
++
++.ajh-root h1,
++.ajh-root h2,
++.ajh-root p {
++  font-family: inherit;
++}
++
++.ajh-root a {
++  color: inherit;
++}
++
++.ajh-root :focus-visible {
++  outline: 2px solid currentColor;
++  outline-offset: 2px;
++}
++
++.ajh-root .ajh-cap {
++  margin: 0;
++  font-family: var(--ajh-mono);
++  font-size: 12px;
++  line-height: 1.38;
++}
++
++/* ── Old desktop pill (fromouterspace COOKIES tag) ────────────────────── */
++.ajh-legacy {
++  position: fixed;
++  z-index: 30;
++  top: max(12px, env(safe-area-inset-top, 0px));
++  right: 12px;
++  padding: 3px 11px 2px;
++  border: 1px solid #000;
++  border-radius: 999px;
++  background: #fff;
++  color: #000 !important;
++  font-size: 12px;
++  line-height: 1.3;
++  text-decoration: none;
++  transition: background-color 0.15s, color 0.15s;
++}
++
++.ajh-legacy:hover,
++.ajh-legacy:focus-visible {
++  background: #000;
++  color: #fff !important;
++}
++
++/* ── Blue panel ────────────────────────────────────────────────────────── */
++.ajh-panel {
++  position: sticky;
++  top: 0;
++  height: 100dvh;
++  display: flex;
++  flex-direction: column;
++  justify-content: space-between;
++  gap: 20px;
++  padding: 20px 22px 22px;
++  overflow: hidden;
++  background: var(--ajh-blue);
++  color: #fff;
++}
++
++.ajh-mark {
++  width: max-content;
++  margin: 0 0 10px -3px;
++  font-size: 84px;
++  font-weight: 700;
++  line-height: 0.8;
++  letter-spacing: -0.055em;
++  cursor: default;
++  user-select: none;
++}
++
++.ajh-panel .ajh-cap a {
++  text-underline-offset: 2px;
++}
++
++/* Fig. 1 */
++.ajh-fig {
++  margin: 0;
++  width: 240px;
++}
++
++.ajh-fig__cap {
++  margin-bottom: 10px;
++  min-height: calc(3 * 1.38em);
++  font-variant-numeric: tabular-nums;
++}
++
++.ajh-fig__plate {
++  position: relative;
++  display: block;
++  width: 240px;
++  height: 264px;
++  padding: 0;
++  border: 0;
++  background: #fff;
++  cursor: crosshair;
++}
++
++.ajh-fig__plate canvas {
++  display: block;
++  width: 100%;
++  height: 100%;
++  image-rendering: pixelated;
++}
++
++.ajh-fig__x {
++  position: absolute;
++  top: 0;
++  bottom: 0;
++  width: 1px;
++  background: var(--ajh-blue);
++  pointer-events: none;
++}
++
++.ajh-fig__x i {
++  position: absolute;
++  left: -6px;
++  width: 13px;
++  height: 3px;
++  margin-top: -1px;
++  background: var(--ajh-blue);
++  box-shadow: 0 0 0 1px #fff;
++}
++
++/* ○ / ● nav */
++.ajh-nav ul {
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++.ajh-nav a,
++.ajh-nav button {
++  display: inline-flex;
++  align-items: center;
++  gap: 0.3em;
++  padding: 0;
++  border: 0;
++  background: none;
++  color: #fff;
++  font: inherit;
++  font-size: 30px;
++  font-weight: 700;
++  line-height: 1.12;
++  letter-spacing: -0.02em;
++  text-decoration: none;
++  cursor: pointer;
++}
++
++.ajh-dot {
++  flex: none;
++  width: 0.34em;
++  height: 0.34em;
++  margin-top: 0.06em;
++  border: 2px solid currentColor;
++  border-radius: 50%;
++  transition: background-color 0.12s;
++}
++
++.ajh-nav a:hover .ajh-dot,
++.ajh-nav a:focus-visible .ajh-dot,
++.ajh-nav button:hover .ajh-dot,
++.ajh-nav button:focus-visible .ajh-dot,
++.ajh-nav [aria-expanded="true"] .ajh-dot {
++  background: currentColor;
++}
++
++/* ── White sheet ───────────────────────────────────────────────────────── */
++.ajh-sheet {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) 200px;
++  align-content: start;
++  min-width: 0;
++}
++
++.ajh-main {
++  position: relative;
++  min-height: 100dvh;
++  max-width: 760px;
++  padding: 96px 28px 56px 22px;
++}
++
++.ajh-sig {
++  position: absolute;
++  top: 12px;
++  left: 8px;
++  width: 232px;
++  height: auto;
++  color: #000;
++  pointer-events: none;
++  transform: rotate(-4deg);
++}
++
++.ajh-sig path {
++  fill: none;
++  stroke: currentColor;
++  stroke-width: 1.9;
++  stroke-linecap: round;
++  stroke-linejoin: round;
++  stroke-dasharray: 1;
++  stroke-dashoffset: 1;
++  animation-name: ajh-draw;
++  animation-timing-function: cubic-bezier(0.5, 0.1, 0.4, 1);
++  animation-fill-mode: forwards;
++}
++
++@keyframes ajh-draw {
++  to {
++    stroke-dashoffset: 0;
++  }
++}
++
++.ajh-h1 {
++  position: relative;
++  margin: 0 0 12px;
++  color: var(--ajh-blue);
++  font-size: 20px;
++  font-weight: 700;
++  line-height: 1.2;
++  letter-spacing: -0.01em;
++}
++
++.ajh-roles p {
++  margin: 0 0 4px;
++}
++
++.ajh-h2 {
++  margin: 30px 0 8px;
++  font-size: 14px;
++  font-weight: 700;
++}
++
++.ajh-index {
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++.ajh-index li {
++  margin: 0 0 9px;
++}
++
++.ajh-index a {
++  color: #000;
++  text-decoration-thickness: 1px;
++  text-underline-offset: 2px;
++  transition: color 0.35s;
++}
++
++.ajh-index a:hover {
++  color: var(--ajh-blue);
++}
++
++/* stu-b-io's sold items: still there, just grey */
++.ajh-index li.is-out a {
++  color: var(--ajh-grey);
++  pointer-events: none;
++}
++
++/* ACC "+" */
++.ajh-contact {
++  margin-top: 30px;
++}
++
++.ajh-plus {
++  display: inline-flex;
++  align-items: center;
++  gap: 8px;
++  padding: 0;
++  border: 0;
++  background: none;
++  color: #000;
++  font: inherit;
++  font-weight: 700;
++  cursor: pointer;
++}
++
++.ajh-plus span {
++  display: inline-block;
++  font-size: 26px;
++  font-weight: 300;
++  line-height: 0.8;
++  color: var(--ajh-blue);
++  transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.2, 1);
++}
++
++.ajh-plus[aria-expanded="true"] span {
++  transform: rotate(45deg);
++}
++
++.ajh-drawer {
++  display: grid;
++  grid-template-rows: 0fr;
++  transition: grid-template-rows 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
++}
++
++.ajh-drawer > div {
++  overflow: hidden;
++}
++
++.ajh-drawer.is-open {
++  grid-template-rows: 1fr;
++}
++
++.ajh-drawer p {
++  margin: 0 0 3px;
++}
++
++.ajh-drawer > div > p:first-child {
++  margin-top: 10px;
++}
++
++.ajh-bio-name {
++  margin-top: 12px !important;
++}
++
++/* ACC hairline column + caps stack */
++.ajh-side {
++  border-left: 1px solid #000;
++  padding: 96px 12px 24px 8px;
++}
++
++.ajh-filter {
++  position: sticky;
++  top: 96px;
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++.ajh-filter button {
++  padding: 0;
++  border: 0;
++  background: none;
++  color: #000;
++  font: inherit;
++  font-size: 13px;
++  font-weight: 700;
++  line-height: 1.05;
++  letter-spacing: 0.01em;
++  text-transform: uppercase;
++  cursor: pointer;
++}
++
++.ajh-filter button:hover {
++  color: var(--ajh-blue);
++}
++
++.ajh-filter button[aria-pressed="true"] {
++  text-decoration: underline;
++  text-decoration-thickness: 2px;
++  text-underline-offset: 2px;
++}
++
++.ajh-filter--inline {
++  display: none;
++}
++
++.ajh-filter sup {
++  margin-left: 2px;
++  font-size: 9px;
++  font-weight: 400;
++}
++
++/* ── RAW sheet ─────────────────────────────────────────────────────────── */
++.ajh-film {
++  grid-column: 1 / -1;
++  padding: 120px 22px 28px;
++  background: var(--ajh-blue);
++  color: #fff;
++}
++
++.ajh-film__grid {
++  display: grid;
++  grid-template-columns: repeat(2, 250px);
++  column-gap: clamp(48px, 15vw, 240px);
++  row-gap: 120px;
++}
++
++.ajh-frame {
++  margin: 0;
++}
++
++.ajh-frame__cap {
++  margin-bottom: 18px;
++}
++
++.ajh-frame__print {
++  position: relative;
++  display: block;
++  width: 250px;
++  aspect-ratio: 25 / 27;
++  padding: 0;
++  border: 0;
++  overflow: hidden;
++  background: #fff;
++  cursor: pointer;
++}
++
++.ajh-frame__print picture,
++.ajh-frame__print img,
++.ajh-frame__print canvas {
++  position: absolute;
++  inset: 0;
++  display: block;
++  width: 100%;
++  height: 100%;
++}
++
++.ajh-frame__print img,
++.ajh-frame__print canvas {
++  filter: grayscale(1) contrast(1.12);
++}
++
++.ajh-frame__print img {
++  object-fit: cover;
++  opacity: 0;
++  transition: filter 0.7s ease, opacity 0.2s;
++}
++
++.ajh-frame__print canvas {
++  image-rendering: pixelated;
++  transition: opacity 0.2s;
++}
++
++.ajh-frame__print.is-resolved img {
++  opacity: 1;
++}
++
++.ajh-frame__print.is-resolved canvas {
++  opacity: 0;
++}
++
++.ajh-frame__print:hover img,
++.ajh-frame__print:focus-visible img,
++.ajh-frame__print.is-developed img {
++  filter: none;
++}
++
++.ajh-film__foot {
++  margin-top: 120px;
++}
++
++.ajh-film__colophon {
++  margin-top: 64px;
++  max-width: 60ch;
++  opacity: 0.85;
++}
++
++/* ── Small screens: the panel stacks on top ───────────────────────────── */
++@media (max-width: 900px) {
++  .ajh-root {
++    grid-template-columns: 1fr;
++  }
++
++  .ajh-panel {
++    position: static;
++    height: auto;
++    gap: 28px;
++    padding: 56px 18px 22px;
++  }
++
++  .ajh-mark {
++    font-size: 72px;
++  }
++
++  .ajh-nav ul {
++    display: flex;
++    flex-wrap: wrap;
++    gap: 2px 18px;
++  }
++
++  .ajh-nav a,
++  .ajh-nav button {
++    font-size: 24px;
++  }
++
++  .ajh-sheet {
++    grid-template-columns: 1fr;
++  }
++
++  .ajh-side {
++    display: none;
++  }
++
++  .ajh-filter--inline {
++    position: static;
++    display: flex;
++    gap: 16px;
++    margin: 0 0 12px;
++    padding: 6px 0;
++    border-top: 1px solid #000;
++    border-bottom: 1px solid #000;
++  }
++
++  .ajh-main {
++    min-height: 0;
++    padding: 92px 18px 48px;
++  }
++
++  .ajh-sig {
++    left: 4px;
++    width: 210px;
++  }
++
++  .ajh-film {
++    padding: 72px 18px 24px;
++  }
++
++  .ajh-film__grid {
++    grid-template-columns: minmax(0, 300px);
++    row-gap: 72px;
++  }
++
++  .ajh-frame__print {
++    width: 100%;
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  .ajh-sig path {
++    animation: none;
++    stroke-dashoffset: 0;
++  }
++
++  .ajh-drawer,
++  .ajh-plus span,
++  .ajh-frame__print img,
++  .ajh-index a {
++    transition: none;
++  }
++}
+-- 
+2.43.0
+

@@ -266,7 +266,7 @@ export default function Gallery() {
       </section>
 
       <footer className="gallery-foot">
-        <button type="button" className="gallery-foot__back" onClick={() => routeTransition.goto("/")}>
+        <button type="button" className="gallery-foot__back" onClick={() => routeTransition.goto("/desktop")}>
           ← Desktop
         </button>
         <p className="gallery-foot__note">

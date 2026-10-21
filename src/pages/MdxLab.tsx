@@ -204,7 +204,7 @@ export default function MdxLab() {
           <button
             type="button"
             className="mdx-lab__back"
-            onClick={() => routeTransition.goto("/")}
+            onClick={() => routeTransition.goto("/desktop")}
           >
             &larr; return to desktop
           </button>

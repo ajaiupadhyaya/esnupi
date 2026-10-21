@@ -21,6 +21,7 @@ const BASE = SITE_OWNER_DOMAIN.replace(/\/$/, "");
 /** Indexable public routes (used for sitemap + internal SEO nav). */
 export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
+  { path: "/desktop", label: `${SITE_OWNER_FULL_NAME} classic Mac desktop` },
   { path: "/archive", label: `${SITE_OWNER_FULL_NAME} project archive` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
@@ -36,12 +37,22 @@ export const SITE_PROFILE_LINKS = [
 ] as const;
 
 function canonicalUrl(path: string) {
-  if (path === "/" || path === "/desktop") return `${BASE}/`;
+  if (path === "/") return `${BASE}/`;
   return `${BASE}${path}`;
 }
 
 export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: string } {
   const normalized = pathname.replace(/\/+$/, "") || "/";
+
+  if (normalized === "/desktop") {
+    return {
+      title: `${SITE_OWNER_FULL_NAME} — Macintosh Desktop | ${SITE_BRAND}`,
+      description: `Explore ${SITE_OWNER_FULL_NAME}'s portfolio through an interactive classic Mac desktop.`,
+      canonicalPath: "/desktop",
+      ogType: "website",
+      canonicalUrl: canonicalUrl("/desktop"),
+    };
+  }
 
   if (normalized === "/archive") {
     return {
@@ -96,7 +107,7 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
 
   return {
     title: `${SITE_OWNER_FULL_NAME} — Official Portfolio | ${SITE_BRAND}`,
-    description: `${SITE_OWNER_FULL_NAME} is a UVA computer science and economics student. Official personal site: projects, photography, writing, and contact for ${SITE_OWNER_FULL_NAME}.`,
+    description: `${SITE_OWNER_FULL_NAME} has a background in computer science and economics. Official personal site: projects, photography, writing, and contact for ${SITE_OWNER_FULL_NAME}.`,
     canonicalPath: "/",
     ogType: "profile",
     canonicalUrl: canonicalUrl("/"),

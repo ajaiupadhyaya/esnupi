@@ -1,0 +1,52 @@
+[      61ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[     184ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[     184ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[     186ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C4SzYsPa.js:1
+[   16488ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   16490ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   16490ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[   16491ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C4SzYsPa.js:1
+[   21884ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   21885ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   21885ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/basis/nope:0
+[   21885ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C4SzYsPa.js:1
+[   22948ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   22950ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   22950ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[   22951ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C4SzYsPa.js:1
+[   67010ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   67037ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   67037ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/basis:0
+[   67037ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-DSyWioHC.js:1
+[   69778ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   69781ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   69781ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[   69782ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-DSyWioHC.js:1
+[   70360ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   70361ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   70362ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[   70362ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-DSyWioHC.js:1
+[   72434ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   72435ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   72435ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/basis:0
+[   72435ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-DSyWioHC.js:1
+[   84450ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   84452ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   84452ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[   84453ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-DSyWioHC.js:1
+[  124382ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  124411ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  124411ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/basis/zz-sample:0
+[  124411ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-B1bb6IPF.js:1
+[  125815ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  126038ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  126038ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  126083ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-B1bb6IPF.js:1
+[  126607ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  126609ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  126609ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  126610ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-B1bb6IPF.js:1
+[  160433ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  160459ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  160459ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/basis/zz-sample:0
+[  160459ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-Yb5QaJ55.js:1

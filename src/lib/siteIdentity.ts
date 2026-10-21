@@ -1,8 +1,8 @@
 /** Canonical site owner — used for meta, JSON-LD, and off-screen SEO copy. */
-export const SITE_OWNER_FULL_NAME = "Ajai Upadhyaya";
-export const SITE_OWNER_GIVEN_NAME = "Ajai";
-export const SITE_OWNER_FAMILY_NAME = "Upadhyaya";
-export const SITE_OWNER_SLUG = "ajai-upadhyaya";
+export const SITE_OWNER_FULL_NAME = "AJ Saito";
+export const SITE_OWNER_GIVEN_NAME = "AJ";
+export const SITE_OWNER_FAMILY_NAME = "Saito";
+export const SITE_OWNER_SLUG = "aj-saito";
 export const SITE_OWNER_EMAIL = "ajaiupad@gmail.com";
 export const SITE_OWNER_DOMAIN = "https://ajaiupadhyaya.com/";
 export const SITE_OWNER_GITHUB = "https://github.com/ajaiupadhyaya";
@@ -57,21 +57,21 @@ export const SITE_OWNER_SEO_PHRASES: readonly string[] = [
   `Meet ${SITE_OWNER_FULL_NAME}`,
   `${SITE_OWNER_FULL_NAME} ajaiupadhyaya.com`,
   `${SITE_OWNER_FULL_NAME} esnupi.com`,
-  `Ajai Upadhyaya ajaiupadhyaya`,
-  `Ajai Upadhyaya portfolio site`,
-  `Ajai Upadhyaya personal site`,
-  `Ajai Upadhyaya home page`,
-  `Ajai Upadhyaya online portfolio`,
-  `Ajai Upadhyaya student portfolio`,
-  `Ajai Upadhyaya fourth year UVA`,
-  `Ajai Upadhyaya YugabyteDB intern`,
-  `Ajai Upadhyaya VITA Finance`,
-  `Ajai Upadhyaya UVIMCO`,
-  `Ajai Upadhyaya archive`,
-  `Ajai Upadhyaya gallery`,
-  `Ajai Upadhyaya felt moon`,
-  `Ajai Upadhyaya official website`,
-  `Ajai Upadhyaya ajaiupadhyaya.com`,
+  `AJ Saito ajaiupadhyaya`,
+  `AJ Saito portfolio site`,
+  `AJ Saito personal site`,
+  `AJ Saito home page`,
+  `AJ Saito online portfolio`,
+  `AJ Saito student portfolio`,
+  `AJ Saito fourth year UVA`,
+  `AJ Saito YugabyteDB intern`,
+  `AJ Saito VITA Finance`,
+  `AJ Saito UVIMCO`,
+  `AJ Saito archive`,
+  `AJ Saito gallery`,
+  `AJ Saito felt moon`,
+  `AJ Saito official website`,
+  `AJ Saito ajaiupadhyaya.com`,
   "literaturevendingmachine photolab",
   "film developing Richmond Virginia",
   "film developing Midlothian Virginia",

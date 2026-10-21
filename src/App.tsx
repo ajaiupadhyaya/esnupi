@@ -3,9 +3,11 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { RouteTransitionProvider } from "@/components/layout/RouteTransition";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { MacintoshDesktop } from "@/components/desktop/MacintoshDesktop";
+import Portfolio from "@/pages/Portfolio";
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
+
+const MacintoshDesktop = lazy(() => import("@/components/desktop/MacintoshDesktop").then((module) => ({ default: module.MacintoshDesktop })));
 
 const Archive = lazy(() => import("@/pages/Archive"));
 const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
@@ -24,8 +26,13 @@ export default function App() {
         <RouteTransitionProvider>
           <Routes>
             <Route element={<SiteLayout />}>
-              <Route path="/" element={<MacintoshDesktop />} />
-              <Route path="/desktop" element={<MacintoshDesktop />} />
+              <Route path="/" element={<Portfolio />} />
+              <Route path="/desktop" element={(
+                <Suspense fallback={<RouteFallback />}>
+                  <MacintoshDesktop />
+                  <Link className="portfolio-return" to="/">← Portfolio view</Link>
+                </Suspense>
+              )} />
               <Route
                 path="/gallery"
                 element={(

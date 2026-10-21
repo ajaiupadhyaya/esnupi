@@ -100,7 +100,7 @@ export default function Archive() {
   }, [filteredProjects]);
 
   const handleBack = useCallback(() => {
-    routeTransition.goto("/");
+    routeTransition.goto("/desktop");
   }, [routeTransition]);
 
   useEffect(() => {
@@ -202,7 +202,7 @@ export default function Archive() {
       <div className="archive-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden />
 
       <header className="archive-bar">
-        <span className="archive-bar__title">Ajai Archive</span>
+        <span className="archive-bar__title">AJ Archive</span>
         <span className="archive-bar__meta">{PROJECTS.length} entries</span>
         <span className="archive-bar__meta">{accessionRange}</span>
         <button type="button" className="archive-bar__back" onClick={handleBack}>

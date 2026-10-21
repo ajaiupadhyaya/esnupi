@@ -26,7 +26,7 @@ export function AboutPanel() {
       <ScaffoldReveal>
         {[
           <p className="mac-about-panel__statement" key="stmt">
-            Ajai Upadhyaya is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, Private Credit or find my thoughts on Substack! (click the red heart button)
+            AJ Saito is a Fourth Year CS and Economics Major at UVA. Ask me anything about Microsoft Excel, Tennis, Film Photography, Road Cycling, Private Credit or find my thoughts on Substack! (click the red heart button)
           </p>,
           <hr className="mac-about-panel__rule" key="r1" />,
           <section className="mac-about-panel__block" key="cur">
@@ -56,7 +56,7 @@ export function AboutPanel() {
             </p>
           </section>,
           <p className="mac-type-metadata mac-about-panel__foot" key="foot">
-            Ajai Upadhyaya, {year}
+            AJ Saito, {year}
           </p>,
         ]}
       </ScaffoldReveal>
@@ -329,7 +329,7 @@ export function FeltMoonPanel({ onOpenGallery }: { onOpenGallery?: () => void })
       <ScaffoldReveal>
         {[
           <header className="mac-feltmoon-panel__head" key="head">
-            <p className="mac-type-metadata">Ajai Upadhyaya</p>
+            <p className="mac-type-metadata">AJ Saito</p>
             <h3 className="mac-feltmoon-panel__title">Post Graduate Plans</h3>
             <p className="mac-feltmoon-panel__sub">
               MBA with Concentrations in Corporate Finance and Financial Engineering · 2026
@@ -584,7 +584,7 @@ export function LabStubPanel() {
         </section>
 
         <footer className="mac-worksite__foot">
-          <span>Ajai Upadhyaya</span>
+          <span>AJ Saito</span>
           <span>2026</span>
         </footer>
       </div>
@@ -608,7 +608,7 @@ const QUICK_EMAIL_HREF = `mailto:${SCHEDULING_EMAIL}`;
 
 const MEETING_REQUEST_MAILTO = (() => {
   const subject = "Meeting request — proposing times";
-  const body = `Hi Ajai,
+  const body = `Hi AJ,
 
 I'd like to find a time to meet. Here are some windows that work on my side (add your time zone):
 

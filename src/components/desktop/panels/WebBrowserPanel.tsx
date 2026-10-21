@@ -224,7 +224,7 @@ export function WebBrowserPanel() {
               setProgress(100);
             }}
             referrerPolicy="no-referrer"
-            sandbox="allow-forms allow-modals allow-pointer-lock allow-popups allow-presentation allow-same-origin allow-scripts"
+            sandbox="allow-forms allow-scripts"
           />
         )}
       </div>

@@ -1,0 +1,313 @@
+[     254ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[     351ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[     351ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[     351ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[   27705ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   27707ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[   31653ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   31654ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   31654ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/archive:0
+[   31654ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[   48881ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   48883ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[   51874ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   51876ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   51876ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/gallery:0
+[   51876ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  101144ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  101147ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  101147ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  101148ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  110606ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  110608ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  115241ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  115243ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  115243ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/archive:0
+[  115244ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  117679ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  117682ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  120605ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  120606ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  120606ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/gallery:0
+[  120606ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  123067ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  123069ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  126008ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  126009ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  126009ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/feltmoon:0
+[  126009ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  128449ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  128451ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  131617ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  131620ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  131620ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  131850ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  136677ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  136678ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  136678ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/film:0
+[  136679ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  138576ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  138578ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  138578ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/photolab:0
+[  138578ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  140522ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  140528ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  140528ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/film:0
+[  140528ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  154347ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  154517ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  155653ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  157768ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  161867ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  165578ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  165673ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  165680ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  165680ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  165683ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  168725ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  168756ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  168757ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  168757ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  168759ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  171800ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  171801ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  171803ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  171803ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  171804ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  174880ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  174885ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  174894ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  174894ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  174895ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  177937ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  177943ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  177944ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  177944ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  177946ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  180986ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  180989ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  181014ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  181015ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  181016ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  184067ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  184178ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  184290ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  185387ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  187391ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  187415ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  187522ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  188627ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  190620ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  190623ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  190724ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  191827ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  193837ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  193839ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  193937ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  195033ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  197061ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  197098ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  197185ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  198287ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  200317ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:406:2722) @ https://www.ajaiupadhyaya.com/assets/vendor-p5-D4OxuT5y.js:411
+[  200344ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ https://www.ajaiupadhyaya.com/site.webmanifest:0
+[  200436ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  201610ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  203703ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  207797ms] [ERROR] Failed to load resource: net::ERR_NAME_NOT_RESOLVED @ https://sqyypzixzprkiwapzidc.supabase.co/rest/v1/museum_photos?select=id%2Cimage_url%2Ccreated_at%2Cvisitor_name&order=created_at.desc&limit=200:0
+[  212885ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  212969ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  212969ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  212970ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  213885ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  213887ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  213887ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  213888ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  231944ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  231946ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  231946ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  231947ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1
+[  267469ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  267471ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  267471ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[  267472ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-bGWRQcuh.js:1

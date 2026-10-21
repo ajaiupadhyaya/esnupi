@@ -1,0 +1,80 @@
+[      54ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[     161ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[     161ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/:0
+[     162ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[    4807ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[    4840ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[    4843ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[    4843ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[    4845ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[    6886ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[    6888ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[    6888ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/archive:0
+[    6888ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[   43589ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[   43591ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   43593ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   43593ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[   43596ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[   81706ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[   81713ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[   81714ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[   81714ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[   81716ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[  122888ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:11)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseBlock (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16607)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:8716)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411
+[  122916ms] [WARNING] Manifest: property 'id' ignored, should be same origin as document. @ http://localhost:4174/site.webmanifest:0
+[  122918ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  122918ms] [ERROR] Refused to execute script from 'http://localhost:4174/_vercel/insights/script.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled. @ http://localhost:4174/desktop:0
+[  122919ms] [LOG] [Vercel Web Analytics] Failed to load script from /_vercel/insights/script.js. Be sure to enable Web Analytics for your project and deploy again. See https://vercel.com/docs/analytics/quickstart for more information. @ http://localhost:4174/assets/index-C3TLozQh.js:1
+[  129706ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:4174/_vercel/insights/script.js:0
+[  129710ms] [ERROR] Error parsing code: SyntaxError: Unexpected token (1:4)
+    at $o.raise (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:408:8917)
+    at ur.unexpected (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4468)
+    at ur.semicolon (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:4191)
+    at Ce.parseExpressionStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:16379)
+    at Ce.parseStatement (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:10035)
+    at Ce.parseTopLevel (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:5762)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:1295)
+    at jt.parse (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:406:2722)
+    at Y0 (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:2183)
+    at Object.extractUserDefinedVariablesAndFuncs (http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:412:8991) @ http://localhost:4174/assets/vendor-p5-D4OxuT5y.js:411

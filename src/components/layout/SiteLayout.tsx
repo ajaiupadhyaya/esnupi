@@ -1,17 +1,18 @@
 import { HiddenSiteIdentity } from "@/components/seo/HiddenSiteIdentity";
 import { SiteSeoHead } from "@/components/seo/SiteSeoHead";
-import { HydraBackground } from "@/components/HydraBackground";
-import { P5MacBackground } from "@/components/P5MacBackground";
+import { lazy, Suspense } from "react";
 import { SITE_OWNER_FULL_NAME } from "@/lib/siteIdentity";
 import { Outlet, useLocation } from "react-router-dom";
+
+const HydraBackground = lazy(() => import("@/components/HydraBackground").then((module) => ({ default: module.HydraBackground })));
+const P5MacBackground = lazy(() => import("@/components/P5MacBackground").then((module) => ({ default: module.P5MacBackground })));
 
 export function SiteLayout() {
   const { pathname } = useLocation();
 
-  /** Classic Mac desktop uses p5 (one random sketch per visit). `/` and
-   *  `/desktop` both mount `MacintoshDesktop`; other routes use opaque UIs
+  /** Classic Mac desktop uses p5 (one random sketch per visit). `/desktop` mounts `MacintoshDesktop`; other routes use opaque UIs
    *  so we skip the live wallpaper to save CPU/GPU. `/lab` uses Hydra instead. */
-  const showP5Mac = pathname === "/" || pathname.startsWith("/desktop");
+  const showP5Mac = pathname.startsWith("/desktop");
   const isLab = pathname.startsWith("/lab");
   const showHydra = isLab;
 
@@ -20,7 +21,7 @@ export function SiteLayout() {
 
   /** /film is a bare field — no grain, vignette, topo, JPEG artifact, or
    *  crosshair cursor. The photographs carry the page on their own. */
-  const isBare = pathname.startsWith("/film");
+  const isBare = pathname === "/" || pathname.startsWith("/film");
 
   return (
     <div
@@ -30,15 +31,15 @@ export function SiteLayout() {
       aria-label={`${SITE_OWNER_FULL_NAME} portfolio`}
     >
       <SiteSeoHead />
-      <HiddenSiteIdentity />
+      <div inert><HiddenSiteIdentity /></div>
       {showP5Mac && (
         <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
-          <P5MacBackground />
+          <Suspense fallback={null}><P5MacBackground /></Suspense>
         </div>
       )}
       {showHydra && (
         <div data-site-owner={SITE_OWNER_FULL_NAME} aria-hidden>
-          <HydraBackground />
+          <Suspense fallback={null}><HydraBackground /></Suspense>
         </div>
       )}
       {!isBare && (
