@@ -366,6 +366,15 @@ const WORKSITE_FEATURES: Array<{
   meta: string;
 }> = [
   {
+    title: "Delegating to the Machine",
+    category: "Research",
+    year: "2026",
+    href: "https://github.com/ajaiupadhyaya/ai-delegation",
+    description:
+      "Pre-registered study of how people hand work to AI, using the Anthropic Economic Index, and whether industry stock returns priced it.",
+    meta: "paper / SSRN / replication package",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -401,6 +410,12 @@ const WORKSITE_LINKS: Array<{
   href: string;
 }> = [
   { title: "Substack", category: "Writing", year: "2026", href: "https://ajaiupadhyaya.substack.com/" },
+  {
+    title: "Delegating to the Machine (paper)",
+    category: "Research",
+    year: "2026",
+    href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658",
+  },
   {
     title: "Case Study Dashboard",
     category: "Projects",

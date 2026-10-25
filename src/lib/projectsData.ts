@@ -57,8 +57,29 @@ const gh = (repo: string) => `https://github.com/ajaiupadhyaya/${repo}`;
 
 export const PROJECTS: Project[] = [
   {
-    id: "private-credit-modeling",
+    id: "delegating-to-the-machine",
     index: "01",
+    accession: "Esn-0005",
+    kind: "drive",
+    title: "Delegating to the Machine",
+    year: "2026",
+    role: "Pre-registered research · Econometrics · Asset Pricing",
+    blurb:
+      "Pre-registered study of how people hand work to AI, using the Anthropic Economic Index, and whether industry stock returns priced it. Paper on SSRN, one-command replication.",
+    href: gh("ai-delegation"),
+    tags: ["AI", "Labour", "Asset Pricing", "Pre-registration", "2026"],
+    status: "complete",
+    hex: "70 61 70 2d 76 31 00 00 de 1e 9a 7e 00 00 00 01",
+    links: [
+      { label: "Paper (PDF)", href: `${gh("ai-delegation")}/releases/download/v1.0.0/delegating-to-the-machine-paper.pdf`, kind: "writeup" },
+      { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658", kind: "press" },
+      { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.23631273", kind: "external" },
+      { label: "GitHub", href: gh("ai-delegation"), kind: "github" },
+    ],
+  },
+  {
+    id: "private-credit-modeling",
+    index: "02",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -73,7 +94,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "02",
+    index: "03",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -88,7 +109,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "03",
+    index: "04",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -102,7 +123,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "04",
+    index: "05",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -121,7 +142,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "05",
+    index: "06",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -135,7 +156,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "06",
+    index: "07",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -149,7 +170,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "07",
+    index: "08",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
