@@ -78,8 +78,28 @@ export const PROJECTS: Project[] = [
     ],
   },
   {
-    id: "private-credit-modeling",
+    id: "sharp-markets",
     index: "02",
+    accession: "Esn-0006",
+    kind: "drive",
+    title: "Are Prediction Markets Sharp?",
+    year: "2026",
+    role: "Registered report · Forecast evaluation · Market microstructure",
+    blurb:
+      "Do Kalshi and Polymarket price European football as well as the Betfair Exchange closing line? 2025–26 says yes, and better than bookmakers; the pre-registered test runs on 2026–27.",
+    href: gh("sharp-markets"),
+    tags: ["Prediction Markets", "Kalshi", "Polymarket", "Pre-registration", "2026"],
+    status: "ongoing",
+    hex: "73 74 61 67 65 31 00 00 70 61 70 2d 76 31 00 02",
+    links: [
+      { label: "Paper (PDF)", href: `${gh("sharp-markets")}/releases/download/stage1-v1/sharp-markets-stage1.pdf`, kind: "writeup" },
+      { label: "Pre-analysis plan", href: `${gh("sharp-markets")}/blob/pap-v1/docs/pap/pre-analysis-plan.md`, kind: "external" },
+      { label: "GitHub", href: gh("sharp-markets"), kind: "github" },
+    ],
+  },
+  {
+    id: "private-credit-modeling",
+    index: "03",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -94,7 +114,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "03",
+    index: "04",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -109,7 +129,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "04",
+    index: "05",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -123,7 +143,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "05",
+    index: "06",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -142,7 +162,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "06",
+    index: "07",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -156,7 +176,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "07",
+    index: "08",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -170,7 +190,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "08",
+    index: "09",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",

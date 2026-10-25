@@ -375,6 +375,15 @@ const WORKSITE_FEATURES: Array<{
     meta: "paper / SSRN / replication package",
   },
   {
+    title: "Are Prediction Markets Sharp?",
+    category: "Research",
+    year: "2026",
+    href: "https://github.com/ajaiupadhyaya/sharp-markets",
+    description:
+      "Registered report: do Kalshi and Polymarket price European football as well as the Betfair Exchange closing line? Pre-registered test runs on 2026–27.",
+    meta: "paper / pre-analysis plan / code",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -415,6 +424,12 @@ const WORKSITE_LINKS: Array<{
     category: "Research",
     year: "2026",
     href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658",
+  },
+  {
+    title: "Are Prediction Markets Sharp? (paper)",
+    category: "Research",
+    year: "2026",
+    href: "https://github.com/ajaiupadhyaya/sharp-markets/releases/download/stage1-v1/sharp-markets-stage1.pdf",
   },
   {
     title: "Case Study Dashboard",
