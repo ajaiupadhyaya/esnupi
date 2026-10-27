@@ -117,8 +117,11 @@ function securityHeaders(csp) {
 
 /** Static assets are content-hashed by Vite, so they can be cached forever. */
 const STATIC_ASSET_ROUTE = "/assets/(.*)";
+// `llms.txt` was removed on purpose (2026-10): it was a hand-written summary
+// for AI crawlers, which is the opposite of the current posture. If you add a
+// root-level file here, also add it to the SPA rewrite exclusion below.
 const ROOT_FILES =
-  "favicon\\.svg|apple-touch-icon\\.png|og-cover\\.png|robots\\.txt|sitemap\\.xml|site\\.webmanifest|humans\\.txt|llms\\.txt";
+  "favicon\\.svg|apple-touch-icon\\.png|og-cover\\.png|robots\\.txt|sitemap\\.xml|site\\.webmanifest|humans\\.txt|\\.well-known/security\\.txt";
 const ROOT_FILE_ROUTE = `/(${ROOT_FILES})`;
 /**
  * Everything that is *not* one of the two routes above. Written as a negative
@@ -156,8 +159,22 @@ function buildConfig(html) {
         source: APP_SHELL_ROUTE,
         headers: [
           { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+          // Not a standard, but the de-facto opt-out that several crawlers
+          // (and the Content-Signal spec) understand. Real enforcement is the
+          // Vercel WAF; this is the polite, machine-readable layer. Google
+          // ignores unrecognized values, so Search is unaffected.
+          { key: "X-Robots-Tag", value: "noai, noimageai" },
           ...securityHeaders(csp),
         ],
+      },
+    ],
+    redirects: [
+      // RFC 9116 says the canonical location is /.well-known/security.txt, but
+      // the /security.txt alias is still what a lot of tooling probes for.
+      {
+        source: "/security.txt",
+        destination: "/.well-known/security.txt",
+        permanent: true,
       },
     ],
     rewrites: [

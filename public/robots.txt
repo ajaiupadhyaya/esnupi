@@ -1,7 +1,63 @@
+# https://ajaiupadhyaya.com/robots.txt
+#
+# Search engines are welcome. AI training/scraping crawlers are not: this site
+# is a personal portfolio, not a corpus. These groups are also denied at the
+# edge (Vercel WAF + AI Bots managed rule), so a crawler that ignores this file
+# gets a 403 rather than content.
+#
+# Content-Signal (https://contentsignals.org/) states the same intent in the
+# newer machine-readable form: search indexing yes, AI training no.
+
 User-agent: *
 Allow: /
+Content-Signal: search=yes, ai-train=no, ai-input=no
+
+# OpenAI
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+Disallow: /
+
+# Anthropic
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: anthropic-ai
+Disallow: /
+
+# Google AI (note: Google-Extended only controls AI training, not Search)
+User-agent: Google-Extended
+Disallow: /
+
+# Microsoft. Bingbot is deliberately NOT blocked: it is the real search index
+# and blocking it would drop the site out of Bing. BingPreview (link previews)
+# and the Copilot crawler are separate agents and are not needed here.
+User-agent: BingPreview
+Disallow: /
+
+# Perplexity
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+Disallow: /
+
+# Meta, Apple, Amazon, xAI, Mistral, DeepSeek, ByteDance, Common Crawl
+User-agent: meta-externalagent
+User-agent: Applebot-Extended
+User-agent: Amazonbot
+User-agent: GrokBot
+User-agent: xAI-Bot
+User-agent: MistralAI-User
+User-agent: DeepSeek
+User-agent: Bytespider
+User-agent: CCBot
+Disallow: /
+
+# Generic scraper tooling
+User-agent: Diffbot
+User-agent: ImagesiftBot
+User-agent: Omgilibot
+User-agent: Timpibot
+User-agent: Webzio-Extended
+User-agent: YouBot
+Disallow: /
 
 Sitemap: https://ajaiupadhyaya.com/sitemap.xml
-
-# Optional machine-readable site summary for AI crawlers
-# https://ajaiupadhyaya.com/llms.txt
