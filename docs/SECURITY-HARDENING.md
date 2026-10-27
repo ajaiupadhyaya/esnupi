@@ -156,19 +156,24 @@ per-IP write budgets so the anon key cannot be used to fill the tables.
 After Attack Mode is off and this branch is deployed:
 
 ```bash
+# Bot Protection may challenge a bare curl, so send a browser UA for the
+# "should work" checks. curl itself is not in the deny regex.
+UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36'
+
 # should be 200
-curl -sS -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/
-curl -sS -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/robots.txt
-curl -sS -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/.well-known/security.txt
-curl -sS -o /dev/null -w '%{http_code}\n' -L https://ajaiupadhyaya.com/security.txt
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/robots.txt
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/.well-known/security.txt
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' -L https://ajaiupadhyaya.com/security.txt
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' -L https://ajaiupadhyaya.com/llms.txt
 
 # should be 403 (WAF)
-curl -sS -o /dev/null -w '%{http_code}\n' -A 'GPTBot' https://ajaiupadhyaya.com/
-curl -sS -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/.env
-curl -sS -o /dev/null -w '%{http_code}\n' -X POST https://ajaiupadhyaya.com/
+curl -sS -A 'GPTBot' -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' https://ajaiupadhyaya.com/.env
+curl -sS -A "$UA" -o /dev/null -w '%{http_code}\n' -X POST https://ajaiupadhyaya.com/
 
 # headers
-curl -sSI https://ajaiupadhyaya.com/ | grep -Ei 'x-robots-tag|content-security-policy|strict-transport'
+curl -sSI -A "$UA" https://ajaiupadhyaya.com/ | grep -Ei 'x-robots-tag|content-security-policy|strict-transport'
 dig +short TXT ajaiupadhyaya.com
 dig +short TXT _dmarc.ajaiupadhyaya.com
 dig +short CAA ajaiupadhyaya.com
