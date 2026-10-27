@@ -176,6 +176,14 @@ function buildConfig(html) {
         destination: "/.well-known/security.txt",
         permanent: true,
       },
+      // llms.txt was removed. Without this the SPA rewrite would answer it with
+      // index.html and a 200, which is exactly the wrong signal to an AI
+      // crawler; point it at the file that actually states the policy.
+      {
+        source: "/llms.txt",
+        destination: "/robots.txt",
+        permanent: true,
+      },
     ],
     rewrites: [
       {

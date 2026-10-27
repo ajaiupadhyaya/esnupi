@@ -32,12 +32,25 @@ list and no OWASP managed ruleset.
 
 | # | Rule | Match | Action |
 |---|------|-------|--------|
-| 1 | `Deny sensitive-file and scanner paths` | path matches dotfiles, `.env*`, `.git`, `wp-admin`, `wp-login`, `xmlrpc.php`, `phpmyadmin`, `server-status`, `@fs`, `__vite`, `..%2f` traversal, `*.php`, `*.sql`, `*.bak`, `*.map` | Deny |
-| 2 | `Deny AI scrapers, hostile methods, hosting ASNs` | UA contains `GPTBot`, `OAI-SearchBot`, `ChatGPT-User`, `ClaudeBot`, `Claude-Web`, `anthropic-ai`, `PerplexityBot`, `Perplexity-User`, `Bytespider`, `CCBot`, `Amazonbot`, `Applebot-Extended`, `meta-externalagent`, `Google-Extended`, `Diffbot`, `ImagesiftBot`, `Omgilibot`, `YouBot`, `DeepSeek`, `GrokBot`, `Kimi`, `MistralAI` **OR** method is not `GET`/`HEAD`/`OPTIONS` **OR** ASN is `396982` (GCP), `14061` (DigitalOcean), `16276` (OVH), `24940` (Hetzner), `63949` (Linode), `20473` (Vultr) | Deny |
-| 3 | `Rate limit 120 req/min per IP` | all paths | Challenge above 120 requests / 60 s, keyed by client IP |
+| 1 | `Deny sensitive-file and scanner paths` | path regex: `.env`, `.git`, `.svn`, `.hg`, `.aws`, `.ssh`, `.DS_Store`, `@fs`, `__vite`, `api`, `app`, `userfiles`, `wp-*`, `xmlrpc.php`, `phpmyadmin`, `pma`, `admin`, `administrator`, `cgi-bin`, `vendor`, `server-status`, `actuator`, `config*`, `docker-compose`, `backup*`, `db.php`, `shell.php`, `eval-stdin.php`, `*.php|asp|aspx|jsp|cgi|pl|py|rb|sh|bak|old|orig|sql|ini|conf|swp|swo|map|log|zip|tar|gz|tgz|rar|7z`, `../` traversal | Deny |
+| 2 | `Deny AI scrapers, hostile methods, hosting ASNs` | UA regex (below) **OR** method not in `GET`/`HEAD`/`OPTIONS` **OR** `geo AS number ∈ {396982 (GCP), 14061 (DigitalOcean), 16276 (OVH), 24940 (Hetzner), 63949 (Linode), 20473 (Vultr)}` | Deny |
+| 3 | `Rate limit 120 req/min per IP` | `path starts with /` | Rate limit 120/60 s, `fixed_window`, keyed by IP; **challenge** when exceeded |
 | — | IP block | `34.118.177.189` | Deny |
 | — | Managed: AI Bots | — | Deny |
 | — | Bot Protection | — | Challenge |
+
+The UA regex is broader than "AI bots" on purpose — it also catches scanner
+tooling (`sqlmap`, `nikto`, `nuclei`, `feroxbuster`, `ffuf`, `masscan`, `zgrab`,
+`Censys`, `Shodan`) and generic HTTP clients (`curl`-class `Python-`, `Go-http-client`,
+`okhttp`, `libwww-perl`, `Wget`, `Java/`), because the site is not an API and
+has no legitimate non-browser consumers:
+
+```
+(?:[Gg]PTBot|[Cc]hatGPT|[Oo]AI-|[Oo]penAI|[Cc]laude|[Aa]nthropic|[Cc][Cc]Bot|[Cc]ommon[Cc]rawl|[Pp]erplexity|[Gg]oogle-[Ee]xtended|[Bb]ytespider|[Dd]eep[Ss]eek|[Kk]imi|[Mm]oonshot|[Gg]rok|x[Aa][Ii]|[Qq]wen|[Mm]istral|cohere|[Mm]eta-[Ee]xternal|[Ff]acebook[Bb]ot|[Aa]mazonbot|[Aa]pplebot-[Ee]xtended|[Dd]iffbot|[Yy]ou[Bb]ot|[Tt]impibot|[Oo]mgili|[Ii]magesift|[Ff]riendly[Cc]rawler|[Ss]crapy|[Pp]ython-|[Aa]iohttp|[Gg]o-http-client|[Oo]khttp|[Ll]ibwww-perl|[Ww]get|[Jj]ava/|[Aa]pache-[Hh]ttp[Cc]lient|masscan|zgrab|nmap|sqlmap|nikto|nuclei|feroxbuster|gobuster|ffuf|dirsearch|[Ww][Pp][Ss]can|[Aa]cunetix|[Nn]essus|[Oo]pen[Vv][Aa][Ss]|[Cc]ensys|[Ss]hodan|[Bb]inary[Ee]dge|[Hh]eadless[Cc]hrome|[Pp]hantom[Jj][Ss]|[Ss]elenium|[Aa][Ii]2[Bb]ot|[Pp]angu[Bb]ot|[Ww]ebzio|[Ii][Cc][Cc]-[Cc]rawler)
+```
+
+Rule 1 denies `/api/*` even though the app has no local API routes; every
+function that needs data talks to GitHub/Supabase from the browser.
 
 Notes:
 
@@ -72,8 +85,9 @@ the Vercel challenge instead of the site, which makes header checks look broken.
   line. **`Bingbot` is intentionally not blocked**: it is the real search index
   and blocking it would drop the site from Bing. `Google-Extended` only governs
   AI training, not Search, so it is safe to block.
-- `public/llms.txt` — **deleted**. It was a hand-written summary for AI
-  crawlers, i.e. the opposite of the current posture.
+- `public/llms.txt` — **deleted**, and `/llms.txt` now permanently redirects to
+  `/robots.txt` so the SPA rewrite cannot answer it with `index.html` + 200
+  (which is exactly the wrong signal to an AI crawler).
 - `vercel.json` — HTML responses carry `X-Robots-Tag: noai, noimageai`.
   Google ignores unknown values, so Search is unaffected.
 - `public/.well-known/security.txt` — RFC 9116 contact point for reports, with

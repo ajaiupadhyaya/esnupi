@@ -82,6 +82,11 @@
       "source": "/security.txt",
       "destination": "/.well-known/security.txt",
       "permanent": true
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/robots.txt",
+      "permanent": true
     }
   ],
   "rewrites": [
