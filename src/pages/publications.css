@@ -1,0 +1,342 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * Publications (/publications), the report behind every Work and Experiment.
+ * Same rules as the home page and BASIS: system Helvetica/Arial and system
+ * mono, the home page's electric blue, hairline rules, no web fonts, no
+ * overlays, no shadows, no rounded cards. Classes are prefixed `pub-`.
+ * ────────────────────────────────────────────────────────────────────────── */
+
+html[data-publications-page],
+html[data-publications-page] body {
+  background: #ffffff;
+  color-scheme: light;
+}
+
+.pub-root {
+  --pub-blue: #160bff;
+  --pub-grey: #a3a3a3;
+  --pub-sans: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --pub-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+
+  min-height: 100dvh;
+  background: #fff;
+  color: #000;
+  font-family: var(--pub-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.pub-root h1,
+.pub-root h2,
+.pub-root h3,
+.pub-root p {
+  font-family: inherit;
+}
+
+.pub-root a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.pub-root a:hover {
+  color: var(--pub-blue);
+}
+
+.pub-root :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.pub-root .pub-cap {
+  margin: 0;
+  font-family: var(--pub-mono);
+  font-size: 12px;
+  line-height: 1.38;
+}
+
+/* ── Masthead: a blue band, like BASIS and the home page's panel ───────── */
+.pub-head {
+  padding: 18px 22px 28px;
+  background: var(--pub-blue);
+  color: #fff;
+}
+
+.pub-bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 48px;
+  font-size: 13px;
+}
+
+.pub-root .pub-head a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.pub-mark {
+  margin: 0;
+  font-size: clamp(46px, 12.5vw, 190px);
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+}
+
+.pub-head .pub-cap {
+  margin-top: 18px;
+}
+
+/* ── Index ─────────────────────────────────────────────────────────────── */
+.pub-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(40px, 7vh, 88px) 22px 96px;
+}
+
+.pub-h2 {
+  margin: 34px 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pub-section:first-child .pub-h2 {
+  margin-top: 0;
+}
+
+.pub-h2 sup {
+  margin-left: 2px;
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.pub-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid #000;
+}
+
+.pub-entry {
+  border-bottom: 1px solid #000;
+  scroll-margin-top: 12px;
+}
+
+.pub-entry__heading {
+  margin: 0;
+  font: inherit;
+}
+
+/* One row per project, laid out like a BASIS issue row. */
+.pub-row {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr) auto 14px;
+  align-items: start;
+  gap: 16px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pub-row__title {
+  font-weight: 700;
+}
+
+.pub-row:hover .pub-row__title,
+.pub-entry[data-open] .pub-row__title {
+  color: var(--pub-blue);
+}
+
+.pub-entry:not([data-has-report]) .pub-row__status {
+  color: var(--pub-grey);
+}
+
+.pub-row__toggle {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  margin-top: 5px;
+}
+
+.pub-row__toggle::before,
+.pub-row__toggle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+}
+
+.pub-row__toggle::after {
+  transform: rotate(90deg);
+  transition: transform 0.25s;
+}
+
+.pub-entry[data-open] .pub-row__toggle::after {
+  transform: none;
+}
+
+/* ── An open entry: notes beside the report ────────────────────────────── */
+.pub-body {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 16px;
+  padding: 4px 0 28px;
+}
+
+.pub-about {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 620px;
+}
+
+.pub-abstract {
+  margin: 0;
+}
+
+.pub-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 14px;
+}
+
+.pub-facts dt {
+  color: var(--pub-grey);
+}
+
+.pub-facts dd {
+  margin: 0;
+}
+
+.pub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.pub-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.pub-reader {
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin-top: 10px;
+}
+
+.pub-pdf {
+  display: block;
+  width: 100%;
+  height: min(88vh, 1100px);
+  border: 1px solid #000;
+  background: #fff;
+}
+
+/* A plain title page: hairline box, title in blue. Dashed while it is still being written. */
+.pub-cover {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(100%, 360px);
+  aspect-ratio: 8.5 / 11;
+  padding: 22px;
+  border: 1px solid #000;
+  text-decoration: none;
+}
+
+.pub-cover[data-pending] {
+  border-style: dashed;
+  border-color: var(--pub-grey);
+  color: var(--pub-grey);
+}
+
+.pub-cover__title {
+  color: var(--pub-blue);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.pub-cover[data-pending] .pub-cover__title {
+  color: #000;
+}
+
+.pub-root .pub-cover__foot {
+  margin-top: auto;
+}
+
+a.pub-cover:hover .pub-cover__foot {
+  text-decoration: underline;
+}
+
+.pub-root .pub-foot {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 22px 32px;
+  color: var(--pub-grey);
+}
+
+@media (max-width: 640px) {
+  .pub-bar {
+    margin-bottom: 32px;
+  }
+
+  .pub-row {
+    grid-template-columns: minmax(0, 1fr) 14px;
+    grid-template-areas:
+      "cap toggle"
+      "title toggle"
+      "status toggle";
+    gap: 4px 12px;
+  }
+
+  .pub-row > .pub-cap:first-child {
+    grid-area: cap;
+  }
+
+  .pub-row__title {
+    grid-area: title;
+  }
+
+  .pub-row__status {
+    grid-area: status;
+  }
+
+  .pub-row__toggle {
+    grid-area: toggle;
+  }
+
+  .pub-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pub-about {
+    grid-column: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pub-row__toggle::after {
+    transition: none;
+  }
+}

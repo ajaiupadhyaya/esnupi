@@ -13,6 +13,7 @@ const FeltMoon = lazy(() => import("@/pages/FeltMoon"));
 const Film = lazy(() => import("@/pages/Film"));
 const Gallery = lazy(() => import("@/pages/Gallery"));
 const PhotoLab = lazy(() => import("@/pages/PhotoLab"));
+const Publications = lazy(() => import("@/pages/Publications"));
 
 function RouteFallback() {
   return <div aria-hidden style={{ minHeight: "40vh" }} />;
@@ -57,6 +58,15 @@ export default function App() {
                 element={(
                   <Suspense fallback={<RouteFallback />}>
                     <FeltMoon />
+                  </Suspense>
+                )}
+              />
+              {/* Every Work and Experiment's report; /publications#<id> opens one. */}
+              <Route
+                path="/publications"
+                element={(
+                  <Suspense fallback={<RouteFallback />}>
+                    <Publications />
                   </Suspense>
                 )}
               />

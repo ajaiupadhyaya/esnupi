@@ -21,6 +21,7 @@ const BASE = SITE_OWNER_DOMAIN.replace(/\/$/, "");
 /** Indexable public routes (used for sitemap + internal SEO nav). */
 export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
+  { path: "/publications", label: `${SITE_OWNER_FULL_NAME} publications and project reports` },
   { path: "/basis", label: `BASIS, research notes by ${SITE_OWNER_FULL_NAME}` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
@@ -50,6 +51,16 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
       canonicalPath: normalized,
       ogType: "website",
       canonicalUrl: canonicalUrl(normalized),
+    };
+  }
+
+  if (normalized === "/publications") {
+    return {
+      title: `${SITE_OWNER_FULL_NAME} — Publications | ${SITE_BRAND}`,
+      description: `Research reports by ${SITE_OWNER_FULL_NAME}: AI delegation, prediction markets, private credit, GPU depreciation, computer vision, machine learning, and option pricing. Read in the browser or download the PDF.`,
+      canonicalPath: "/publications",
+      ogType: "website",
+      canonicalUrl: canonicalUrl("/publications"),
     };
   }
 

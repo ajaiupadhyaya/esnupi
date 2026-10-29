@@ -11,6 +11,10 @@
   - `src/components/desktop/panels/ContentPanels.tsx`
   - `src/lib/projectsData.ts`
 - Add `.env` from `.env.example` if you need optional integrations.
+- Every Work and Experiment needs a report: `public/reports/<id>.pdf` plus `report` on the
+  project in `src/lib/projectsData.ts`. Still missing: Delegating to the Machine (the v1.0.0
+  release PDF) and Financial Modeling for Wealth Management. Until then they read
+  "In preparation" on `/publications`.
 
 ## Optional integrations
 
@@ -34,6 +38,7 @@
   - `/feltmoon`
   - `/photolab`
   - `/basis` (and `/basis/<issue>` once an issue exists)
+  - `/publications` (and `/publications#<project-id>` opens and scrolls to that report)
 - `/` renders with no grain, vignette, or crosshair cursor; the signature draws, Fig. 1 fills in and reseeds on click, film frames resolve from mosaic and turn colour on hover/tap, and the filter greys out non-matching rows.
 - `/film` renders white in light mode and black in dark mode (`prefers-color-scheme`),
   with no grain, vignette, or crosshair cursor.

@@ -1,8 +1,8 @@
 import { DateTime } from "luxon";
 import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { hydraStage } from "@/lib/hydraStage";
-import { CASE_STUDY_GITHUB, CASE_STUDY_URL } from "@/lib/caseStudyUrl";
-import { PROJECTS_BY_KIND, type Project } from "@/lib/projectsData";
+import { CASE_STUDY_URL } from "@/lib/caseStudyUrl";
+import { PROJECTS_BY_KIND, publicationHref, type Project } from "@/lib/projectsData";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
 import { ScaffoldReveal } from "./ScaffoldReveal";
 
@@ -68,7 +68,8 @@ export function AboutPanel() {
 /* Work — System Profiler                                                      */
 /*                                                                             */
 /*   Pulls from the canonical list in @/lib/projectsData. Clicking a row       */
-/*   surfaces a short wall-label with links to where the work lives.           */
+/*   surfaces a short wall-label; its first link opens the report on           */
+/*   /publications.                                                            */
 /* -------------------------------------------------------------------------- */
 
 /** DISK0, DISK1, … for drives; KEXT.A, KEXT.B, … for kernel extensions. */
@@ -369,7 +370,7 @@ const WORKSITE_FEATURES: Array<{
     title: "Delegating to the Machine",
     category: "Research",
     year: "2026",
-    href: "https://github.com/ajaiupadhyaya/ai-delegation",
+    href: publicationHref("delegating-to-the-machine"),
     description:
       "Pre-registered study of how people hand work to AI, using the Anthropic Economic Index, and whether industry stock returns priced it.",
     meta: "paper / SSRN / replication package",
@@ -378,7 +379,7 @@ const WORKSITE_FEATURES: Array<{
     title: "Are Prediction Markets Sharp?",
     category: "Research",
     year: "2026",
-    href: "https://github.com/ajaiupadhyaya/sharp-markets",
+    href: publicationHref("sharp-markets"),
     description:
       "Registered report: do Kalshi and Polymarket price European football as well as the Betfair Exchange closing line? Pre-registered test runs on 2026–27.",
     meta: "paper / pre-analysis plan / code",
@@ -390,7 +391,7 @@ const WORKSITE_FEATURES: Array<{
     href: CASE_STUDY_URL,
     description:
       "Applied financial math case studies — interactive dashboard of models, writeups, and decision-making work.",
-    meta: "live app / Vercel / GitHub",
+    meta: "live app / Vercel",
   },
   {
     title: "github",
@@ -423,13 +424,13 @@ const WORKSITE_LINKS: Array<{
     title: "Delegating to the Machine (paper)",
     category: "Research",
     year: "2026",
-    href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658",
+    href: publicationHref("delegating-to-the-machine"),
   },
   {
     title: "Are Prediction Markets Sharp? (paper)",
     category: "Research",
     year: "2026",
-    href: "https://github.com/ajaiupadhyaya/sharp-markets/releases/download/stage1-v1/sharp-markets-stage1.pdf",
+    href: publicationHref("sharp-markets"),
   },
   {
     title: "Case Study Dashboard",
@@ -437,7 +438,7 @@ const WORKSITE_LINKS: Array<{
     year: "2026",
     href: CASE_STUDY_URL,
   },
-  { title: "case-study repo", category: "GitHub", year: "2026", href: CASE_STUDY_GITHUB },
+  { title: "Case Study report", category: "Publications", year: "2026", href: publicationHref("case-study-dashboard") },
   { title: "Undergrad CS Research", category: "Research", year: "2026", href: "/gallery" },
   { title: "Excel Models & Dashboards", category: "Notes", year: "2026", href: "/feltmoon" },
   { title: "YugabyteDB Intern Work", category: "Internship Work", year: "2026", href: "https://github.com/ajaiupadhyaya" },

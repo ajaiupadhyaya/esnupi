@@ -117,18 +117,25 @@ function securityHeaders(csp) {
 
 /** Static assets are content-hashed by Vite, so they can be cached forever. */
 const STATIC_ASSET_ROUTE = "/assets/(.*)";
+/**
+ * Project report PDFs (public/reports/), shown in an <iframe> on /publications.
+ * Kept out of the SPA rewrite so a missing PDF is a 404 rather than the whole
+ * site rendering inside the frame. They are replaced in place under the same
+ * name, so they revalidate instead of being cached as immutable.
+ */
+const REPORT_ROUTE = "/reports/(.*)";
 const ROOT_FILES =
   "favicon\\.svg|apple-touch-icon\\.png|og-cover\\.png|robots\\.txt|sitemap\\.xml|site\\.webmanifest|humans\\.txt|llms\\.txt";
 const ROOT_FILE_ROUTE = `/(${ROOT_FILES})`;
 /**
- * Everything that is *not* one of the two routes above. Written as a negative
+ * Everything that is *not* one of the routes above. Written as a negative
  * lookahead rather than a bare `/(.*)` on purpose: when several `headers` rules
  * match one request, Vercel applies them all and the later `Cache-Control`
  * silently wins — so a catch-all sitting below `/assets/(.*)` is what decides
  * whether hashed assets are immutable or `max-age=0`. Non-overlapping sources
  * mean the answer never depends on rule order.
  */
-const APP_SHELL_ROUTE = `/((?!assets/|${ROOT_FILES}).*)`;
+const APP_SHELL_ROUTE = `/((?!assets/|reports/|${ROOT_FILES}).*)`;
 
 function buildConfig(html) {
   const csp = contentSecurityPolicy(inlineScriptHashes(html));
@@ -141,6 +148,19 @@ function buildConfig(html) {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+        ],
+      },
+      {
+        source: REPORT_ROUTE,
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // Framing is the only part of the app-shell CSP that applies to a
+          // PDF: same-origin pages may embed it, nobody else may.
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
       {
@@ -162,7 +182,7 @@ function buildConfig(html) {
     ],
     rewrites: [
       {
-        source: `/((?!assets/|api/|${ROOT_FILES}).*)`,
+        source: `/((?!assets/|api/|reports/|${ROOT_FILES}).*)`,
         destination: "/index.html",
       },
     ],

@@ -33,6 +33,7 @@ const TYPES = {
   ".ico": "image/x-icon",
   ".mp3": "audio/mpeg",
   ".mp4": "video/mp4",
+  ".pdf": "application/pdf",
   ".woff2": "font/woff2",
   ".txt": "text/plain; charset=utf-8",
   ".xml": "application/xml; charset=utf-8",

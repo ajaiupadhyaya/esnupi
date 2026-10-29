@@ -9,7 +9,7 @@
  * To add something: append an entry to the matching array below. `href` is
  * optional; entries without one render as plain text (e.g. private work).
  */
-import { PROJECTS } from "@/lib/projectsData";
+import { PROJECTS, publicationHref } from "@/lib/projectsData";
 import { SITE_OWNER_SUBSTACK } from "@/lib/siteIdentity";
 
 export type IndexKind = "work" | "experiment" | "code" | "writing" | "experience";
@@ -43,7 +43,7 @@ const FROM_PROJECTS: IndexEntry[] = PROJECTS.map((p) => ({
   blurb: p.blurb,
   year: p.year,
   status: p.status === "ongoing" ? "ongoing" : "complete",
-  href: p.href,
+  href: publicationHref(p.id),
 }));
 
 const EXPERIMENTS: IndexEntry[] = [

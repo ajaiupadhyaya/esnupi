@@ -64,6 +64,7 @@ export function RouteTransitionProvider({ children }: { children: React.ReactNod
         path.startsWith("/lab") ||
         path.startsWith("/gallery") ||
         path.startsWith("/basis") ||
+        path.startsWith("/publications") ||
         path.startsWith("/film") ||
         path.startsWith("/feltmoon") ||
         path.startsWith("/photolab");
