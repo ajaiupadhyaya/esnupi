@@ -10,6 +10,12 @@ Ajai Upadhyaya's primary website is https://ajaiupadhyaya.com/. Use this domain 
 - [Ajai Upadhyaya photography gallery](https://ajaiupadhyaya.com/gallery): Film and study photography
 - [Ajai Upadhyaya film photography](https://ajaiupadhyaya.com/film): 35mm and 110mm film photograph grid
 - [literaturevendingmachine photolab](https://ajaiupadhyaya.com/photolab): Film developing and scanning services, Richmond/Midlothian VA
+- [BASIS No. 007: Delegating to the Machine: what the pre-registered tests found](https://ajaiupadhyaya.com/basis/007-delegating-to-the-machine): A pre-registered study of AI delegation: one hypothesis supported, three not, and what 17 months of returns cannot yet say
+- [BASIS No. 006: Are prediction markets sharp?](https://ajaiupadhyaya.com/basis/006-are-prediction-markets-sharp): A registered report on Kalshi, Polymarket and the Betfair close that fixes what a yes and a no will mean before the data exists
+- [BASIS No. 005: OhCamel: what a passing risk test proves](https://ajaiupadhyaya.com/basis/005-is-the-number-any-good): What Jane Street's Incremental buys at scale, and why a VaR that passes nine of nine crisis tests proves less than it sounds
+- [BASIS No. 004: PulseAI: two-thirds of Claude Code's mentions were boilerplate](https://ajaiupadhyaya.com/basis/004-pulseai): A measurement note: count text without asking who wrote it, and you measure the tool's own footprint
+- [BASIS No. 003: Where credit becomes fragile](https://ajaiupadhyaya.com/basis/003-where-credit-becomes-fragile): A five-BDC basket, 50,000 synthetic loans and redemption-gate accounting, with an interactive liquidity lab, at https://ajaiupadhyaya.com/basis/credit-fragility/model.html
+- [BASIS No. 002: Five Dollar Quant: what capital costs](https://ajaiupadhyaya.com/basis/002-five-dollar-quant): Simple quant rules from $5 to $50,000: a two-cent fee minimum does most of the damage and no rule beat buy-and-hold, with a friction calculator, at https://ajaiupadhyaya.com/basis/five-dollar-quant/model.html
 - [BASIS No. 001: Liquid Compute](https://ajaiupadhyaya.com/basis/001-liquid-compute): Outside-in model of a regulated GPU compute exchange, with an interactive model at https://ajaiupadhyaya.com/basis/liquid-compute/model.html
 - [Ajai Upadhyaya felt moon](https://ajaiupadhyaya.com/feltmoon): Interactive room experience
 

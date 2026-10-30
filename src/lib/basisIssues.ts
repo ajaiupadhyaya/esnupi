@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 
 /**
- * BASIS, the weekly market monitor. Each issue is one MDX file in
+ * BASIS, the research notes. Each issue is one MDX file in
  * `src/content/basis/` (see the README there). Files starting with `_` are
  * ignored, so `_template.mdx` never ships.
  */

@@ -45,7 +45,7 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
 
 ### BASIS (`/basis`)
 
-The weekly market monitor. `src/pages/Basis.tsx` + `basis.css` (classes prefixed `bas-`), same plain rules as the home page. Each issue is an MDX file in `src/content/basis/` exporting `meta` (`number`, `title`, `date`, optional `dek`); `src/lib/basisIssues.ts` globs them (files starting with `_` are ignored, so `_template.mdx` never ships) and the issue renders at `/basis/<filename>`. MDX runs with `remark-gfm` so issues can use Markdown tables. `/basis` is bare like `/` and `/film`.
+The research notes. `src/pages/Basis.tsx` + `basis.css` (classes prefixed `bas-`), same plain rules as the home page. Each issue is an MDX file in `src/content/basis/` exporting `meta` (`number`, `title`, `date`, optional `dek`); `src/lib/basisIssues.ts` globs them (files starting with `_` are ignored, so `_template.mdx` never ships) and the issue renders at `/basis/<filename>`. MDX runs with `remark-gfm` so issues can use Markdown tables. `/basis` is bare like `/` and `/film`.
 
 ### The desktop (`/desktop`)
 

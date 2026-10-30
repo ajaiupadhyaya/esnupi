@@ -1,0 +1,131 @@
+export const meta = {
+  number: 7,
+  title: "Delegating to the Machine: what the pre-registered tests found",
+  date: "2026-10-30",
+  dek: "A pre-registered study of how conversations with a language model divide work between person and machine, and what 17 months of industry returns can and cannot yet say about it.",
+};
+
+I pre-registered four hypotheses about how people delegate to a language model, using the Anthropic Economic Index (AEI), and ran each test once. One was supported: across countries, the share of conversations handed over relates to usage intensity and income, beyond the mix of tasks. Three were not. Two more hypotheses asked about industry returns, and that evidence cannot yet say much: the test had 80% power only against a departure from history of at least 7.43 percentage points of annualised risk-adjusted return per standard deviation of exposure.
+
+**[Read the paper (PDF) →](https://github.com/ajaiupadhyaya/ai-delegation/releases/download/v1.0.0/delegating-to-the-machine-paper.pdf)** It is a preprint [on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658), under review there. The [code, plan and results](https://github.com/ajaiupadhyaya/ai-delegation) are public and [archived at Zenodo](https://doi.org/10.5281/zenodo.23631273).
+
+AEI data are conversations matched to O*NET tasks. Nothing here says anything about job risk, displacement or reassurance about the labour market.
+
+## Summary
+
+- **What it is.** Six AEI releases, 2025-02-10 to 2026-06-26, joined to O\*NET, BLS wages, two exposure benchmarks and Fama-French returns. The plan was signed and tagged `pap-v1` on 2026-10-21, before any confirmatory outcome was read.
+- **What happened.** H1 to H4 ran once and H5 and H5b ran once, both on 2026-10-22, and each output was committed unedited.
+- **What it found.** H4 is supported. H1, H2 and H3 are not supported. For H5 and H5b, the null of no departure from the 1990-2022 pattern is not rejected. Descriptively, industry delegation and human-rated theoretical exposure have a rank correlation of 0.716.
+- **What it does not show.** The market non-rejections do not show that exposure is unrelated to returns, and the market inputs are not strictly real-time. The index records conversations on one provider's platforms. It does not sample people at work.
+
+## 1. The data and the measure
+
+AEI sorts conversations into five collaboration patterns. Automation is directive plus feedback-loop, where the user hands the task over or relays results back. Augmentation is task iteration, learning and validation. I call the automation share of classified conversations delegation. Industry exposure is usage relative to employment by occupation, times the automation share, carried to 49 Fama-French industries with OEWS weights and standardised.
+
+![Conversations matched to Computer and Mathematical tasks hold 24.70% of usage at 63.89% automation, while the next three groups sit below 50%](/basis/delegating-to-the-machine/collaboration-by-group.svg)
+
+Conversations matched to Computer and Mathematical tasks hold 24.70% of published major-group usage in r6. The highest automation shares belong to groups with little usage. This is description, with no test attached.
+
+## 2. Behaviour: H1 to H4 (confirmatory)
+
+H2 is tested alone at 0.0125, and H1, H3 and H4 by Holm at 0.0375. Here pp is percentage points, a unit of a log is a hundred log points, the usage index is usage relative to working-age population, and income is GDP per working-age person.
+
+| Hypothesis | Estimate | 95% interval | p | Level | Decision |
+| --- | --- | --- | --- | --- | --- |
+| H1: delegation is lower for tasks requiring more education and in higher-wage occupations | -0.53 pp per year of education; 4.40 pp per unit of log wage | [-1.68, 0.62]; [0.07, 8.72] | 0.361 (larger of the two) | 0.01875 | Not supported |
+| H2: within a task, delegation rises across releases | 4.98 pp per year | [2.71, 7.25] | under 0.001 task-clustered; 0.927 release-level | 0.0125 | Not supported |
+| H3: validation is more common in occupations with high error costs | -0.18 pp of validation share | [-1.10, 0.75] | 0.707 | 0.0375 | Not supported |
+| H4: a country's delegation share relates to its usage index and income, given task mix | -1.19 pp per unit of log usage index; -0.92 pp per unit of log income | [-1.98, -0.40]; [-1.61, -0.23] | under 0.001 (joint) | 0.0125 | Supported |
+
+1. **H1 is not supported: the null that either coefficient is zero is not rejected at 0.01875.** Education has the predicted sign, but its interval includes zero. The wage coefficient (nominal p = 0.046) is opposite in sign to the prediction and misses its Holm level, so it neither supports H1 nor contradicts it. One pre-registered robustness row takes the p to 0.011 with both coefficients negative, and it changes no decision. Conversations matched to Computer and Mathematical tasks carry 25.81% of H1's weight. Leaving them out moves the wage coefficient to 0.34 (p = 0.802), a diagnostic run after the result: exploratory, not a decision.
+2. **H2 is not supported: the release-level check fails.** A shock common to a release hits every task, so the plan also required a wild bootstrap across releases, which gives p = 0.927 against 0.0125. The measured rise is one r2-to-r3 step followed by a fall, and that step coincides with a change in the base of classified conversations, so classifier or platform drift cannot be separated from behaviour. Leaving out r2 reverses the sign, to -6.55 pp per year (wild p = 0.204; a diagnostic run after the result: exploratory, not a decision). Two pre-registered rows also run the other way: API conversations over r3 to r5 (-9.51 pp per year, [-12.75, -6.27]) and the autonomy score (-1.24 scale points per year, [-1.40, -1.09], labelled confounded with the r6 suppression change). The balanced panel removes 890 tasks holding 5.39% of usage.
+3. **H3 is not supported: the null that the coefficient is zero is not rejected.** Holm stopped at H1, and p exceeds even H3's own level. The point estimate is negative, opposite to the prediction.
+4. **H4 is supported.** The joint test rejects at 0.0125 across 113 countries in r6. Given task mix, countries with a higher usage index and higher income have a lower share of classified conversations in the automation patterns. H4 left the direction open, so the signs are description. The two regressors are strongly correlated across countries, so each coefficient is only weakly separable on its own, though the joint test is not. The signs are not stable across robustness rows: with r4 countries the usage coefficient is 3.68 ([-6.16, 13.53]), and with usage weights the income coefficient is 0.09 ([-2.73, 2.91]). None changes the decision.
+
+![Within-task automation is 8.45 points above r2 at r3, then 5.27 at r4 and 5.22 at r5, so the measured rise is one step followed by a fall](/basis/delegating-to-the-machine/h2-release-step.svg)
+
+The chart's intervals are task-clustered, so they do not capture shocks common to a release. Not supported does not mean the coefficient is zero: the intervals show which values the data leave open.
+
+## 3. Could versus does (RQ2, descriptive)
+
+RQ2 carries no test. Across 49 industries, delegation exposure has a Spearman correlation of 0.716 with the human-rated exposure scores of Eloundou et al. (industry-bootstrap interval [0.527, 0.839]), 0.815 [0.676, 0.900] with their GPT-4 scores, and 0.763 [0.594, 0.866] with AIOE. "Could" and "does" order the industries similarly, with sizeable exceptions: Fin ranks first on could and 14th on does.
+
+![Retail is 20th on theoretical exposure and 48th on delegation exposure, while Textiles is 43rd and 16th](/basis/delegating-to-the-machine/could-vs-does-ranks.svg)
+
+1. **Shared weights.** Both sides use the same occupation-to-industry weights, so part of each correlation is common occupational mix.
+2. **The zero assumption.** Occupations holding 12.14% of OEWS employment are unpublished in AEI and assigned zero by assumption. They are not measured as zero. Dropping them lowers the headline most, to 0.568 [0.321, 0.754].
+3. **Timing.** The OEWS May 2024 weights were released on 2025-04-02, after the 2025-03-27 formation date and inside the return window, and the O\*NET 29.3 links also postdate formation. The exposure vector is out of sample in AEI data only, not strictly real-time. No RQ2 value exists on strictly real-time inputs.
+4. **Seen in advance.** I saw these correlations before the plan was frozen, and the plan discloses that. They were never a test.
+
+## 4. What the market evidence can and cannot yet say (RQ3, confirmatory)
+
+That heading was fixed by rule. The plan says that if H5's minimum detectable effect (MDE) exceeds 5 pp of annualised alpha per SD of exposure, RQ3 is reported under this title and the paper is led by RQ1 and RQ2. The MDE is 7.43 pp, so the rule fires. The threshold was written before the power analysis first ran, but it became binding only when I confirmed it with the MDE in view.
+
+![The minimum detectable effect is 7.43 points for H5 and 8.38 for H5b, rising to 10.46 and 12.15 with Softw dropped, all above the 5 point threshold](/basis/delegating-to-the-machine/market-power.svg)
+
+The test regresses each industry's alpha over 2025-04-01 to 2026-08-31 on delegation exposure from release r2, published 2025-03-27. Alpha is the return left after the five Fama-French factors and momentum. H5b adds the AIOE benchmark as a control. The null is not zero. It is b̄, the mean slope of the same exposure vector across 378 overlapping 17-month windows in 1990 to 2022, so a rejection would say only that the slope departs from that pattern, a narrower claim than the hypothesis first approved. T is the distance from b̄ in units of s, the spread of those historical slopes. H5 and H5b form a Holm family at 0.05.
+
+| Specification | Slope (pp per SD) | b̄ | s | T | p |
+| --- | --- | --- | --- | --- | --- |
+| H5 | 1.958 | 1.650 | 2.271 | 0.136 | 0.8934 |
+| H5b | 3.461 | 1.217 | 2.560 | 0.877 | 0.3906 |
+| H5, ranks | -1.065 | 1.317 | 2.211 | -1.077 | 0.2936 |
+| H5b, ranks | -2.386 | 0.539 | 2.982 | -0.981 | 0.3379 |
+| H5, Softw dropped | 1.655 | 1.666 | 3.195 | -0.003 | 0.9974 |
+| H5b, Softw dropped | 3.634 | 1.068 | 3.713 | 0.691 | 0.4972 |
+
+The plan fixes the wording of each non-rejection, and the script printed it:
+
+> H5 is not rejected (H0: b = bbar (the 1990-2022 pattern for this exposure vector)). Interval [-2.76, 6.68] pp per 1 SD; the test had 80% power only against a departure from H0 of at least 7.43 pp per 1 SD (MDE at Holm level 0.025).
+>
+> H5b is not rejected (H0: b = bbar (the 1990-2022 pattern for this exposure vector)). Interval [-1.86, 8.79] pp per 1 SD; the test had 80% power only against a departure from H0 of at least 8.38 pp per 1 SD (MDE at Holm level 0.025).
+
+I do not read these as saying the market did not price delegation. They say what this window could resolve.
+
+1. **The zero null is secondary, not part of the decision.** T = 0.862 and p = 0.3982 for H5, T = 1.352 and p = 0.1908 for H5b, beside the same MDEs of 7.43 and 8.38 pp.
+2. **Softw dominates the cross-section.** It sits at 4.739 SD of exposure, against 1.977 for the next industry. A pricing claim also needed the test without Softw to reject, and that test's MDEs are 10.46 and 12.15 pp. The slopes without Softw still lie close to the primaries.
+3. **Timing.** Every number here carries the caveat in section 3. The strict real-time row, on May 2023 weights, gives 2.20 for H5 ([-2.67, 7.08], p = 0.843) and 3.72 for H5b ([-1.75, 9.19], p = 0.374).
+4. **The slope moves.** For H5, dropping Hardw, Softw and Chips gives -1.72 ([-8.02, 4.57], p = 0.430) and equal-weighted returns give 4.88 ([0.30, 9.47], p = 0.212). For H5b, the same drop gives -0.24 ([-7.98, 7.50], p = 0.971) and the 30-industry version gives 0.72 ([-6.61, 8.05], p = 0.827). Ranks move both, as the table shows. None changes a decision.
+
+## 5. Exploratory results (not findings)
+
+None of these sits in a testing family, and each p is nominal. The event studies and other Fama-MacBeth designs are in the paper.
+
+| Analysis | Result |
+| --- | --- |
+| H6: AI talk in 10-K filings against usage exposure | Spearman 0.361 [0.050, 0.612]; t-approximation p = 0.011, nominal and exploratory |
+| H6: gap between talk and use, against returns | -2.40 pp per SD of gap [-6.48, 1.68]; nominal p = 0.215; no MDE computed (exploratory) |
+| Tercile high-minus-low, cap-weighted legs (secondary) | Mean 15.49 pp a year, bootstrap [-5.18, 34.08]; FF5+UMD alpha 0.89 pp [-8.78, 10.56] |
+| Same, equal-weighted legs (secondary) | Mean -0.84 pp a year, bootstrap [-16.00, 12.98] |
+| Fama-MacBeth slope on exposure | 0.23 pp a month per SD [-0.40, 0.87]; nominal p = 0.448 |
+
+The 15.49 pp is the number here most open to misreading. The portfolio is a measurement device, not a strategy. It rests on 17 monthly returns, its FF3 alpha is 12.91 pp against 0.89 pp under FF5+UMD, and its mean turns negative with equal-weighted legs. I claim no edge from it.
+
+For H6, two inputs are fixed at retrieval in 2026, not in 2024: each filer's industry is its current SIC, and the phrase matching is the SEC's on the retrieval date. Leaving out Softw gives 0.320 [0.001, 0.585], and leaving out Hardw or BusSv gives intervals that cross zero (diagnostics run after the result: exploratory, not a decision). So do the robustness rows on the change in talk, float weighting and pre-formation filings.
+
+## 6. Limits
+
+| Limit | What it means |
+| --- | --- |
+| One provider's platforms | Each share describes usage of one assistant, not the conduct of people in an occupation |
+| Unnamed classifier | No release names the classifying model, so a change in it cannot be told from a change in behaviour |
+| One 17-month window | A single draw of the cross-section of industry alphas |
+| The null was chosen with history in view | The recommendation to centre it on b̄ came after uncentred rejection rates of 7.1% for H5 and 3.2% for H5b at nominal 2.5% had been seen, all pre-seal |
+| The 1990 start | The least conservative of three starts, with no reason recorded at the time; every MDE in the plan's power table lies between 7.00 and 11.56 pp |
+| What the seal cannot do | It kept code from returns dated from 2022-11-30 until the tag, but public knowledge of market moves cannot be removed, from me or from the model assisting me |
+
+## 7. What I'd do next
+
+1. **Wait for a test with power.** The MDE is 3.2729 times s, so RQ3 could lead only if a future window's s brought it to 5 pp or below, and the MDEs without Softw would have to fall as well.
+2. **Test the wage coefficient afresh.** Two robustness rows flip its sign, which calls for a new pre-registered test on a later release.
+3. **Revisit H2 only if a release names its classifier.** Until then, drift and behaviour stay tangled.
+
+## 8. How this was made
+
+The code, analysis and drafts were produced with Claude, Anthropic's language model, running in Claude Code under my direction. Claude wrote the code, ran the analyses and the red-team review, and drafted the paper and the pre-analysis plan, with a recommended option for each decision, all of which I accepted at signing. I set the research questions and hypotheses, signed the plan, approved every deviation (one, D-1, after it was filed) and take responsibility for the content. The data are conversations with Claude, so the assistant is a product of the firm whose data are studied. Anthropic did not fund, review or approve this study. I have no employment, funding, consulting or equity relationship with Anthropic, OpenAI or any other AI developer, and hold no position in the industry portfolios studied beyond broad index funds.
+
+## Sources
+
+The [paper](https://github.com/ajaiupadhyaya/ai-delegation/releases/download/v1.0.0/delegating-to-the-machine-paper.pdf), [SSRN preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658), [Zenodo record](https://doi.org/10.5281/zenodo.23631273) and [replication repository](https://github.com/ajaiupadhyaya/ai-delegation). Data: Anthropic Economic Index r1 to r6; BLS OEWS; Kenneth R. French Data Library, copyright Eugene F. Fama and Kenneth R. French; AIOE (Felten, Raj and Seamans 2021); Eloundou et al. (2024); SEC EDGAR; U.S. Census Bureau concordances. This page includes information from the O\*NET Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA), used under the CC BY 4.0 licence; the author has modified all or some of this information, and USDOL/ETA has not approved, endorsed or tested these modifications.
+
+This is a pre-registered description of usage and a short market test. It is not a statement of what would follow if delegation changed, and it is not a trading signal. The hypotheses, the exposure construction, the 5 pp threshold and the choice of null are mine, and meant to be argued with.

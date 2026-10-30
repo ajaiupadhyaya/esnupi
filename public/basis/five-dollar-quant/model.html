@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five Dollar Quant Friction Calculator · BASIS · Ajai Upadhyaya</title>
+<meta name="description" content="What one order costs under the Five Dollar Quant friction model: spread, SEC fee, FINRA TAF and the $1 minimum, ported line for line from the repo's code.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+html, body { margin: 0; }
+/* Layout: a term sheet. A narrow spec rail beside a wide working column; controls sit directly above what they move. */
+:root {
+  --bg: #ffffff; --panel: #ffffff; --ink: #000000; --ink-2: #3d3d3d; --muted: #6b6b6b;
+  --rule: #e2e2e2; --axis: #000000; --accent: #160bff; --accent-wash: #eceaff;
+  --s1: #160bff; --s2: #000000; --s3: #8a8a8a; --s4: #c4c4c4;
+  --good: #006300; --bad: #c8102e;
+  --f-display: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-body: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 48px); line-height: 1.05; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 16px; }
+p { margin: 0; max-width: 66ch; }
+code { font-family: var(--f-mono); font-size: 0.92em; }
+.eyebrow { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+a { color: var(--accent); }
+
+/* Masthead */
+.mast { padding-block: 40px 28px; border-bottom: 1px solid var(--ink); display: grid; gap: 18px; }
+.mast .lede { color: var(--ink-2); font-size: 17px; }
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--rule); margin: 0; }
+.spec div { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 2px; min-width: 0; }
+.spec dt { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.spec dd { margin: 0; font-family: var(--f-mono); font-size: 13px; }
+
+section { padding-block: 44px 8px; display: grid; gap: 20px; }
+.sec-head { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
+.sec-head .eyebrow { padding-top: 6px; }
+.sec-head > div { display: grid; gap: 8px; min-width: 0; }
+.sec-head p { color: var(--ink-2); }
+.body-grid { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+.body-grid > * { min-width: 0; }
+.rail { font-size: 12.5px; color: var(--muted); display: grid; gap: 12px; align-content: start; }
+.rail b { color: var(--ink-2); font-weight: 500; }
+
+/* Controls */
+.controls { display: grid; gap: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; width: max-content; max-width: 100%; }
+.seg button { font: 500 13px var(--f-mono); padding: 7px 14px; background: transparent; color: var(--ink); border: 0; border-right: 1px solid var(--ink); cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible, .knob input:focus-visible, .reset:focus-visible, .pick select:focus-visible, .check input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 22px; }
+.knob { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: baseline; }
+.knob label { font-size: 12.5px; color: var(--ink-2); }
+.knob output { font: 500 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+.knob input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+.ctl-row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.pick { display: inline-flex; gap: 8px; align-items: center; font-size: 12.5px; color: var(--ink-2); }
+.pick select { font: 500 13px var(--f-mono); padding: 6px 8px; background: var(--bg); color: var(--ink); border: 1px solid var(--ink); border-radius: 3px; }
+.check { display: inline-flex; gap: 8px; align-items: center; font-size: 12.5px; color: var(--ink-2); }
+.check input { accent-color: var(--accent); margin: 0; }
+.ctl-label { font-size: 12.5px; color: var(--ink-2); }
+.reset { font: 12px var(--f-mono); color: var(--accent); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Readouts */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.ro { padding: 14px 14px 14px 0; display: grid; gap: 4px; min-width: 0; }
+.ro + .ro { padding-left: 14px; border-left: 1px solid var(--rule); }
+.ro .v { font-family: var(--f-display); font-size: 28px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ro .k { font-size: 12px; color: var(--muted); }
+.ro .v.neg { color: var(--bad); }
+.ro .v.sm { font-size: 21px; }
+
+/* Charts */
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.chart-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: baseline; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 2px; display: inline-block; }
+.legend i.band { width: 10px; height: 10px; border-radius: 2px; }
+.tick { font: 11px var(--f-mono); fill: var(--muted); }
+.lbl { font: 500 11.5px var(--f-mono); fill: var(--ink); }
+.grid line { stroke: var(--rule); stroke-width: 1; }
+.baseline { stroke: var(--axis); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px var(--f-mono); padding: 8px 10px; border-radius: 3px; min-width: 150px; opacity: 0; transition: opacity .1s; z-index: 5; line-height: 1.5; }
+.tip .r { display: flex; justify-content: space-between; gap: 14px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.two > * { min-width: 0; }
+.callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; font-size: 14px; color: var(--ink); max-width: 70ch; }
+
+/* Table */
+.tbl-wrap { overflow-x: auto; border-top: 1px solid var(--ink); }
+table { border-collapse: collapse; width: 100%; font: 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; font-family: var(--f-body); }
+thead th { font-weight: 500; color: var(--muted); }
+tr.sum td { font-weight: 500; border-top: 1px solid var(--axis); }
+td.bind { color: var(--accent); font-weight: 500; }
+td.ok { color: var(--good); }
+td.no { color: var(--bad); }
+
+.foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--ink); display: grid; gap: 10px; font-size: 12.5px; color: var(--ink-2); }
+.foot ol { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+.lc-band { background: var(--accent); color: #fff; margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.lc-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-block: 14px; font-size: 13px; }
+.lc-nav a { color: #fff; text-decoration: none; }
+.lc-nav a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .sec-head, .body-grid, .two { grid-template-columns: 1fr; gap: 14px; }
+  .ro + .ro { border-left: 0; padding-left: 0; }
+  .ro { border-bottom: 1px solid var(--rule); }
+  .seg { display: flex; width: 100%; }
+  .seg button { flex: 1 1 0; padding: 8px 2px; font-size: 12px; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="lc-band"><div class="wrap">
+  <nav class="lc-nav" aria-label="Site">
+    <a href="/basis/002-five-dollar-quant">← BASIS No. 002: the full write-up</a>
+    <a href="/">ajaiupadhyaya.com</a>
+  </nav>
+</div></div>
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">Friction calculator · Ajai Upadhyaya · October 2026</div>
+    <h1>Five Dollar Quant: what one order costs</h1>
+    <p class="lede">Set a capital, a trade size and a turnover, and see what the project's friction model charges. The arithmetic is a line-for-line port of the repo's Python, so a rejected order here is one the backtest would reject.</p>
+    <dl class="spec">
+      <div><dt>Model</dt><dd>friction v1.0.0</dd></div>
+      <div><dt>Minimum order</dt><dd>$1.00</dd></div>
+      <div><dt>Cash buffer</dt><dd>10% at every tier</dd></div>
+      <div><dt>SEC fee</dt><dd>0.00278% · min 1¢</dd></div>
+      <div><dt>FINRA TAF</dt><dd>$0.000166/sh · min 1¢</dd></div>
+      <div><dt>Settlement</dt><dd>T+1 cash account</dd></div>
+    </dl>
+  </header>
+
+  <section id="calc" aria-labelledby="h-calc">
+    <div class="sec-head">
+      <div class="eyebrow">01 · Calculator</div>
+      <div>
+        <h2 id="h-calc">One round trip, leg by leg</h2>
+        <p>A purchase pays half the spread. A sale pays half the spread plus two fees, each with a one-cent minimum. Those minimums are fixed in cents, so their weight depends on the size of the order.</p>
+      </div>
+    </div>
+    <div class="body-grid">
+      <div class="rail">
+        <div><b>Order size.</b> The engine sizes every order as a weight times 90% of equity, because 10% stays in cash at every tier.</div>
+        <div><b>Minimum.</b> An order under $1.00 is rejected and logged. Nothing fills and nothing is charged.</div>
+        <div><b>Stress.</b> Scales the spread only, because that is what the code does. The fees stay put.</div>
+        <div><b>Default turnover.</b> 2.1 round trips a year is Donchian on SPY at $5: 10 sales in 1,208 test days. Those fees come to 0.84% of capital a year, and removing them from that backtest adds 0.84 points of CAGR.</div>
+      </div>
+      <div class="controls">
+        <div class="ctl-row">
+          <div class="seg" role="group" aria-label="Capital tier">
+            <button type="button" data-cap="5" aria-pressed="false">$5</button>
+            <button type="button" data-cap="50" aria-pressed="false">$50</button>
+            <button type="button" data-cap="500" aria-pressed="false">$500</button>
+            <button type="button" data-cap="5000" aria-pressed="false">$5,000</button>
+            <button type="button" data-cap="50000" aria-pressed="false">$50,000</button>
+          </div>
+          <button type="button" class="reset" id="reset">Reset to defaults</button>
+        </div>
+        <div class="knobs">
+          <div class="knob"><label for="k-capital">Capital</label><output id="o-capital" for="k-capital"></output><input type="range" id="k-capital" min="0" step="1"></div>
+          <div class="knob"><label for="k-weight">Trade size, share of deployable cash</label><output id="o-weight" for="k-weight"></output><input type="range" id="k-weight" min="1" max="100" step="1"></div>
+          <div class="knob"><label for="k-turnover">Turnover, round trips a year</label><output id="o-turnover" for="k-turnover"></output><input type="range" id="k-turnover" min="0" max="50" step="0.1"></div>
+          <div class="knob"><label for="k-mid">Share price, mid</label><output id="o-mid" for="k-mid"></output><input type="range" id="k-mid" min="25" max="600" step="5"></div>
+        </div>
+        <div class="ctl-row">
+          <label class="pick">ETF
+            <select id="k-symbol">
+              <option>SPY</option><option>QQQ</option><option>IWM</option><option>TLT</option><option>IEF</option><option>GLD</option><option>XLE</option><option>XLF</option><option>XLK</option>
+            </select>
+          </label>
+          <span class="ctl-label" id="stress-label">Spread stress</span>
+          <div class="seg" role="group" aria-labelledby="stress-label">
+            <button type="button" data-stress="1" aria-pressed="false">1×</button>
+            <button type="button" data-stress="2" aria-pressed="false">2×</button>
+            <button type="button" data-stress="5" aria-pressed="false">5×</button>
+          </div>
+          <label class="check"><input type="checkbox" id="k-vix"> VIX above 25 (spread × 1.5)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k">Order size</span><span class="v" id="r-ticket"></span></div>
+      <div class="ro"><span class="k">Round trip</span><span class="v" id="r-total"></span></div>
+      <div class="ro"><span class="k">Round trip, basis points of the order</span><span class="v" id="r-bps"></span></div>
+      <div class="ro"><span class="k">Fees as a share of the round trip</span><span class="v" id="r-share"></span></div>
+      <div class="ro"><span class="k">Cost a year, share of capital</span><span class="v" id="r-year"></span></div>
+    </div>
+    <p class="callout" id="insight"></p>
+
+    <div class="tbl-wrap"><table id="legs" aria-label="Friction on the buy and sell legs"></table></div>
+
+    <div class="two">
+      <div class="chart" id="c-ticket">
+        <div class="chart-title"><h3>Round-trip cost by order size, basis points</h3>
+          <div class="legend"><span><i style="background:var(--s1)"></i>All friction</span><span><i style="background:var(--s2)"></i>Spread only</span><span><i class="band" style="background:var(--accent-wash)"></i>Rejected</span></div>
+        </div>
+      </div>
+      <div class="chart" id="c-capital">
+        <div class="chart-title"><h3>Cost a year by capital, % of capital</h3>
+          <div class="legend"><span><i style="background:var(--s1)"></i>At this trade size and turnover</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" aria-labelledby="h-proof">
+    <div class="sec-head">
+      <div class="eyebrow">02 · Proof</div>
+      <div>
+        <h2 id="h-proof">Published numbers, recomputed on this page</h2>
+        <p>Each row runs one purchase of 100% of deployable capital through the calculation above and sets it beside the figure in the experiment files. Buy-and-hold makes exactly one order, so its whole recorded cost is that purchase. At the defaults, the first row is the buy leg shown above.</p>
+      </div>
+    </div>
+    <div class="tbl-wrap"><table id="check" aria-label="Published costs against this calculator"></table></div>
+  </section>
+
+  <footer class="foot">
+    <div class="eyebrow">Sources and limits</div>
+    <ol>
+      <li>Port of <code>fdq/frictions/config.py</code> and <code>fdq/frictions/emulator.py</code>, with parameters from <code>config/friction_v1.yaml</code>, in <a href="https://github.com/ajaiupadhyaya/capitallimits">capitallimits</a>.</li>
+      <li>Checked against the repo's own emulator on 20,000 random fills, 20,000 order checks and all 1,462 fills from the three experiments. The largest difference was zero.</li>
+      <li>The spreads and fee minimums are configured assumptions, and the config calls the fees approximate. No real or paper fill in the repo calibrates them.</li>
+      <li>This page charges what <code>apply_fill</code> charges. On a full exit the backtest records the sell half-spread but does not deduct it from cash, so at the defaults a backtest pays 0.045¢ less than the round trip shown.</li>
+      <li>The annual cost multiplies one round trip at today's capital by turnover. It ignores compounding and assumes each round trip is the same size.</li>
+      <li>Fees apply to sales only. There is no commission and no market impact in this model.</li>
+    </ol>
+  </footer>
+</div>
+
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Liquidity Lab · BASIS · Ajai Upadhyaya</title>
+<meta name="description" content="An auditable model of a fund paying redemptions by selling illiquid assets: requests, gates, sale haircuts, quarterly accounting and explicit unfunded redemptions.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+html, body { margin: 0; }
+/* Layout: a term sheet. A narrow spec rail (labels, units, sources) beside a wide working column; controls sit directly above the chart they move. */
+:root {
+  --bg: #ffffff; --panel: #ffffff; --ink: #000000; --ink-2: #3d3d3d; --muted: #6b6b6b;
+  --rule: #e2e2e2; --axis: #000000; --accent: #160bff; --accent-wash: #eceaff;
+  --s1: #160bff; --s2: #000000; --s3: #8a8a8a; --s4: #c4c4c4;
+  --good: #006300; --bad: #c8102e;
+  --f-display: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-body: "Helvetica Neue", Helvetica, Arial, "Liberation Sans", sans-serif;
+  --f-mono: ui-monospace, Menlo, Monaco, "Liberation Mono", "Courier New", monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+h1, h2, h3 { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(30px, 4.6vw, 48px); line-height: 1.05; }
+h2 { font-size: 24px; line-height: 1.2; }
+h3 { font-size: 16px; }
+p { margin: 0; max-width: 66ch; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.eyebrow { font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+a { color: var(--accent); }
+
+/* Masthead: a contract-spec strip, the way an exchange lists a product */
+.mast { padding-block: 40px 28px; border-bottom: 1px solid var(--ink); display: grid; gap: 18px; }
+.mast .lede { color: var(--ink-2); font-size: 17px; }
+.spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--rule); margin: 0; }
+.spec div { padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); display: grid; gap: 2px; min-width: 0; }
+.spec dt { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.spec dd { margin: 0; font-family: var(--f-mono); font-size: 13px; }
+
+section { padding-block: 44px 8px; display: grid; gap: 20px; }
+.sec-head { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
+.sec-head .eyebrow { padding-top: 6px; }
+.sec-head > div { display: grid; gap: 8px; min-width: 0; }
+.sec-head p { color: var(--ink-2); }
+.body-grid { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+.body-grid > * { min-width: 0; }
+.rail { font-size: 12.5px; color: var(--muted); display: grid; gap: 12px; align-content: start; }
+.rail b { color: var(--ink-2); font-weight: 500; }
+
+/* Controls */
+.controls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.seg { display: inline-flex; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; width: fit-content; max-width: 100%; }
+.seg button { font: 500 13px var(--f-mono); padding: 7px 16px; background: transparent; color: var(--ink); border: 0; border-right: 1px solid var(--ink); cursor: pointer; }
+.seg button:last-child { border-right: 0; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.seg button:focus-visible, .knob input:focus-visible, .reset:focus-visible, .tbl-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg button:focus-visible { outline-offset: -3px; }
+.knobs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px 22px; }
+.knob { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: baseline; }
+.knob label { font-size: 12.5px; color: var(--ink-2); }
+.knob output { font: 500 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+.knob input { grid-column: 1 / -1; width: 100%; accent-color: var(--accent); margin: 2px 0 0; }
+.ctl-row { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.reset { font: 12px var(--f-mono); color: var(--accent); background: none; border: 0; padding: 4px 0; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* Readouts */
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); }
+.ro { padding: 14px 14px 14px 0; display: grid; gap: 4px; min-width: 0; align-content: start; }
+.ro + .ro { padding-left: 14px; border-left: 1px solid var(--rule); }
+.ro .v { font-family: var(--f-display); font-size: 28px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ro .k { font-size: 12px; color: var(--muted); }
+.ro .v.neg { color: var(--bad); }
+
+/* Charts */
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-title { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; align-items: baseline; margin-bottom: 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.legend i.line { height: 2px; width: 14px; border-radius: 0; }
+.tick { font: 11px var(--f-mono); fill: var(--muted); }
+.lbl { font: 500 11.5px var(--f-mono); fill: var(--ink); }
+.lbl2 { font: 11px var(--f-mono); fill: var(--ink-2); }
+.grid line { stroke: var(--rule); stroke-width: 1; }
+.baseline { stroke: var(--axis); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--bg); font: 12px var(--f-mono); padding: 8px 10px; border-radius: 3px; min-width: 150px; opacity: 0; transition: opacity .1s; z-index: 5; line-height: 1.5; }
+.tip b { font-weight: 500; }
+.tip .r { display: flex; justify-content: space-between; gap: 14px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.two > * { min-width: 0; }
+.note { font-size: 13px; color: var(--ink-2); }
+.callout { border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; font-size: 14px; color: var(--ink); max-width: 70ch; }
+.callout.warn { border-left-color: var(--bad); }
+
+/* Table */
+.tbl-wrap { overflow: auto; max-height: 390px; border-top: 1px solid var(--ink); }
+table { border-collapse: collapse; width: 100%; font: 12.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; font-family: var(--f-body); }
+thead th { font-weight: 500; color: var(--muted); position: sticky; top: 0; background: var(--bg); }
+tr.sum td { font-weight: 500; border-top: 1px solid var(--axis); }
+td.neg { color: var(--bad); }
+
+/* Heatmap */
+.hm { display: grid; grid-template-columns: 64px repeat(8, minmax(0, 1fr)); gap: 2px; font: 11.5px var(--f-mono); font-variant-numeric: tabular-nums; }
+.hm div { padding: 9px 2px; text-align: center; border-radius: 2px; }
+.hm .h { color: var(--muted); background: none; }
+.hm .c { color: var(--ink); }
+.hm .c.z { color: var(--muted); background: #f2f2f2; }
+.hm .c.cur { outline: 2px solid var(--ink); outline-offset: -2px; }
+.foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--ink); display: grid; gap: 10px; font-size: 12.5px; color: var(--ink-2); }
+.foot ol { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+
+.lc-band { background: var(--accent); color: #fff; margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.lc-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; padding-block: 14px; font-size: 13px; }
+.lc-nav a { color: #fff; text-decoration: none; }
+.lc-nav a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .sec-head, .body-grid, .two { grid-template-columns: 1fr; gap: 14px; }
+  .ro + .ro { border-left: 0; padding-left: 0; }
+  .ro { border-bottom: 1px solid var(--rule); }
+  .readouts { grid-template-columns: 1fr 1fr; border-bottom: 0; }
+  .hm { font-size: 10px; grid-template-columns: 34px repeat(8, minmax(0, 1fr)); gap: 1px; }
+  .hm div { padding: 8px 0; }
+  th, td { padding: 7px 8px; }
+  .tick, .lbl2 { font-size: 15px; }
+  .seg button { padding: 7px 10px; font-size: 12px; }
+  .lbl { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="lc-band"><div class="wrap">
+  <nav class="lc-nav" aria-label="Site">
+    <a href="/basis/003-where-credit-becomes-fragile">← BASIS No. 003: the full write-up</a>
+    <a href="/">ajaiupadhyaya.com</a>
+  </nav>
+</div></div>
+<div class="wrap">
+  <header class="mast">
+    <div class="eyebrow">Accounting model · prepared by AJ Upadhyaya · October 2026</div>
+    <h1>The liquidity lab: what a gate buys</h1>
+    <p class="lede">A deliberately small, auditable model of a fund paying redemptions by selling illiquid assets. Move the requests, the gate and the sale haircut, and every quarter's accounting updates. The calculation is the one from my Credit Observatory project, unchanged. It does not reproduce any particular fund's terms.</p>
+    <dl class="spec">
+      <div><dt>Unit</dt><dd>Initial NAV = 100</dd></div>
+      <div><dt>Period</dt><dd>Quarter</dd></div>
+      <div><dt>Gate basis</dt><dd>Initial NAV</dd></div>
+      <div><dt>Sale price</dt><dd>1 − haircut</dd></div>
+      <div><dt>Stops when</dt><dd>Requests paid or assets gone</dd></div>
+      <div><dt>Left out</dt><dd>Cash, debt, income, new requests</dd></div>
+    </dl>
+  </header>
+
+  <!-- ================= THE RUN ================= -->
+  <section id="run" aria-labelledby="h-run">
+    <div class="sec-head">
+      <div class="eyebrow">01 · The run</div>
+      <div>
+        <h2 id="h-run">When withdrawals meet illiquid assets</h2>
+        <p>One group of investors asks for its money back. The fund has no cash, so every dollar it pays comes from selling assets below book value, up to the gate each quarter.</p>
+      </div>
+    </div>
+    <div class="body-grid">
+      <div class="rail">
+        <div><b>Each quarter.</b> The fund pays the smallest of what is still requested, the gate, and what its remaining assets would fetch.</div>
+        <div><b>The sale.</b> Assets sold = cash paid ÷ (1 − haircut). Haircut loss = assets sold − cash paid.</div>
+        <div><b>The check.</b> Every quarter, 100 = assets left + redemptions paid so far + haircut losses so far.</div>
+      </div>
+      <div class="controls">
+        <div class="ctl-row">
+          <div class="seg" role="group" aria-label="Preset runs">
+            <button type="button" data-preset="default" aria-pressed="true">Default</button>
+            <button type="button" data-preset="slow" aria-pressed="false">Slower gate</button>
+            <button type="button" data-preset="out" aria-pressed="false">Assets run out</button>
+          </div>
+          <button type="button" class="reset" id="reset">Reset to default</button>
+        </div>
+        <div class="knobs">
+          <div class="knob"><label for="k-request">Redemption requests, % of NAV</label><output id="o-request" for="k-request"></output><input type="range" id="k-request" min="0" max="100" step="1"></div>
+          <div class="knob"><label for="k-gate">Quarterly gate, % of initial NAV</label><output id="o-gate" for="k-gate"></output><input type="range" id="k-gate" min="1" max="25" step="1"></div>
+          <div class="knob"><label for="k-haircut">Sale haircut, % below book</label><output id="o-haircut" for="k-haircut"></output><input type="range" id="k-haircut" min="0" max="75" step="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="readouts" aria-live="polite">
+      <div class="ro"><span class="k" id="r-quarters-k">Quarters simulated</span><span class="v" id="r-quarters"></span></div>
+      <div class="ro"><span class="k">Haircut losses, per 100</span><span class="v" id="r-loss"></span></div>
+      <div class="ro"><span class="k">Unpaid requests, per 100</span><span class="v" id="r-unpaid"></span></div>
+      <div class="ro"><span class="k">Book assets left, per 100</span><span class="v" id="r-assets"></span></div>
+      <div class="ro"><span class="k">Book assets behind each 100 of remaining claims</span><span class="v" id="r-cover"></span></div>
+    </div>
+
+    <div class="two">
+      <div class="chart" id="c-path">
+        <div class="chart-title"><h3>Book assets and unpaid requests</h3>
+          <div class="legend"><span><i class="line" style="background:var(--s1)"></i>Book assets</span><span><i class="line" style="background:var(--s2)"></i>Unpaid requests</span></div>
+        </div>
+      </div>
+      <div class="chart" id="c-stack">
+        <div class="chart-title"><h3>Where the initial 100 went</h3>
+          <div class="legend"><span><i style="background:var(--s1)"></i>Book assets</span><span><i style="background:var(--s2)"></i>Redemptions paid</span><span><i style="background:var(--s3)"></i>Haircut losses</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="callout" id="insight" aria-live="polite"></p>
+    <div class="tbl-wrap" id="tbl" tabindex="0" role="region" aria-label="Quarterly accounting table"></div>
+  </section>
+
+  <!-- ================= THE GATE ================= -->
+  <section id="gate" aria-labelledby="h-gate">
+    <div class="sec-head">
+      <div class="eyebrow">02 · The gate</div>
+      <div>
+        <h2 id="h-gate">Time is not capital</h2>
+        <p>Both charts below rerun your requests and haircut at every gate from 1% to 25%. A tighter gate stretches the timetable. It does not change the bill.</p>
+      </div>
+    </div>
+    <div class="two">
+      <div class="chart" id="c-time">
+        <div class="chart-title"><h3>Quarters needed, by gate</h3></div>
+      </div>
+      <div class="chart" id="c-bill">
+        <div class="chart-title"><h3>Total haircut loss per 100, by gate</h3></div>
+      </div>
+    </div>
+    <p class="callout" id="gate-insight"></p>
+    <p class="note">That flat line is an identity of this model, not an empirical result. There is no income or price recovery, so waiting cannot help. While assets last, the loss is requests × haircut ÷ (1 − haircut).</p>
+  </section>
+
+  <!-- ================= THE EDGE ================= -->
+  <section id="edge" aria-labelledby="h-edge">
+    <div class="sec-head">
+      <div class="eyebrow">03 · The edge</div>
+      <div>
+        <h2 id="h-edge">Where the assets run out</h2>
+        <p>Requests go unpaid once they exceed what the whole book can fetch: 100 × (1 − haircut). The gate does not move that line. Cells show unpaid requests per 100 of initial NAV, and the outlined cell is the closest to your settings.</p>
+      </div>
+    </div>
+    <p class="note">Across: redemption requests, % of NAV. Down: sale haircut.</p>
+    <div class="hm" id="hm" role="table" aria-label="Unpaid requests by redemption request and sale haircut"></div>
+  </section>
+
+  <footer class="foot">
+    <div class="eyebrow">Sources and limits</div>
+    <ol>
+      <li>Calculation: <code>simulate()</code> from <a href="https://github.com/ajaiupadhyaya/privatecredit/blob/main/frontend/domain.js">frontend/domain.js</a>, copied unchanged, which the project tests against <a href="https://github.com/ajaiupadhyaya/privatecredit/blob/main/src/models/liquidity_stress.py">src/models/liquidity_stress.py</a>. This page matches both.</li>
+      <li>The default run (30% requests, 10% gate, 15% haircut) reproduces the project's published result: 3 quarters, 5.29 of haircut losses, nothing unpaid, 64.71 of book assets left.</li>
+      <li>One redemption cohort. No existing cash, debt, income, new requests or price recovery. Gates apply to initial NAV. The simulator has no time limit, so a 1% gate can run for 100 quarters.</li>
+      <li>Redemptions are paid at book value with no NAV markdown, so in this model the whole haircut falls on the claims that remain.</li>
+      <li>Requests, gates and haircuts are inputs, not estimates. Nothing here is calibrated to a real fund or a real sale.</li>
+    </ol>
+  </footer>
+</div>
+
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

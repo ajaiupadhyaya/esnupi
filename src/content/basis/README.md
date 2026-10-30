@@ -1,6 +1,6 @@
 # BASIS issues
 
-Each weekly issue of BASIS is one `.mdx` file in this folder. It appears at
+Each issue of BASIS is one `.mdx` file in this folder. It appears at
 `/basis` (the issue list) and `/basis/<filename>` (the issue itself) as soon as
 it is committed and deployed. Nothing else needs editing.
 

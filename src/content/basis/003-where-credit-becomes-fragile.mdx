@@ -1,0 +1,136 @@
+export const meta = {
+  number: 3,
+  title: "Where credit becomes fragile",
+  date: "2026-10-30",
+  dek: "Three small studies of one question: a five-BDC basket, 50,000 synthetic loans and redemption-gate accounting, and what was left once the leakage was gone.",
+};
+
+My first credit model scored near-perfectly because the answers were in its inputs. The audited rebuild scores about 0.88 AUC on 10,103 held-out synthetic loans, and I stand on that number, but only as a calm-period number: 44% of the book's defaults fall in three months of 2020, the holdout contains none of them, and in an exploratory test through that shock the ranking falls to 0.54. A redemption gate has a similar limit. In my accounting model it changes when investors are paid, not what the selling costs.
+
+**[Open the liquidity lab →](/basis/credit-fragility/model.html)** Requests, gates and sale haircuts are sliders there, with the full quarterly accounting. The code is public: [creditrisk](https://github.com/ajaiupadhyaya/creditrisk) and [privatecredit](https://github.com/ajaiupadhyaya/privatecredit).
+
+## Summary
+
+- **What it is.** Three small studies joined under one question: a listed basket of five BDCs (a public proxy, from an unverified price snapshot), classification on 50,000 synthetic loans, and redemption-gate liquidity accounting.
+- **What happened.** The original loan model had near-perfect scores that could not be trusted. The rebuild uses eleven pre-outcome fields and one chronological holdout, and reports holdout AUCs of 0.877 and 0.882. These are synthetic classification results, not evidence of real-world default prediction.
+- **What it found.** Ranking is what survives, and only in calm periods. In an exploratory walk-forward I ran for this page, AUC is 0.84 to 0.87 in six calm test years and 0.54 in 2020. That synthetic year's realized loss of 8.44% is more than twice the 3.47% the Severe stress gives on the same loans. In the liquidity lab, a 15% haircut on 30% requests costs 5.29 per 100 of NAV at any gate.
+- **What it does not show.** Anything about real loans, real funds or current prices. Scores are not annual PDs, the cohort split is not a deployment backtest, the BDC prices are not current performance, and the macro table is excluded from every conclusion.
+
+## 1. Where the near-perfect scores came from
+
+The audit found supplied risk estimates and derived fields among the features, target encodings built before validation, and no clear line between training and holdout. It retired those scores, and I do not quote them here.
+
+To see the mechanism, I replayed it for this page: the same split and the same two model specifications, with one excluded group added back at a time.
+
+| Added to the eleven allowed fields | Logistic AUC | Forest AUC |
+| --- | --- | --- |
+| Nothing (the validated models) | 0.877 | 0.882 |
+| Supplied annual PD | 0.871 | 0.887 |
+| Supplied PD, LGD, EL, unexpected loss and RWA | 0.871 | 0.888 |
+| `survival_months` | 0.995 | 0.984 |
+| `recovery_rate`, blanks filled with 0 | 1.000 | 1.000 |
+| `loss_given_default`, blanks filled with 0 | 1.000 | 1.000 |
+
+The supplied risk estimates barely move the score: all five together add 0.006 to the forest. Outcome fields do the damage. `recovery_rate` and `loss_given_default` are blank for every loan that did not default and filled for every loan that did, so they are the label in another form. `survival_months` equals the term for every non-default and is shorter for 98.3% of defaults. This replays the mechanism on synthetic data. It is not a rerun of the retired code.
+
+The fix was dull: an explicit allowlist of eleven fields, preprocessing fitted on training rows only, no target encodings, one fixed holdout, both prespecified models reported, and nothing tuned on the holdout. Rerunning the pipeline for this page reproduced both models' AUC and Brier score exactly.
+
+## 2. What the honest rebuild scores
+
+The split is 39,897 training loans and 10,103 held-out loans from origination cohorts beginning March 2022. Splitting by origination cohort is not a deployment backtest, because outcome dates and observation horizons have not been validated.
+
+| Prespecified model | Holdout ROC AUC (95% interval) | Average precision | Brier score |
+| --- | --- | --- | --- |
+| Logistic regression | 0.877 (0.859 to 0.891) | 0.425 | 0.0754 |
+| Random forest | 0.882 (0.864 to 0.894) | 0.439 | 0.0649 |
+| Constant at the training default rate | n/a | n/a | 0.0773 |
+
+These are synthetic classification results, not evidence of real-world default prediction. The intervals come from 200 bootstrap resamples of the holdout, so they describe holdout sampling only. Read average precision against the holdout default rate of 7.73%. Lower Brier is better.
+
+Ranking is strong. Levels are not. Logistic regression barely beats a constant on Brier score. Mean scores are 21.2% for logistic regression and 17.7% for the forest against an observed 7.73%, and both models overstate in all eight calibration bins.
+
+![Mean score exceeds the observed default-flag rate in all eight bins for both models](/basis/credit-fragility/calibration.svg)
+
+These scores are not annual PDs. The target is a default flag over varied loan lifetimes, and the flag rate runs from 3.3% on 12-month loans to 22.4% on 120-month loans. A longer loan has more time to default.
+
+## 3. The shock the holdout cannot see
+
+Of the 6,950 defaults in the synthetic book, 3,065 (44.1%) are dated April to June 2020. No other month has more than 51. All 3,065 sit in the training window, where they are 49.7% of defaults. Count them as non-defaults and the training default rate falls from 15.46% to 7.78%, almost exactly the holdout's 7.73%. The models learned a level that includes a shock the holdout never had.
+
+The validated split cannot test that shock, because it divides loans by origination date. So I ran a walk-forward. Each January I take the loans live on that date (originated, not yet matured, not yet defaulted), train the same forest on earlier years' outcomes only, and score who defaults within the year, using the same eleven fields. This is exploratory: it is my design, it is not part of the project's validated outputs, and it leans on default dates the project has not validated.
+
+![Forest AUC is 0.84 to 0.87 in calm test years and 0.54 in 2020, and the supplied annual PD falls the same way](/basis/credit-fragility/walk-forward.svg)
+
+1. **Ranking breaks in the shock.** Forest AUC is 0.844 to 0.869 in the six calm years and 0.543 in 2020 (bootstrap interval 0.533 to 0.553). The supplied annual PD needs no training and shows the same fall, from 0.868 to 0.880 down to 0.548.
+2. **Ratings stop separating.** Live AA loans defaulted at 0.07% in 2019 (1 of 1,508) and 14.3% in 2020, above BBB's 13.5%. CCC went from 13.7% to 24.8%.
+3. **Levels miss in both directions.** The forest scored 2020 at a mean of 1.8%, and 15.3% of live loans defaulted. With the shock in its training data it scored 2021 at 5.8%, and 2.0% defaulted.
+4. **The Severe stress sits below the book's own shock.** Base lands close to what calm years realized (0.87% to 1.16% of live exposure). Severe does not reach 2020.
+
+| Case | PD multiple | LGD add | Loss, whole book | Loss, loans live January 2020 |
+| --- | --- | --- | --- | --- |
+| Base | 1.0× | none | 1.17% | 1.01% |
+| Adverse | 1.5× | 10 points | 2.08% | 1.80% |
+| Severe | 2.5× | 20 points | 4.02% | 3.47% |
+| Realized in 2020 (synthetic) | 8.1× supplied PD | n/a | n/a | 8.44% |
+
+The three scenarios are expected loss from the supplied synthetic annual PD and LGD, kept separate from classifier scores, and their shocks are illustrative assumptions, not calibrated forecasts.
+
+In April to June 2020, 14.9% of live loans defaulted, and every rating grade landed between 11.5% and 18.8%. A wave that flat looks written into the synthetic data, and I would not expect it from a real crisis. So I do not read 0.54 as how any real model behaves. I read it as a limit: the 0.88 was earned on cohorts with no shock in them, and it says nothing about one.
+
+## 4. The market lens
+
+Listed BDCs connect private lending to public equity, so their prices move on borrowing, distributions, discount rates and sentiment as well as credit. The basket is a liquid proxy, not a measure of private loan marks. It holds ARCC, FSK, MAIN, OBDC and PSEC at equal weight, rebalanced daily, on 1,680 common dates from 18 July 2019 to 24 March 2026. The audit replaced an earlier index that averaged nominal share prices.
+
+![In the unverified snapshot the five-BDC basket drew down 54.2 percent between 27 December 2019 and 23 March 2020](/basis/credit-fragility/drawdown.svg)
+
+In this snapshot the basket fell 54.15% from 27 December 2019 to 23 March 2020, a span of 87 days, and regained its peak on 10 February 2021. At month ends the same fall reads 41.1%. The snapshot is unverified: download times and price-adjustment settings were not recorded, so this is neither a verified return nor current performance, and I quote no return from it.
+
+The loans are synthetic, so the overlap between this fall and the April to June default wave says nothing about timing. The bundled macro table is excluded here and everywhere else on this page, because its original loader silently substituted synthetic data when the real feed was unavailable.
+
+## 5. The liquidity lab
+
+Initial NAV is 100. Each quarter the fund pays the smallest of what is still requested, the gate, and what its remaining assets would fetch. Assets sold equal cash paid divided by (1 − haircut). There is no existing cash, debt, income, new requests or price recovery. The audit fixed an earlier version that multiplied payouts by the sale price and overpaid final requests.
+
+The default run is 30% requests, a 10% gate and a 15% haircut, and the lab reproduces the project's published result.
+
+| Quarter | Paid | Assets sold | Haircut loss | Assets left | Requests unpaid |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 10.00 | 11.76 | 1.76 | 88.24 | 20.00 |
+| 2 | 10.00 | 11.76 | 1.76 | 76.47 | 10.00 |
+| 3 | 10.00 | 11.76 | 1.76 | 64.71 | 0.00 |
+| Total | 30.00 | 35.29 | 5.29 | 64.71 | 0.00 |
+
+![With 30 percent requests and a 15 percent haircut, gates of 5, 10 and 25 percent all end at 64.71 of book assets](/basis/credit-fragility/gates.svg)
+
+1. **A gate moves timing, not loss.** Gates of 5%, 10% and 25% take six, three and two quarters and all cost 5.29. While assets last, the loss is requests × haircut ÷ (1 − haircut). This is an identity of the model, not an empirical result: with no income or price recovery, waiting cannot help.
+2. **Holders who stay carry the loss.** Redeemers receive their 30 in full. After quarter three, 64.71 of book assets stands behind 70 of remaining claims, or 92.44 per 100. That follows from paying at book value with no NAV markdown, and a real fund's terms would differ.
+3. **Assets run out only under large requests or deep haircuts.** Requests go unpaid once they exceed 100 × (1 − haircut). At 30% requests that takes a haircut above 70%. At 100% requests and a 50% haircut, 50 is paid, 50 stays unpaid and assets reach zero. The gate does not move that line.
+
+The haircut drives the bill, and nothing in this project estimates it. The 54% equity drawdown is not a loan sale haircut.
+
+Read together, the three studies sketch a chain without measuring it. A listed proxy can reprice within weeks, a loan model's ranking can say little when defaults are common, and a fund that has to sell turns a price gap into a realized loss for those who stay. Each link is a proxy, a synthetic result or an accounting identity, and nothing here measures the chain end to end.
+
+## 6. Limits
+
+| Limit | What it means here |
+| --- | --- |
+| The loans are synthetic | The original listing and license were not recorded. AUCs show method, not real-world predictive ability |
+| Scores are not annual PDs | The target is a flag over varied lifetimes. Stress uses supplied annual PD separately |
+| The cohort split is not a deployment backtest | 18.4% of training defaults are dated on or after the cutoff. 19,350 maturity dates stop at 31 December 2024 while default dates run to September 2033, and 662 defaults are dated after their stated maturity |
+| The walk-forward is exploratory | One shock, unvalidated dates, my design |
+| The BDC snapshot is unverified | Not current performance and not a total-return backtest. Five fixed names, with survivorship bias |
+| The macro table is excluded | It supports no conclusion on this page |
+| Retired work is not evidence | The legacy 600-loan fragility track, old outputs, notebooks and dashboard are not used here |
+| The liquidity model is minimal | One redemption cohort, gates on initial NAV, and no particular fund's terms |
+
+## 7. What I'd do next
+
+1. **Put a shock in the holdout.** Rerun on data with a recorded license and validated observation dates, with a pre-registered test window that contains a stress period.
+2. **Report by regime.** Show ranking and calibration for calm and stress separately, so a calm-period AUC cannot stand in for both.
+3. **Give the lab a balance sheet.** Add cash, credit lines, income and a NAV markdown rule, then test whether a gate ever changes the loss and not only the timing.
+
+## Sources
+
+Loan study: [creditrisk](https://github.com/ajaiupadhyaya/creditrisk), its [audit](https://github.com/ajaiupadhyaya/creditrisk/blob/main/AUDIT.md), [validated report](https://github.com/ajaiupadhyaya/creditrisk/blob/main/outputs/validated/REPORT.md) and [summary.json](https://github.com/ajaiupadhyaya/creditrisk/blob/main/outputs/validated/summary.json). Market and liquidity: [privatecredit](https://github.com/ajaiupadhyaya/privatecredit), its [audit](https://github.com/ajaiupadhyaya/privatecredit/blob/main/docs/AUDIT.md), [research snapshot](https://github.com/ajaiupadhyaya/privatecredit/blob/main/dist/research.json), [domain.js](https://github.com/ajaiupadhyaya/privatecredit/blob/main/frontend/domain.js) and [liquidity_stress.py](https://github.com/ajaiupadhyaya/privatecredit/blob/main/src/models/liquidity_stress.py). Background cited by the project: [SEC Investor.gov on publicly traded BDCs](https://www.investor.gov/introduction-investing/investing-basics/investment-products/closed-end-funds/publicly-traded-business-development-companies-bdcs) and [scikit-learn on data leakage](https://scikit-learn.org/stable/common_pitfalls.html).
+
+This is a method study on synthetic loans and an unverified price snapshot. It is not a view on any fund, lender or market, and it is not a recommendation. The leak replay and the walk-forward were run for this page from the committed data and are not in the project's validated outputs. The walk-forward design, the reading of the 2020 shock and the lab's inputs are mine to argue with.

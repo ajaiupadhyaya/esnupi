@@ -1,0 +1,130 @@
+export const meta = {
+  number: 5,
+  title: "OhCamel: what a passing risk test proves",
+  date: "2026-10-30",
+  dek: "Jane Street's Incremental earns its keep at scale. A VaR that passes nine of nine crisis tests proves less than it sounds.",
+};
+
+OhCamel's 95% Value at Risk passes its joint coverage test in all nine runs across three real crises, and that pass proves less than it sounds. The equal-weighted estimator took 10 breaches in 21 sessions in the COVID crash, the coverage test would accept any count from 10 to 25 on that window, and at 99% the same battery rejects five of nine. The engine underneath is a real gain at 400 names and, in seconds, close to irrelevant at 10.
+
+**[Open the live site →](https://ohcamel.ajaiupadhyaya.com)** The public site runs its own VaR models. This page covers the OCaml engine's three estimators, and the crisis table reproduces from the [public repo](https://github.com/ajaiupadhyaya/OhCamel).
+
+## Summary
+
+- **What it is.** A real-time risk and limits engine in OCaml, built on Jane Street's Incremental. Exposure, VaR, expected shortfall and limit breaches are nodes in a dependency graph, updated by what changed and not by a timer.
+- **What the graph buys.** A tick reaches 25 to 26 nodes at any book size. At 400 names that costs 0.50 ms against 80 ms for a full recompute, a 160-fold gap. At 10 names it is 20 µs against 73 µs, which nobody would notice.
+- **What the test found.** Across the global financial crisis (GFC), COVID and the 2022 rate shock, the joint test rejects none of nine runs. The duration test rejects two, both on COVID. The decay-weighted EWMA estimator halves the worst COVID burst from 10 breaches to 5.
+- **What it does not show.** It does not show the number holds in a crisis. The coverage test has little power, it ignores how far a breach goes, and the pass depends on the 95% threshold and on where the sample stops. This checks a risk model on a fixed test book, not a trading result.
+
+## 1. A graph in place of a loop
+
+Most risk systems poll: a timer fires and the process recomputes the whole book. The number is as old as the last timer tick, and the cost scales with the book and not with the change. OhCamel treats risk as a dependency graph: inputs are cells, everything derived is a node with declared edges, and a tick recomputes only what sits downstream of the cell it set.
+
+## 2. What that buys
+
+| Names | Nodes in the graph | Nodes a tick reaches | Heap words per tick, graph | Heap words per tick, full recompute |
+| --- | --- | --- | --- | --- |
+| 10 | 63 | 25.6 | 9.3k | 63k |
+| 100 | 342 | 25.2 | 45k | 5.0M |
+| 400 | 1,272 | 26.0 | 181k | 79M |
+
+![A tick through the graph costs 20 microseconds at 10 names and 0.50 milliseconds at 400, while a full recompute costs 73 microseconds and 80 milliseconds](/basis/ohcamel-risk/tick-cost.svg)
+
+The baseline is a poll-and-recompute using the same pure functions as the graph, so the gap is incrementality and not a slower routine.
+
+1. **Reach is flat. Cost is not.** Nodes stay at 25 to 26 while time per tick goes from 20 µs to 93 µs to 502 µs. Some nodes a tick reaches scale with the book: weights are O(n), the portfolio return series is O(n·w), and the Euler risk decomposition is O(n²).
+2. **The gain is one matrix.** Covariance is O(n²·w), the most expensive thing the engine computes. It depends only on return windows, so a price tick cannot reach it, and a test asserts a recomputation count of zero. The baseline rebuilds it on every event, which is why the gap widens from 3.6 times at 10 names to 160 times at 400. The baseline omits the second, EWMA matrix, so it understates a true full recompute.
+3. **Scale decides whether this matters.** At 400 names a full recompute caps the engine near 12 events a second, where the graph clears about 2,000. On the six-name demo run the graph avoids 38.4% of node recomputations. A small book gets freshness and a checked dependency structure more than it gets speed.
+4. **The saving is specific to ticks.** On a bar close the return windows change and the graph rebuilds both covariance matrices. The benchmark does not measure that event.
+
+## 3. The test
+
+A 95% VaR is a loss the book should exceed on about 5% of days, with those days scattered. The battery scores that claim with a rolling 60-day window. Each forecast sees only the 60 sessions before the day it is scored on, and a test rebuilds those windows independently to prove it.
+
+Historical reads the empirical tail, flat is a normal VaR with equal weights, and EWMA is the same formula with weights decaying at λ = 0.94, an effective sample of about 31 sessions against 60.
+
+The data is adjusted daily closes committed to the repo: GFC (July 2007 to December 2009), COVID (June 2019 to December 2020) and the rate shock (June 2021 to December 2022). The test book is the engine's six-name synthetic demo book, long technology and financials, short energy, at constant weights. It is a stress input, not a track record.
+
+Kupiec's test counts breaches. Christoffersen's Markov test asks whether a breach predicts one the next day. The joint test combines those two. The duration test fits a Weibull to the waits between breaches. The burst is the most breaches in any 21 sessions. My Python port of the battery reproduces all nine rows of the engine's table at the precision it prints. Placement p is mine (section 4).
+
+| Window | Estimator | Breaches (expected) | Joint p | Duration p | Burst | Placement p | Worst day ÷ VaR |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| GFC | Historical | 25 (28.5) | 0.79 | 0.75 | 5 | 0.13 | 2.07× |
+| GFC | Flat | 27 (28.5) | 0.79 | 0.23 | 5 | 0.18 | 2.35× |
+| GFC | EWMA | 34 (28.5) | 0.59 | 0.22 | 5 | 0.44 | 2.27× |
+| COVID | Historical | 18 (17.0) | 0.19 | **0.016** | 8 | **0.0002** | 2.95× |
+| COVID | Flat | 22 (17.0) | 0.073 | **0.0033** | 10 | **0.000006** | 2.74× |
+| COVID | EWMA | 23 (17.0) | 0.19 | 0.34 | 5 | 0.41 | 1.60× |
+| 2022 | Historical | 24 (17.0) | 0.25 | 0.71 | 4 | 0.95 | 1.50× |
+| 2022 | Flat | 22 (17.0) | 0.45 | 0.53 | 4 | 0.88 | 1.43× |
+| 2022 | EWMA | 22 (17.0) | 0.45 | 0.28 | 4 | 0.88 | 1.24× |
+
+The joint test rejects nothing here, though it can fail: on synthetic series with known answers it rejects three of nine. The duration test rejects two rows, both COVID. Flat's fitted shape is 0.65, and a shape below 1 means a breach makes the next one arrive sooner than chance.
+
+![Between 21 February and 16 March 2020 the flat VaR was breached 10 times, ending with a 7.07% loss at 2.7 times the forecast, while EWMA VaR moved faster](/basis/ohcamel-risk/covid-crash.svg)
+
+Going into that burst the flat window's daily volatility was 0.69%. Over the 21 sessions it ran at 3.09%, 4.5 times higher. That is a real version of the 4× regime break the project's synthetic test was built around. The same measure for the GFC burst is 1.57% to 2.90%, or 1.9 times.
+
+## 4. A null for the burst
+
+The repo compares the burst with about 1.1 breaches expected. That is the mean for one fixed 21-session window. The reported number is the maximum over every window in the series, and a maximum runs higher. The project labels the burst as not a hypothesis test, and without a null it cannot be one.
+
+So I built the null. For each run, place its breaches at random across its sessions and record the worst 21-session count. Seeded, 400,000 draws per row, and 4 million for the two COVID rows with the rarest tails. The typical maximum is near 4.
+
+![Under random placement a maximum of four or five breaches in 21 sessions is common, while ten almost never occurs](/basis/ohcamel-risk/burst-null.svg)
+
+The GFC's five breaches between 15 September and 7 October 2008 have a placement p of 0.13 to 0.44. The engine's docs read that run as a cluster the tests failed to see. On this null it is ordinary, and the GFC reads as a pass at 95% on this book. COVID is different. Flat's ten comes up about 5.5 times in a million placements, and historical's eight about 1.6 times in 10,000. EWMA's five is unremarkable at 0.41.
+
+## 5. Why the pass is weak evidence
+
+1. **The coverage test has little power.** On 339 sessions Kupiec accepts any count from 10 to 25, a breach rate from 3.0% to 7.4%. If the true rate were 7.5%, half again too high, it would reject only 48% of the time. On the 570-session GFC window, 69%.
+2. **It counts and does not measure.** Seven of the flat VaR's 22 breaches in the COVID window were at least twice the forecast. A normal model would expect about 0.2.
+3. **95% is a mild bar.** I reran the battery at 99%. It rejects five of nine, including all three COVID rows. Flat took 12 breaches against 3.4 expected (joint p = 0.0009, Basel zone red). The GFC passes all three.
+4. **The verdict moves with the stopping date.** Stop the test on any session from 12 March to 23 April 2020 and the joint test rejects the flat VaR, with p as low as 0.018. By year end it is back at 0.073. EWMA never goes below 0.05.
+
+![The flat VaR's joint p-value falls below 0.05 from 12 March to 23 April 2020 and recovers to 0.073 by year end, while EWMA stays above 0.05](/basis/ohcamel-risk/stop-date.svg)
+
+## 6. The pass does not rest on the hedge
+
+The engine's docs credit part of the survival to the book being hedged. The short energy leg did offset the long leg on 22 of that leg's 25 worst GFC days. Removing it still does not break the pass.
+
+| Book | Joint rejected, 95% | Joint rejected, 99% | Duration rejected, 95% |
+| --- | --- | --- | --- |
+| Test book, hedged | 0 of 9 | 5 of 9 | 2 of 9 |
+| Long leg alone | 0 of 9 | 6 of 9 | 2 of 9 |
+| Same names, all long | 2 of 9 | 3 of 9 | 2 of 9 |
+| Six names, equal-weight long | 2 of 9 | 4 of 9 | 3 of 9 |
+| Each name alone | 5 of 54 | 20 of 54 | 12 of 54 |
+
+Chance at a 5% level would give about 0.45 of 9 and 2.7 of 54 if runs were independent, and they are not. The threshold moves the result more than the book does, and the joint test at 95% rarely rejects anything.
+
+## 7. What EWMA bought and what it cost
+
+On COVID, EWMA cuts the burst from 10 to 5, moves the Markov p from 0.052 to 0.27, and moves the duration p from 0.0033 to 0.34. That carries past the test book: across the six names alone on COVID, the duration test rejects flat five times and EWMA none. Those names are correlated, so that is not six independent confirmations.
+
+On the GFC, EWMA takes 34 breaches against flat's 27, and it has its own worst day. A calm stretch pulled its VaR down to 0.81% by 3 September 2020, and a 4.15% loss arrived at 5.1 times the forecast, against 3.3 times for flat. Neither estimator dominates, which is why the engine reports both.
+
+## 8. Limits
+
+| Limit | What it means |
+| --- | --- |
+| One book, three windows | Six survivors at constant weights, chosen with hindsight. No delisted name or failed bank is in it, so it cannot show what a real 2008 book faced. |
+| Data source | Yahoo's keyless, unofficial chart endpoint. The closes are committed, so the table reproduces, but the source has no contract. |
+| Correlated runs | Rows share the same days. At a Bonferroni cut of 0.0056, only flat's COVID duration test and the two COVID burst nulls survive. |
+| Post hoc work | The placement null, the 99% rerun and the other books came after I had seen the project's table. |
+| Few breaches at 99% | 3.4 to 5.7 expected per run, so those chi-square p-values are rough. Historical VaR at 99% on 60 sessions is just the worst day in the window. |
+| Timings | An Apple M2 Pro, four runs on a busy machine, moving 0.6% to 3.3%. The repo's production latency baseline has no row yet. |
+| Older table in the repo | The engine's docs quote an older run. Its graph numbers still match within 5%. Its recompute numbers do not: 53 ms and 108 times there, 80 ms and 160 times here, with allocation up by a third. The baseline got slower. The graph did not get faster. |
+
+## 9. What I'd do next
+
+1. **Put the burst null in the battery.** It turns a labelled non-test into a p-value.
+2. **Backtest expected shortfall,** so the size of a breach has a test.
+3. **Report 99% beside 95%.** They disagree on five of nine rows.
+4. **Widen the test set** with more books, delisted names and longer windows.
+
+## Sources
+
+Code and method: [OhCamel on GitHub](https://github.com/ajaiupadhyaya/OhCamel), [docs/engine.md](https://github.com/ajaiupadhyaya/OhCamel/blob/main/docs/engine.md), [docs/quant_notes.md](https://github.com/ajaiupadhyaya/OhCamel/blob/main/docs/quant_notes.md), [docs/CHARTER.md](https://github.com/ajaiupadhyaya/OhCamel/blob/main/docs/CHARTER.md), [lib/var_backtest.ml](https://github.com/ajaiupadhyaya/OhCamel/blob/main/lib/var_backtest.ml), [bench/bench_graph.ml](https://github.com/ajaiupadhyaya/OhCamel/blob/main/bench/bench_graph.ml) and the committed closes in [docs/crisis](https://github.com/ajaiupadhyaya/OhCamel/tree/main/docs/crisis). Runtime: [Incremental](https://github.com/janestreet/incremental). Tests as cited in the repo: Kupiec (1995), Christoffersen (1998), Christoffersen and Pelletier (2004).
+
+This is a check on a risk model and says nothing about whether any strategy makes money. The project's charter says the deliverable is a defensible number, never a profitable one. I would defend the 95% number as a day-to-day gauge outside a volatility jump, read beside EWMA. I would not defend it as a crisis bound. The extensions and that judgement are mine to argue with.

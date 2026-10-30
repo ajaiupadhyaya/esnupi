@@ -60,7 +60,7 @@ export default function App() {
                   </Suspense>
                 )}
               />
-              {/* BASIS, the weekly market monitor: issue list and one issue per slug. */}
+              {/* BASIS, the research notes: issue list and one issue per slug. */}
               {["/basis", "/basis/:slug"].map((path) => (
                 <Route
                   key={path}

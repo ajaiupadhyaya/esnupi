@@ -21,7 +21,7 @@ const BASE = SITE_OWNER_DOMAIN.replace(/\/$/, "");
 /** Indexable public routes (used for sitemap + internal SEO nav). */
 export const SITE_INDEXABLE_ROUTES = [
   { path: "/", label: `${SITE_OWNER_FULL_NAME} home` },
-  { path: "/basis", label: `BASIS, a weekly market monitor by ${SITE_OWNER_FULL_NAME}` },
+  { path: "/basis", label: `BASIS, research notes by ${SITE_OWNER_FULL_NAME}` },
   { path: "/gallery", label: `${SITE_OWNER_FULL_NAME} photography gallery` },
   { path: "/film", label: `${SITE_OWNER_FULL_NAME} film photography` },
   { path: "/photolab", label: `${SITE_OWNER_FULL_NAME} film developing lab` },
@@ -45,8 +45,8 @@ export function resolveSeoMeta(pathname: string): SeoMeta & { canonicalUrl: stri
 
   if (normalized === "/basis" || normalized.startsWith("/basis/")) {
     return {
-      title: `BASIS — Weekly Market Monitor | ${SITE_OWNER_FULL_NAME}`,
-      description: `BASIS is a weekly market monitor by ${SITE_OWNER_FULL_NAME}: rates, credit, equities, and what moved.`,
+      title: `BASIS — Research Notes | ${SITE_OWNER_FULL_NAME}`,
+      description: `BASIS is a set of research notes by ${SITE_OWNER_FULL_NAME}: models, experiments, and what the numbers said.`,
       canonicalPath: normalized,
       ogType: "website",
       canonicalUrl: canonicalUrl(normalized),

@@ -1,0 +1,103 @@
+export const meta = {
+  number: 4,
+  title: "PulseAI: two-thirds of Claude Code's mentions were boilerplate",
+  date: "2026-10-30",
+  dek: "A measurement problem: count text without asking who wrote it, and you measure the tool's own footprint.",
+};
+
+PulseAI is my pipeline for measuring public sentiment toward large language models from Hacker News, GitHub and news RSS. On its first live corpus, 18.6% of model mentions were boilerplate: commit trailers, issue-template placeholders and bot pull requests. Removing them cut Claude Code's apparent mention count from 85 to 28 and moved its sentiment from −0.06 to −0.35. Count text without asking who wrote it, and you measure the tool's own footprint.
+
+**[Read the code on GitHub →](https://github.com/ajaiupadhyaya/slopsentimentmonitor)**
+
+## Summary
+
+- **What it is.** A pipeline that collects public text, strips boilerplate, detects 33 tracked models by alias, and scores sentiment per model and document. Phase 1 is built; Reddit is built but dormant.
+- **What happened.** The first live corpus, which the git history puts on August 6, 2026, counted machine attribution as public discussion. A cleaning step now runs first.
+- **What it found.** Claude Code lost 67% of its mentions, far above the 18.6% corpus rate, and its sentiment fell about 0.29 on a scale from −1 to 1.
+- **What it does not show.** The repo holds no corpus, so this one snapshot cannot be recomputed, and it documents one model only. −0.35 is not a reading of public opinion on Claude Code, and nothing here ranks models.
+
+## 1. What the cleaner removes
+
+Three classes of text carry model names without carrying an opinion.
+
+| Class | Example from the repo | Rule |
+| --- | --- | --- |
+| Attribution trailers | `Co-Authored-By: Claude Opus 5`, `Generated with [Claude Code]` | Seven line-start patterns |
+| Template placeholders | `<!-- Example: GPT5.5 high, Claude Opus 4.8 xhigh -->` | All HTML comments removed |
+| Bot-authored documents | dependabot, release-please | 18 named accounts plus any login ending in `[bot]`; no mentions recorded |
+
+A trailer records which assistant touched a commit, not what anyone thinks of it. A placeholder is the template author's example, present whether or not the reporter used those models. A fixture titled `Enable eslint max-depth rule and fix infringements`, whose only model reference is a trailer, is a Claude Opus mention before cleaning and nothing after. A line of human praise above a trailer survives.
+
+## 2. The one snapshot
+
+| Measure | Uncleaned | Cleaned | Change |
+| --- | --- | --- | --- |
+| Claude Code mentions | 85 | 28 | −57 (−67%) |
+| Claude Code sentiment | −0.06 | −0.35 | about −0.29 |
+
+A mention is one row per document and model, so ten references in one document count once. Sentiment is a confidence-weighted mean. The repo does not split the 18.6% by class.
+
+Count and sentiment are contaminated differently. The eslint fixture holds no signal words for the repo's lexicon analyzer, so it adds one mention and zero weight. `Fix the cache invalidation bug.` scores −0.20, charged to the model that signed the commit. The optional RoBERTa analyzer would give a neutral commit real weight and pull the average toward zero. The repo does not record which analyzer produced −0.06 and −0.35, so I cannot say which channel moved the number. Its own config labels the lexicon "lower accuracy".
+
+## 3. Precision is designed, not measured
+
+Every metric is a count of detector matches, so detection favors precision over recall. Five guards sit over 88 aliases.
+
+1. **Longest match.** `Claude Code` beats `Claude`.
+2. **Word boundaries.** `Casanova` is not Nova.
+3. **Case, on 9 aliases.** `grok` the verb is not Grok.
+4. **Context gating, on 12 aliases.** `Gemini` needs one of 42 AI terms in the document, with its own matches masked so a name cannot vouch for itself.
+5. **A 14-entry blocklist.** Claude Monet is not a language model.
+
+All 12 must-not-match strings in the tests hold when I run them. But the repo has no labeled sample, so precision and recall are unmeasured. Strings I wrote get through at 0.70, the confidence of a real single mention.
+
+| My test string | Detected as | Why |
+| --- | --- | --- |
+| `Claude Monet's water lilies` | Claude | The blocklist compares `monet's`, not `monet` |
+| `These two arguments do not cohere.` | Cohere | Canonical name, any case, no gate |
+| `Their moonshot factory closed the project.` | Kimi | `moonshot` is an ungated alias |
+| `She's a Gemini and a fashion model.` | Gemini | `model` is a context term |
+| `Grok the borrow checker first.` | Grok | Case fails at a sentence start |
+
+These show the shape of the gap, not its size: with no corpus I cannot say how often they occur.
+
+## 4. Sentiment per document and model
+
+A comparison post holds two opinions, so PulseAI keys sentiment on (document, model) and scores the text within 320 characters of the mention. That works when subjects sit far apart: the pipeline test puts 12 filler sentences between them and gets +0.78 for ChatGPT and −0.85 for Gemini.
+
+It fails on a short post. The repo's comparison fixture is 158 characters, praising Claude and panning Gemini. Its unit test passes a 60-character window and the two separate. The pipeline uses 320, both windows cover the whole post, and both models get −0.33. The windows are identical text, so any analyzer would return one score.
+
+![In one post praising Claude and panning Gemini, the scores separate at a 60-character window and are both minus 0.33 at the pipeline default of 320](/basis/pulseai/comparison-window.svg)
+
+Windows stop sharing text only when mentions are more than 640 characters apart. A second gap: the README describes a window around each model's mentions, but the pipeline passes only the first occurrence, so later mentions outside it are not read.
+
+## 5. Weighting and momentum
+
+Each average is weighted by detection confidence times analyzer confidence, and every figure ships with its mention count. Detection confidence is 0.70 for one occurrence, 0.85 for two and 0.90 for three, times the alias weight, so a bare `sonnet` (weight 0.8) scores 0.56. Lexicon confidence is 0.11 for one strong word, 0.59 for a short run of praise, and 0 with no signal words.
+
+Momentum compares mentions with the equal window before, capped at ±1, and returns null when the prior window is empty. In the tests, 150 against 100 is +0.5, 1,000 against 10 reads +1.0 though the raw ratio is +99, and 50 against 0 is null: growth from zero is unknown, not infinite. It is a count ratio, so it inherits every count problem above. The repo records no momentum figure for the snapshot.
+
+## 6. Limits
+
+| Limit | Detail |
+| --- | --- |
+| One snapshot, no corpus | First commit 11:23, the numbers 13:06, both August 6, 2026. No data or run log is committed, and 28 mentions is a small base for a mean. |
+| Denominator unrecorded | Corpus size and total mentions are undocumented. The README says "all model mentions"; a test docstring says "first live GitHub corpus". I cannot settle which. |
+| −0.35 is not opinion | The GitHub collector's docstring says sentiment there shows up as "concrete complaints rather than opinion". The source mix of the 28 is unrecorded. |
+| The sample shares the bias | `"claude code"` is one of 11 GitHub search terms and sits inside the `Generated with [Claude Code]` footer, so a footer can be why a document was fetched. Cleaning fixes the count, not the sample. |
+| Counts are capped | The default is 200 documents per source, and Hacker News has 384 query slots in a fixed order, so late terms can be cut off. 85 is not a volume. |
+| Shapes, not authorship | An agent-written pull request under a human login with no trailer passes as human. I read 18.6% as what these rules caught, probably a floor. |
+| No ranking | Numbers exist for one model, Reddit is dormant, and Anthropic publishes no RSS feed. |
+
+## 7. What I'd do next
+
+1. **Log a run manifest.** Documents, mentions, analyzer and boilerplate class by source, so 18.6% can be recomputed.
+2. **Fix the window.** Pass every occurrence and cut the span at the next model's mention.
+3. **Measure precision.** Hand-label a sample and add the strings above to the false-positive tests.
+4. **Publish the footprint.** Report each model's count with and without boilerplate.
+
+## Sources
+
+[PulseAI on GitHub](https://github.com/ajaiupadhyaya/slopsentimentmonitor): `README.md`, `src/pulseai/pipeline/`, `src/pulseai/analytics.py`, `tests/`, and commit `a4636fc`, whose message states the same figures. Fixture scores come from running the repo's code offline on its own test strings.
+
+This is a note on one early snapshot of my own project, not a study of how anyone feels about a model. The test strings, the reading of 18.6% as a floor and the fixes are mine, and meant to be argued with.

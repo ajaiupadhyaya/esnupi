@@ -181,7 +181,7 @@ export default function Home() {
           </div>
 
           <a className="ajh-basis" href="/basis" onClick={go("/basis")}>
-            <b>BASIS</b> A weekly market monitor.{" "}
+            <b>BASIS</b> Research notes.{" "}
             {LATEST_BASIS
               ? `${formatIssueNumber(LATEST_BASIS.number)}: ${LATEST_BASIS.title}`
               : `${formatIssueNumber(1)} coming soon`}{" "}

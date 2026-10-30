@@ -1,0 +1,142 @@
+export const meta = {
+  number: 6,
+  title: "Are prediction markets sharp?",
+  date: "2026-10-30",
+  dek: "A registered report on Kalshi, Polymarket and the Betfair Exchange closing line in European football. The test has not been run, and this page fixes what a yes and a no will mean before the data exists.",
+};
+
+The test has not been run. On 2026-27 league matches that kick off after a git tag signed on 25 October 2026, through 30 June 2027, I will check one claim: at kickoff, Kalshi's probabilities on European football are as accurate as the Betfair Exchange closing line, to within 0.002 nats per match. If the 90% interval lands inside that margin the answer is yes, and if it does not the answer is no. Every 2025-26 number below is exploratory: it shaped the design and cannot confirm it.
+
+**[Read the registered report (PDF) →](https://github.com/ajaiupadhyaya/sharp-markets/releases/download/stage1-v1/sharp-markets-stage1.pdf)** The signed [pre-analysis plan](https://github.com/ajaiupadhyaya/sharp-markets/blob/pap-v1/docs/pap/pre-analysis-plan.md) sits at the tag.
+
+## Summary
+
+- **What it is.** A registered report. Kalshi and Polymarket match-winner prices at kickoff are compared with Betfair's closing odds on the same fixtures, across 18 European football divisions. One hypothesis is confirmatory, on Kalshi. The plan was frozen as the tag `pap-v1` at 2026-10-25 19:22:02 UTC.
+- **What has happened.** Nothing confirmatory. The window is open until 30 June 2027. One script makes one data pull on or after 1 July 2027, and that pull is the first read of the outcomes.
+- **What the exploratory season shows.** In 2025-26 the mean log-score gap to Betfair was −0.0003 nats per match for Kalshi (s.e. 0.0004) and −0.0005 for Polymarket (s.e. 0.0006). The ordinary bookmaker average was −0.0022 (s.e. 0.0005). I set the margin after seeing these numbers, so they are not evidence for the test.
+- **What it will not show.** A yes would mean Kalshi prices these matches about as well as the exchange. It would not mean Kalshi adds information, and it says nothing about profit after fees.
+
+## 1. What counts as a yes or a no
+
+H1: at kickoff, Kalshi's match probabilities are as accurate as the Betfair Exchange closing line, to within 0.002 nats per match.
+
+A plain significance test can only fail to find a gap, which is not evidence that no gap exists. So the null here is that Kalshi differs from Betfair by at least 0.002, and the data must rule that out on both sides. That is two one-sided tests at 5% each, which is the same as asking whether the 90% interval of the mean sits inside the margin.
+
+| Outcome | Condition | What gets reported |
+| --- | --- | --- |
+| **Yes** | At least 1,500 paired fixtures, and the 90% interval inside (−0.002, +0.002) | Kalshi is within ±0.002 nats per match of the Betfair close: closer to the exchange than ordinary bookmakers are |
+| **No** | At least 1,500 paired fixtures, and the interval touches or crosses either edge | Kalshi is not shown to be within ±0.002. That is not proof Kalshi is worse: the interval can miss through noise, or because Kalshi beats Betfair by more than the margin |
+| **Exploratory only** | Fewer than 1,500 paired fixtures | H1 is reported as exploratory, with the reason stated |
+| **Attempt, not a result** | The script fails after its marker is written | The attempt record stays. A rerun needs a logged deviation and my approval |
+
+The mean, its 95% interval and a plain test of zero sit beside the verdict and are not confirmatory. Polymarket gets the same test as H2, labelled secondary.
+
+The test runs once. `sharpmkt.confirm` refuses to start unless `pap-v1` is an annotated tag that HEAD descends from and the code matches its blobs at the tag. It writes an attempt marker, pulls the 2026-27 data itself and writes its output once, and both files are committed unedited. A deviation adopted after a result has been seen demotes that hypothesis to exploratory.
+
+## 2. Why the Betfair close is the benchmark
+
+Most of the volume on Kalshi and Polymarket since mid-2025 has been sport (Pew, 2026). The calibration papers on these venues compare prices with realised frequencies. That says whether a price is calibrated, not whether it is as good as the market already pricing the same event. The closing line answers that: it is the last price of the sharpest existing market, and the standard benchmark in sports betting.
+
+I use Betfair's close for two reasons:
+
+1. **It is the same kind of venue.** Betfair is an exchange, like Kalshi, so the comparison is cleaner than one against a bookmaker.
+2. **It runs through both seasons.** Football-data.co.uk carries it for 2025-26 and 2026-27. Pinnacle covers only about 40% of 2025-26 and none of 2026-27, so it appears only as a yardstick.
+
+## 3. The score, and where fees go
+
+The loss function is the log score, which is log loss with the sign flipped. For each match, take the probability each venue gave the result that happened, and take its natural log. The paired difference is `d = log p_Kalshi(result) − log p_Betfair(result)`. Positive d means Kalshi was more accurate. The score is strictly proper: a forecaster does best in expectation by quoting the probabilities it believes.
+
+The unit is the nat. A mean gap of 0.002 nats means one side gave what happened about 0.2% more probability in relative terms, such as 40.08% against 40.00%. The margin comes from the exploratory 2025-26 gap between the bookmaker average and Betfair, −0.0022. Both prices cover the same match, so most match-level noise cancels. Standard errors are clustered by division × ISO week, since matches in one league on one weekend share shocks.
+
+Fees do not enter H1. It scores prices as forecasts, not trades, and no fee, commission or spread cost is modelled for any venue. The inputs are:
+
+- **Kalshi:** the mid of the closing yes-bid and yes-ask in the last minute candle at or before kickoff, or the last trade if the book is one-sided or wider than 10 cents. That fallback fired for 1 fixture in the exploratory season, when the median spread at kickoff was 1.3 cents.
+- **Polymarket:** the last price-history point at or before kickoff.
+- **Betfair:** 1/odds, from football-data's closing columns.
+
+Each source's three prices, home, draw and away, are divided by their sum, which strips out any overround. Shin's method is a pre-registered variant. The paper's only return figures are before fees and spread, and it says they are not a trading result.
+
+## 4. The sample
+
+The 18 divisions are every league football-data covers for which both venues list match-winner series, and the plan froze that list. Only fixtures in football-data's division files count, so cup ties and playoffs are out. The confirmatory sample is every such fixture that kicks off after the tag and on or before 30 June 2027, and is priced by both Kalshi and Betfair.
+
+| 2025-26 step (exploratory) | Count |
+| --- | --- |
+| League fixtures | 6,555 |
+| With Betfair closing odds | 6,171 |
+| Kalshi events listed, then matched | 3,855, then 3,788 (98%) |
+| Polymarket events listed, then matched | 4,292, then 4,204 (98%) |
+| Kalshi fixtures paired with Betfair | 3,426 |
+| Polymarket fixtures paired with Betfair | 3,851 |
+
+Matching uses normalised team names, within the same division and a day. An event is assigned only if its summed similarity is at least 1.0 and beats the runner-up by at least 0.15. Fixtures where a venue's settlement disagrees with football-data's result are dropped: 4 for Kalshi and 6 for Polymarket in that season.
+
+"18 leagues" describes the frozen list, not where the weight sits. In the exploratory season Kalshi priced no National League or Ligue 2 fixtures, and Polymarket priced none in Belgium or Greece. Of Kalshi's 3,426 paired fixtures, 1,634 (48%) came from the five biggest leagues. Coverage a venue adds inside the 18 in 2026-27 counts.
+
+## 5. Power
+
+Kalshi's standard error in the exploratory season was 0.00044 nats on 3,426 matches, and the minimum detectable effect over a full season is 0.0012 (5% two-sided, 80% power), a little over half the bookmaker gap.
+
+| Share of a season | 100% | 70% | 60% | 40% |
+| --- | --- | --- | --- | --- |
+| Kalshi (H1) | 1.00 | 0.97 | 0.94 | 0.78 |
+| Polymarket (H2) | 0.90 | 0.74 | 0.64 | 0.35 |
+
+That is the power of the equivalence test if the true gap is zero, with the 2025-26 standard error scaled by the square root of the share. About four-fifths of 2026-27 remained at signing. At the 1,500-fixture floor the expected standard error is about 0.00066 and power about 0.83. Polymarket's lower power is why it is secondary.
+
+The plan notes power is a little lower if the true gap equals the exploratory estimate, and my calculation with the project's formula puts it at 0.94 at 70% of a season. At that share the mean must land within about ±0.0011 to pass. A true gap of −0.001 would pass only 60% of the time, and a true gap at the margin 5% of the time.
+
+![Chance of a yes by true gap: 97% at zero and 5% at the margin with 70% of a season, 83% at zero at the 1,500-fixture floor](/basis/sharp-markets/power-curve.svg)
+
+## 6. What 2025-26 shows (exploratory)
+
+Everything in this section is exploratory. I looked at it freely, and it informed the design.
+
+| Source against Betfair | Matches | Mean d (nats) | s.e. |
+| --- | --- | --- | --- |
+| Kalshi | 3,426 | −0.0003 | 0.0004 |
+| Polymarket | 3,851 | −0.0005 | 0.0006 |
+| Pinnacle | 2,634 | −0.0018 | 0.0011 |
+| Bookmaker average | 6,170 | −0.0022 | 0.0005 |
+
+Each row is paired with Betfair on the fixtures both priced. Kalshi and Polymarket are statistically indistinguishable from Betfair, and the Brier score agrees (Kalshi −0.0002, s.e. 0.0003). The bookmaker average is clearly worse.
+
+Run through the confirmatory code on the whole season, Kalshi's 90% interval is [−0.0010, +0.0004], inside the margin. Polymarket's is too. Reads an hour or more before kickoff are not, because they are noisier against Betfair's close, and the bookmaker average fails, as it should. I don't count this pass as evidence: the equivalence framing and the margin were chosen after seeing this season.
+
+![Exploratory 2025-26: Kalshi's and Polymarket's 90% intervals lie inside the ±0.002 margin; the bookmaker average and the reads 60 and 120 minutes before kickoff do not](/basis/sharp-markets/exploratory-intervals.svg)
+
+On the same outcome rows, Kalshi's and Betfair's calibration curves lie on top of each other. That is why the scores barely differ.
+
+![Exploratory 2025-26: Kalshi's and Betfair's calibration points overlap across the price range](/basis/sharp-markets/calibration.svg)
+
+The season's main exploratory finding is about timing. On the fixtures priced at every read time (3,255 Kalshi, 3,850 Polymarket), both venues' kickoff probabilities sit a little further from the middle than Betfair's: the calibration-slope gap is −0.018 for Kalshi and −0.012 for Polymarket, each with a standard error of 0.003. That gap is against Betfair, not against the truth.
+
+1. **Polymarket's gap is gone 30 to 60 minutes before kickoff** (−0.001 at 60 minutes). That points to late information such as team news, not bias.
+2. **Kalshi's shrinks by about 40% but persists** (−0.011, s.e. 0.005, at 60 minutes). At that read the minimum detectable gap is about 0.014. The 95% interval excludes zero, but I looked at this season freely, so I report it as a pattern, not a test.
+3. **Accuracy barely moves with read time.** Nor does it show a detectable relation to venue volume, or differ between the five largest leagues and the rest.
+
+![Exploratory 2025-26: Polymarket's slope gap to Betfair falls from −0.012 at kickoff to −0.001 an hour earlier, while Kalshi's falls from −0.018 to −0.011](/basis/sharp-markets/timing.svg)
+
+## 7. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Read times are not matched | Football-data's closing snapshot is not time-stamped to the minute. Venues are read in the last minute, which if anything favours them |
+| The margin came after the 2025-26 data | The plan discloses this. No 2026-27 outcome could have informed it |
+| Being as sharp is not adding information | If market makers quote off the exchange, the venues match it almost by construction. The exploratory opinion pool cannot tell: the minimum detectable weight on Kalshi is 1.84, above the 1 that would mean Kalshi alone |
+| The season lock stops accidents, not intent | The real guarantee is the single-run protocol and the git record |
+| Power assumes 2025-26 scales | Coverage differs by venue and grew during the season |
+| Polymarket volume | Partly wash trading, so a poor liquidity measure |
+| Scope | One season of one sport, and venue settlement occasionally disagrees with the official result |
+
+## 8. What I'd do next
+
+1. **Run it once.** On or after 1 July 2027, run `sharpmkt.confirm` and commit its marker and output unedited.
+2. **Finish the report.** Add the fixture counts, H1's estimate, interval and TOST p-value, H2 and the variants, and any deviation with its date and reason.
+3. **Describe the timing pattern again.** The plan repeats it on 2026-27, labelled exploratory. Settling it would take an exchange price stamped to the minute, which is separate work.
+
+## Sources
+
+Project: the [repository](https://github.com/ajaiupadhyaya/sharp-markets), the [stage 1 report](https://github.com/ajaiupadhyaya/sharp-markets/releases/download/stage1-v1/sharp-markets-stage1.pdf), the [pre-analysis plan](https://github.com/ajaiupadhyaya/sharp-markets/blob/pap-v1/docs/pap/pre-analysis-plan.md), and `docs/power.md` and `paper/generated/` in the repository. Data: [Football-Data.co.uk](https://www.football-data.co.uk/) and the public Kalshi and Polymarket APIs. Nothing raw is committed; `data/raw/MANIFEST.json` records the URL, SHA-256 and size of every response. Methods: Gneiting and Raftery (2007) on proper scores, Schuirmann (1987) and Lakens (2017) on equivalence tests, Shin (1993) on margins.
+
+This page is a design and one exploratory season, not a finding. The confirmatory section of the paper stays empty until the window closes, and nothing here is betting or investment advice. I hold no accounts or positions on Kalshi, Polymarket or Betfair and will not trade on them during the window. The code, analysis and drafts were produced with Claude under my direction; I set the questions, made every design decision in the plan and signed it. The margin, the read time and the choice of a single confirmatory hypothesis are mine to argue with.

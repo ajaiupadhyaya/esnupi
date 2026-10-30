@@ -33,9 +33,9 @@ function Masthead({ go }: { go: ReturnType<typeof useInternalLink> }) {
         BASIS
       </a>
       <p className="bas-cap">
-        A weekly market monitor by AJ.
+        Research notes by AJ.
         <br />
-        Rates, credit, equities, and what moved.
+        Models, experiments, and what the numbers said.
       </p>
     </header>
   );
@@ -48,7 +48,7 @@ function IssueList({ go }: { go: ReturnType<typeof useInternalLink> }) {
         <p className="bas-cap">{formatIssueNumber(1)}</p>
         <p className="bas-empty__lede">The first issue is in preparation.</p>
         <p>
-          New issues will appear here every week. In the meantime, my other writing is on{" "}
+          New issues will appear here. In the meantime, my other writing is on{" "}
           <a href={SITE_OWNER_SUBSTACK} target="_blank" rel="noopener noreferrer">
             Substack
           </a>

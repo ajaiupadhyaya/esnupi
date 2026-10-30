@@ -1,0 +1,142 @@
+export const meta = {
+  number: 2,
+  title: "Five Dollar Quant: what capital costs",
+  date: "2026-10-30",
+  dek: "Simple quant rules run from $5 to $50,000 on six years of ETF prices. A two-cent fee minimum does most of the damage at $5, and no rule beat buy-and-hold at any size.",
+};
+
+I ran simple quant rules on ETFs at five account sizes, from $5 to $50,000, to see how they decay as capital approaches zero. The decay is real but narrow: it sits almost entirely between $5 and $50, and the friction behind it is one assumption, a two-cent minimum fee on every sale. The larger finding is that no rule beat buy-and-hold on return at any size, no holdout has been touched, and nothing here is evidence of an edge.
+
+**[Open the friction calculator →](/basis/five-dollar-quant/model.html)** Capital, trade size and turnover, charged by a line-for-line port of the repo's friction code.
+
+## Summary
+
+- **What it is.** Five Dollar Quant simulates retail execution on liquid ETFs. There are three experiments so far: buy-and-hold and 60/40 (EXP-001), trend rules (EXP-002) and mean-reversion rules (EXP-003). No live money and no paper trading.
+- **What has been tested.** Only 2016-06-01 to 2022-05-31, the project's in-sample block. The walk-forward test days sit inside it. The validation and locked-test windows are unused.
+- **What it found.** At $5, removing the fee minimums adds 0.45 to 1.64 points of CAGR. Removing the spread adds 0.02 to 0.08. Removing the $1 minimum order or T+1 settlement adds nothing to any of the eight walk-forward strategies.
+- **What it does not show.** That any rule works. Every rule trailed buy-and-hold on return, even at $50,000, and none reaches the plan's deflated-Sharpe gate. Prices exclude dividends, and no real fill has checked the fee minimums.
+
+## 1. What is in-sample, and what is not
+
+| Block | Dates | Status |
+| --- | --- | --- |
+| In-sample | 2016-06-01 to 2022-05-31 | Used by all three experiments |
+| Walk-forward test folds | 2017-08-11 to 2022-05-27 | Four folds inside the in-sample block, 1,208 trading days |
+| Validation | 2022-06-01 to 2024-05-31 | Not used |
+| Locked test | 2024-06-01 to 2026-06-01 | Not used |
+
+The walk-forward picks parameters on expanding training windows, then runs them on the next fold. That makes the test folds out-of-sample for the parameters. It does not make them a holdout: they belong to the block the project treats as in-sample. Bars through 2026 are cached on disk, but the loader clips them to the experiment window, and none of the 60 equity files holds a date after 2022-05-31.
+
+I also re-ran all three experiments from the repo's code and cached bars. Every equity curve, selected parameter, DSR and PBO matched the published figures exactly. So the numbers are what the code produces. What they mean is a separate question.
+
+## 2. What the friction model charges
+
+| Rule | Setting |
+| --- | --- |
+| Minimum order | $1.00; smaller orders are rejected |
+| Spread | SPY 2 bp, QQQ 3, IWM 4; half charged each way; 1.5× when VIX is above 25 |
+| SEC fee, on sales | 0.00278% of the sale, minimum 1¢ |
+| FINRA TAF, on sales | $0.000166 a share, minimum 1¢, cap $8.30 |
+| Settlement | T+1, settled cash only |
+| Cash buffer | 10% held back at every tier |
+| Execution | Signal at the close, fill at the next open, long only |
+
+The minimums are the mechanism. A sale under $359.71 pays the SEC minimum, and a sale under about 60 shares pays the FINRA minimum, so a small sale pays two cents flat. On the $4.50 order a $5 account places, that is 44 bp, on top of 2 bp of spread. The fees equal the spread at a $100 order on SPY. The calculator's defaults reproduce the 0.045¢ purchase recorded in EXP-001.
+
+![A round trip on SPY costs 46.4 basis points on a $4.50 order and about 2.3 basis points from $4,500 up, and fees are almost all of the difference](/basis/five-dollar-quant/round-trip.svg)
+
+## 3. What hurts at $5
+
+I re-ran each walk-forward strategy at $5 with one rule removed at a time, holding parameters fixed. These counterfactuals are mine; the reports do not contain them.
+
+![Removing the fee minimums adds 0.45 to 1.64 points of CAGR at $5, while removing the spread adds at most 0.08 and removing the $1 minimum or T+1 settlement adds nothing](/basis/five-dollar-quant/what-hurts.svg)
+
+1. **The fee minimums do the damage.** Fees are 91% to 95% of recorded friction at $5, 49% to 66% at $50 and 10% to 18% at $500. In the four strategies where the $5 and $50,000 accounts pick the same parameters, removing the minimums alone lifts the $5 CAGR to the $50,000 figure, to two decimals.
+2. **The spread barely registers.** It costs 0.02 to 0.08 points a year as the engine runs, or 0.04 to 0.15 once a bug in section 7 is fixed.
+3. **The $1 minimum and T+1 never bind on these rules.** Each rule holds one ETF at full size or nothing, so a $4.50 order never nears $1, and a sale settles before the next signal can act.
+4. **The $1 minimum does bind on 60/40, and it helps.** At $5 the rebalancing portfolio filled 4 orders in six years, while 140 others failed the minimum. It simply drifted: 6.20% CAGR against 6.32% at $50,000. Remove the minimum and the same account makes 82 sales at two cents each, and CAGR falls to 0.98%. The minimum protects the account from its own fee floor.
+5. **The cash buffer is not a capital effect.** Removing it adds 1.10 and 1.14 points to the QQQ trend rules, more than the fee minimums do. But it applies at $50,000 too. On SPY buy-and-hold it costs 0.94 points a year, 11.95% against 11.02%.
+
+Above $50 almost nothing moves. CAGR at $50 is within 0.36 points of $50,000 in every strategy, and CAGR at $500 is within 0.02.
+
+## 4. What the tier columns do not show
+
+**Different tiers run different strategies.** The walk-forward picks parameters separately at each tier. In four of the eight strategies the $5 account picks differently from every larger account, because fees change which setting wins in training. In those rows the gap between columns is part friction, part parameter noise, and the noise goes both ways.
+
+| Rule | $5 as reported | $5 on the $50,000 parameters | $50,000 |
+| --- | --- | --- | --- |
+| MA crossover SPY | 5.78% | 6.61% | 7.39% |
+| Z-score SPY | −2.06% | −0.29% | 3.67% |
+| Bollinger SPY | 1.19% | 0.19% | 1.44% |
+| Z-score IWM | −5.12% | −6.29% | −2.45% |
+
+Bollinger's $5 row shows a better Sharpe and a shallower drawdown than its $50 row (0.21 and −9.01% against 0.17 and −26.32%). That is a stricter entry and fewer trades, not an advantage of being small. In the last fold of z-score on IWM, the $5 account's best training result was a setting that never trades: zero orders, against 56 at $50.
+
+**At $50,000 the rejections are not real.** EXP-001 reports 70 for 60/40, and none is a capital constraint. A sale fills below mid and removes slightly more shares than the target. The engine then tries to buy back the leftover, which fails the $1 minimum.
+
+| Tier | Orders filled | Rejections reported | Real, under $1 | Engine residual |
+| --- | --- | --- | --- | --- |
+| $5 | 4 | 141 | 140 | 1 |
+| $50 | 48 | 121 | 96 | 25 |
+| $500 | 129 | 80 | 15 | 65 |
+| $5,000 | 143 | 70 | 1 | 69 |
+| $50,000 | 144 | 70 | 0 | 70 |
+
+**PBO is a $5 number in every row.** The reported PBO and the trial Sharpes behind DSR are measured at $5 and copied to every tier. Section 6 shows PBO measured at $50,000.
+
+**Buy-and-hold's zero cost at $5 means it never sold.** The report rounds 0.045¢ of spread to 0.0¢ and charges no exit. Selling the final position would cost 2.09¢, 46 times as much.
+
+## 5. Buy-and-hold beat every rule
+
+![Every rule, at both $5 and $50,000, earned less than buy-and-hold on the same ETF and the same dates](/basis/five-dollar-quant/versus-buy-and-hold.svg)
+
+Buy-and-hold here carries the same 10% cash and the same missing dividends, on the same 1,208 days. SPY earned 10.87%, against 7.80% for the best SPY rule at $50,000. QQQ earned 16.53% against 11.28%, and IWM 6.35% against −2.45%. So a $5 buy-and-hold beat every rule at $50,000 on the same ETF. The gap between the $5 and $50,000 rows is 0.25 to 5.73 points. The gap between the $50,000 row and simply holding is 3.07 to 9.43. The rules were in the market on 16% to 80% of test days, and cash earns zero in this model.
+
+The trend rules did cut risk. Donchian on SPY at $50,000 had a Sharpe of 0.79 against 0.65, and a maximum drawdown of −12.77% against −31.98%. On QQQ the Sharpes were 0.79 and 0.78. I would not lean on that. Every Sharpe in the study is below the 1.14 that 1,208 days can detect at 80% power.
+
+## 6. Overfitting
+
+The plan's gate asks for a deflated Sharpe significant at 95%, which I read as a DSR of 0.95 or more, and a PBO below a declared threshold. The repo declares no threshold. No row reaches 0.95. The best is 0.920, while buy-and-hold on QQQ, with nothing to deflate, scores 0.953 on the same days.
+
+| Rule | Configs | DSR, $50,000 | DSR, all 46 | PBO reported | PBO $5, corrected | PBO $50,000, corrected |
+| --- | --- | --- | --- | --- | --- | --- |
+| MA crossover SPY | 9 | 0.731 | 0.315 | 0.725 | 0.586 | 0.581 |
+| Donchian SPY | 2 | 0.917 | 0.408 | 0.253 | 0.253 | 0.335 |
+| MA crossover QQQ | 9 | 0.731 | 0.337 | 0.777 | 0.741 | 0.700 |
+| Donchian QQQ | 2 | 0.920 | 0.410 | 0.240 | 0.240 | 0.323 |
+| Z-score SPY | 9 | 0.568 | 0.110 | 0.552 | 0.435 | 0.356 |
+| RSI SPY | 3 | 0.624 | 0.088 | 0.500 | 0.500 | 0.447 |
+| Bollinger SPY | 3 | 0.515 | 0.058 | 0.585 | 0.585 | 0.634 |
+| Z-score IWM | 9 | 0.289 | 0.016 | 0.914 | 0.816 | 0.537 |
+
+1. **DSR deflates within one grid.** The reports' 36 trials means 4 folds times 9 settings, and the deflation uses 9. Donchian's 8 becomes 2. The study ran 46 distinct settings. Deflating by all of them is blunt, since it mixes ETFs and families, but it takes the best row from 0.920 to 0.410.
+2. **PBO needs a correction.** Each 9-row grid holds a setting that never trades: MA 50/50, and a 5-day z-score with a 2.0 entry. The repo's ranking puts their undefined Sharpe above every real result, which inflates PBO. The corrected columns remove them. These are my recomputations.
+3. **High PBO means no evidence.** MA crossover on both ETFs, Bollinger and z-score on IWM stay above 0.5 at both tiers: the best in-sample choice lands in the bottom half out-of-sample more often than not. Those rows say nothing about any rule, at any capital.
+4. **Low PBO is not a pass.** Donchian's low numbers come from a grid of two, which is a narrow test. Its best row rests on 7 entries.
+
+## 7. Limits
+
+| Limit | Detail |
+| --- | --- |
+| No dividends | `close_adj` equals `close` on all 2,514 cached rows of SPY, QQQ, IWM and TLT. Every return is price only, for rules and benchmark alike |
+| Fee minimums | A configured assumption, labelled approximate. The headline rests on it and no real or paper fill checks it |
+| Spreads | A static table of estimates, not quotes |
+| Exit spread bug | On a full exit the engine records the sell half-spread but never deducts it. Fixing it lowers CAGR by 0.02 to 0.07 points at $5 and 0.02 to 0.19 at $50,000 |
+| Stress bands | The plan requires 2× and 5×, but no published result has them. The README says all frictions scale; the code scales only the spread. My 5× run costs 0.08 to 0.31 points at $5 and 0.09 to 0.79 at $50,000 |
+| Docs against code | The config labels its spreads as half-spreads, and the code halves them again. The docs say about 100 bp on a $1 order; the code charges 200 bp |
+| Fold restarts | Each fold restarts at the tier's capital, and a position open at a fold's end pays no exit. Carrying equity across folds moves CAGR by at most 0.12 points |
+| Scope | Single-ETF long-or-flat rules plus 60/40. Stat arb, regime filters, machine learning and paper trading are not built, so this answers the question for simple rules only |
+
+## 8. What I'd do next
+
+1. **Fix the engine.** Add dividends, charge the exit spread, drop the dead settings, and measure PBO at each tier. Then re-run everything.
+2. **Freeze parameters across tiers,** so a tier comparison measures friction alone.
+3. **Check the fee minimums** against real statements or paper fills before trusting the headline.
+4. **Declare the PBO threshold,** then run the validation window once and the locked test once.
+5. **Test the $1 minimum where it should bind:** several positions at once.
+
+## Sources
+
+The repository is [capitallimits](https://github.com/ajaiupadhyaya/capitallimits). I used `updatedplan.md` (v2.0; `handoff.md` is superseded), `config/`, `fdq/frictions/`, `fdq/backtest/`, `fdq/validation/`, and `experiments/EXP-001` to `EXP-003`. The results and market data are regenerated locally and are not committed. Bars come from Alpaca and VIX from FRED, per the provenance files. All results use friction model v1.0.0.
+
+This is a simulation on in-sample data, using a friction model no real fill has tested. It is not a trading recommendation or a claim of edge. The re-runs, counterfactuals and corrected PBOs are mine, as is the reading of the 95% gate, and all of them are meant to be argued with.
