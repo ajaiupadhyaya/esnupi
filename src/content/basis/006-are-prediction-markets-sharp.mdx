@@ -64,12 +64,12 @@ The 18 divisions are every league football-data covers for which both venues lis
 | --- | --- |
 | League fixtures | 6,555 |
 | With Betfair closing odds | 6,171 |
-| Kalshi events listed, then matched | 3,855, then 3,788 (98%) |
-| Polymarket events listed, then matched | 4,292, then 4,204 (98%) |
+| Kalshi events listed, then matched | 3,855, then 3,792 (98%), on 3,788 fixtures |
+| Polymarket events listed, then matched | 4,292, then 4,216 (98%), on 4,204 fixtures |
 | Kalshi fixtures paired with Betfair | 3,426 |
 | Polymarket fixtures paired with Betfair | 3,851 |
 
-Matching uses normalised team names, within the same division and a day. An event is assigned only if its summed similarity is at least 1.0 and beats the runner-up by at least 0.15. Fixtures where a venue's settlement disagrees with football-data's result are dropped: 4 for Kalshi and 6 for Polymarket in that season.
+Matching uses normalised team names, within the same division and a day. An event is assigned only if its summed similarity is at least 1.0 and beats the runner-up by at least 0.15. Fixtures where a matched event's settlement disagrees with football-data's result are dropped: 4 for Kalshi and 6 for Polymarket in that season. All 10 are matching errors, not venues disagreeing with the result. Seven attached a different match to the fixture, and three city derbies appear to have home and away swapped.
 
 "18 leagues" describes the frozen list, not where the weight sits. In the exploratory season Kalshi priced no National League or Ligue 2 fixtures, and Polymarket priced none in Belgium or Greece. Of Kalshi's 3,426 paired fixtures, 1,634 (48%) came from the five biggest leagues. Coverage a venue adds inside the 18 in 2026-27 counts.
 
@@ -82,7 +82,7 @@ Kalshi's standard error in the exploratory season was 0.00044 nats on 3,426 matc
 | Kalshi (H1) | 1.00 | 0.97 | 0.94 | 0.78 |
 | Polymarket (H2) | 0.90 | 0.74 | 0.64 | 0.35 |
 
-That is the power of the equivalence test if the true gap is zero, with the 2025-26 standard error scaled by the square root of the share. About four-fifths of 2026-27 remained at signing. At the 1,500-fixture floor the expected standard error is about 0.00066 and power about 0.83. Polymarket's lower power is why it is secondary.
+That is the power of the equivalence test if the true gap is zero, with the 2025-26 standard error scaled by the square root of the share. The plan puts about 70% of 2026-27 left at signing. At the 1,500-fixture floor the expected standard error is about 0.00066 and power about 0.83. Polymarket's lower power is why it is secondary.
 
 The plan notes power is a little lower if the true gap equals the exploratory estimate, and my calculation with the project's formula puts it at 0.94 at 70% of a season. At that share the mean must land within about ±0.0011 to pass. A true gap of −0.001 would pass only 60% of the time, and a true gap at the margin 5% of the time.
 
@@ -127,7 +127,7 @@ The season's main exploratory finding is about timing. On the fixtures priced at
 | The season lock stops accidents, not intent | The real guarantee is the single-run protocol and the git record |
 | Power assumes 2025-26 scales | Coverage differs by venue and grew during the season |
 | Polymarket volume | Partly wash trading, so a poor liquidity measure |
-| Scope | One season of one sport, and venue settlement occasionally disagrees with the official result |
+| Scope | One season of one sport, and the matcher occasionally assigns the wrong event or swaps home and away. The settlement check removed the 10 such cases in 2025-26 |
 
 ## 8. What I'd do next
 
