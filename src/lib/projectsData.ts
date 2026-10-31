@@ -71,7 +71,7 @@ export type Project = {
   links: ProjectLink[];
   /** The published PDF — see step 3 above. */
   report?: ProjectReport;
-  status?: "complete" | "ongoing" | "shelved";
+  status?: "complete" | "ongoing" | "idea" | "shelved";
   /** Purely for the decorative hex-dump effect in the Profiler window. */
   hex?: string;
 };
@@ -271,6 +271,57 @@ export const PROJECTS: Project[] = [
       abstract:
         "The options layer of the quant-trading project is a 932-line Black–Scholes–Merton module (prices, Greeks, implied volatility) pinned by 46 tests. It prices hedges for an offline overlay and reads live SPY implied volatility for an always-on engine that never trades. Re-running the code shows round-trip accuracy near 2.5×10⁻⁹. On matched synthetic paths a 5%-OTM put cuts a 15-day crash's drawdown from 28.1% to 13.0% but barely touches a slow decline. The live read solves against a stale price.",
     },
+  },
+  {
+    id: "sports-quant-ideas",
+    index: "10",
+    accession: "Esn-0104",
+    kind: "kext",
+    title: "Sports + Quant",
+    year: "2025",
+    role: "Sports · Quantitative research",
+    blurb: "Research ideas applying quant methods to sport, starting with predicting live defensive matchups in the NBA and NFL.",
+    tags: ["Sports", "Quant", "NBA", "NFL"],
+    status: "idea",
+    links: [reportLink("sports-quant-ideas")],
+  },
+  {
+    id: "prediction-markets",
+    index: "11",
+    accession: "Esn-0105",
+    kind: "kext",
+    title: "Prediction Markets Analysis",
+    year: "2026",
+    role: "Prediction markets · Sportsbooks · Market efficiency",
+    blurb: "Analysis of how efficient prediction markets and sportsbooks really are, and how they market themselves.",
+    tags: ["Prediction Markets", "Sportsbooks", "2026"],
+    status: "ongoing",
+    links: [reportLink("prediction-markets")],
+  },
+  {
+    id: "injury-cv",
+    index: "12",
+    accession: "Esn-0106",
+    kind: "kext",
+    title: "Injury-Risk Computer Vision",
+    year: "2025",
+    role: "Computer Vision · Sports injury",
+    blurb: "Computer vision tool, prompted by Brandon Aiyuk's 2024 knee injury, to help athletes and play-callers avoid injuries.",
+    tags: ["Computer Vision", "Sports", "Injury"],
+    links: [reportLink("injury-cv")],
+  },
+  {
+    id: "wallmachine",
+    index: "13",
+    accession: "Esn-0107",
+    kind: "kext",
+    title: "Wall Machine",
+    year: "2026",
+    role: "Robotics",
+    blurb: "A robot that draws.",
+    tags: ["Robotics", "2026"],
+    status: "ongoing",
+    links: [reportLink("wallmachine")],
   },
 ];
 

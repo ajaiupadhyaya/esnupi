@@ -49,7 +49,7 @@ The research notes. `src/pages/Basis.tsx` + `basis.css` (classes prefixed `bas-`
 
 ### Publications (`/publications`)
 
-The report behind every Work and Experiment. `src/pages/Publications.tsx` + `publications.css` (classes prefixed `pub-`), same plain rules as the home page and BASIS, bare like them. **Works and Experiments never link straight to GitHub**: the home index links each one to `publicationHref(id)` (`/publications#<id>`), and each project's first `links` entry is a "Read the report" link to the same place, which the System Profiler renders. Arriving at `/publications#<id>` opens that entry and scrolls it to the top.
+Reports on every Work and Experiment; there is no second list of Experiments, so a new one goes in `PROJECTS`, and an entry without a PDF reads "In preparation". `src/pages/Publications.tsx` + `publications.css` (classes prefixed `pub-`), same plain rules as the home page and BASIS, bare like them. **Works and Experiments never link straight to GitHub**: the home index links each one to `publicationHref(id)` (`/publications#<id>`), and each project's first `links` entry is a "Read the report" link to the same place, which the System Profiler renders. Arriving at `/publications#<id>` opens that entry and scrolls it to the top.
 
 - A report is a PDF at `public/reports/<id>.pdf` plus `report: { src, date?, pages?, title?, abstract? }` on the project in `projectsData.ts`. No `report` → the entry reads "In preparation".
 - Desktop browsers get the PDF inline in an `<iframe>`; touch devices, and browsers reporting `navigator.pdfViewerEnabled === false`, get a cover that opens the PDF on its own, because Android Chrome can't render PDFs in frames.

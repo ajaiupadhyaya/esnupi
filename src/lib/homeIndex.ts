@@ -42,47 +42,9 @@ const FROM_PROJECTS: IndexEntry[] = PROJECTS.map((p) => ({
   title: p.title,
   blurb: p.blurb,
   year: p.year,
-  status: p.status === "ongoing" ? "ongoing" : "complete",
+  status: p.status === "ongoing" || p.status === "idea" ? p.status : "complete",
   href: publicationHref(p.id),
 }));
-
-const EXPERIMENTS: IndexEntry[] = [
-  {
-    id: "sports-quant-ideas",
-    kind: "experiment",
-    title: "Sports + Quant",
-    blurb: "Research ideas applying quant methods to sport, starting with predicting live defensive matchups in the NBA and NFL",
-    year: "2025",
-    status: "idea",
-    href: gh("kaggle"),
-  },
-  {
-    id: "prediction-markets",
-    kind: "experiment",
-    title: "Prediction Markets Analysis",
-    blurb: "Analysis of how efficient prediction markets and sportsbooks really are, and how they market themselves",
-    year: "2026",
-    status: "ongoing",
-    href: gh("ihatepredictionmarkets"),
-  },
-  {
-    id: "injury-cv",
-    kind: "experiment",
-    title: "Injury-Risk Computer Vision",
-    blurb: "Computer vision tool, prompted by Brandon Aiyuk's 2024 knee injury, to help athletes and play-callers avoid injuries",
-    year: "2025",
-    href: gh("brandonaiyuks-knee"),
-  },
-  {
-    id: "wallmachine",
-    kind: "experiment",
-    title: "Wall Machine",
-    blurb: "A robot that draws",
-    year: "2026",
-    status: "ongoing",
-    href: gh("wallmachine"),
-  },
-];
 
 const CODE: IndexEntry[] = [
   {
@@ -538,4 +500,4 @@ const EXPERIENCE: IndexEntry[] = [
   },
 ];
 
-export const HOME_INDEX: IndexEntry[] = [...FROM_PROJECTS, ...EXPERIMENTS, ...CODE, ...WRITING, ...EXPERIENCE];
+export const HOME_INDEX: IndexEntry[] = [...FROM_PROJECTS, ...CODE, ...WRITING, ...EXPERIENCE];

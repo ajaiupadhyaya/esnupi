@@ -158,7 +158,7 @@ function Entry({
 }
 
 /**
- * /publications — the report behind every Work and Experiment. Every project
+ * /publications — reports on every Work and Experiment. Every project
  * link on the site lands here as `/publications#<id>`, which opens that entry
  * and brings it to the top so nobody has to find the project again.
  */
@@ -231,9 +231,9 @@ export default function Publications() {
         </nav>
         <h1 className="pub-mark">Publications</h1>
         <p className="pub-cap">
-          The report behind every Work and Experiment by AJ.
+          Reports on the Works and Experiments by AJ.
           <br />
-          Read it here, or take the PDF with you.
+          Read them here, or take the PDF with you.
         </p>
       </header>
       <main className="pub-main">
