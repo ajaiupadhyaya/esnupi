@@ -12,10 +12,9 @@
   - `src/lib/projectsData.ts`
 - Add `.env` from `.env.example` if you need optional integrations.
 - Every Work and Experiment needs a report: `public/reports/<id>.pdf` plus `report` on the
-  project in `src/lib/projectsData.ts`. Still missing: Delegating to the Machine (the v1.0.0
-  release PDF), Financial Modeling for Wealth Management, Sports + Quant, Prediction Markets
-  Analysis, Injury-Risk Computer Vision, and Wall Machine. Until then they read
-  "In preparation" on `/publications`.
+  project in `src/lib/projectsData.ts`. Still missing: Financial Modeling for Wealth
+  Management, Sports + Quant, Prediction Markets Analysis, Injury-Risk Computer Vision, and
+  Wall Machine. Until then they read "In preparation" on `/publications`.
 
 ## Optional integrations
 

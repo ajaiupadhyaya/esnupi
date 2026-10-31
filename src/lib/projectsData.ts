@@ -99,6 +99,13 @@ export const PROJECTS: Project[] = [
       { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7667658", kind: "press" },
       { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.23631273", kind: "external" },
     ],
+    // The paper exactly as released (tag v1.0.0), appendices included.
+    report: {
+      src: "/reports/delegating-to-the-machine.pdf",
+      title: "Delegating to the Machine: How People Hand Work to AI, and Whether Equity Markets Priced It",
+      date: "October 2026",
+      pages: 396,
+    },
   },
   {
     id: "sharp-markets",
