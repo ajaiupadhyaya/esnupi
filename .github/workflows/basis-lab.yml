@@ -92,7 +92,8 @@ jobs:
           git push -q origin "$BRANCH"
           gh pr create --draft --base main --head "$BRANCH" \
             --title "BASIS draft No. $(printf '%03d' "$NUMBER"): $TITLE" \
-            --body-file "$RUN_DIR/PR_BODY.md"
+            --body-file "$RUN_DIR/PR_BODY.md" \
+          || echo "::warning::Branch $BRANCH was pushed, but the PR could not be opened. Enable Settings > Actions > General > 'Allow GitHub Actions to create and approve pull requests', or open it from the branch."
 
       - name: Keep run files
         if: always()

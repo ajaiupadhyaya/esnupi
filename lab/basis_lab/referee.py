@@ -103,7 +103,7 @@ def referee(cfg, budget: Budget, repo: Path, run_dir: Path, mdx: str, log) -> di
         f"<analysis_py>\n{(run_dir / 'analysis.py').read_text()[:30000]}\n</analysis_py>\n\n"
         f"<machine_number_audit unmatched=\"{len(unmatched)}\">{json.dumps(unmatched)}</machine_number_audit>"
     )
-    report, _ = ask_json(budget, "referee", log=log, require="verdict", model=cfg["models"]["referee"], max_tokens=8000,
+    report, _ = ask_json(budget, "referee", log=log, require="verdict", model=cfg["models"]["referee"], max_tokens=16000,
                          system=REFEREE_SYSTEM, messages=[{"role": "user", "content": payload}])
     report["unmatched_numbers"] = unmatched
     n_block = sum(1 for i in report.get("issues", []) if i.get("severity") == "blocking")
