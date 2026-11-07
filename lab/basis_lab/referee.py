@@ -98,7 +98,7 @@ def referee(cfg, budget: Budget, repo: Path, run_dir: Path, mdx: str, log) -> di
     payload = (
         f"<style_guide>\n{style}\n</style_guide>\n\n"
         f"<draft>\n{mdx}\n</draft>\n\n"
-        f"<results_json>\n{(run_dir / 'results.json').read_text()[:25000]}\n</results_json>\n\n"
+        f"<results_json>\n{(run_dir / 'results.json').read_text()[:90000]}\n</results_json>\n\n"
         f"<run_log_tail>\n{(run_dir / 'logs/final_run.txt').read_text()[-4000:] if (run_dir / 'logs/final_run.txt').exists() else ''}\n</run_log_tail>\n\n"
         f"<analysis_py>\n{(run_dir / 'analysis.py').read_text()[:30000]}\n</analysis_py>\n\n"
         f"<machine_number_audit unmatched=\"{len(unmatched)}\">{json.dumps(unmatched)}</machine_number_audit>"

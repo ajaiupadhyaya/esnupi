@@ -83,7 +83,7 @@ def write_issue(cfg, budget: Budget, repo: Path, run_dir: Path, proposal: dict, 
         figures=", ".join(figs) or "(none)",
         proposal=json.dumps(proposal, indent=2, ensure_ascii=False),
         notes=(run_dir / "notes.md").read_text()[:30000],
-        results=(run_dir / "results.json").read_text()[:30000],
+        results=(run_dir / "results.json").read_text()[:90000],
         runlog=runlog.read_text()[-4000:] if runlog.exists() else "",
         data_request=("\n--- data_request.md (mention under 'What I'd do next') ---\n" + dr.read_text()[:4000]) if dr.exists() else "",
     )
