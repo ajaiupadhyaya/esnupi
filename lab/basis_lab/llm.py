@@ -126,7 +126,30 @@ class Budget:
             }
         )
         self.ledger.save()  # persist after every call, so a crash never loses spend
+        self._maybe_checkpoint()
         return resp
+
+    def _maybe_checkpoint(self, force: bool = False) -> None:
+        """In CI, push the ledger to its branch every $0.25, so a runner that dies
+        mid-run (no `if: always()` step runs then) loses at most that much accounting."""
+        import os
+        import subprocess
+
+        if not os.environ.get("BASIS_LEDGER_PUSH"):
+            return
+        if not force and self.ledger.total_usd - getattr(self, "_pushed_at", 0.0) < 0.25:
+            return
+        d = str(self.ledger.path.parent)
+        try:
+            subprocess.run(["git", "-C", d, "add", self.ledger.path.name], check=True, capture_output=True, timeout=30)
+            subprocess.run(["git", "-C", d, "-c", "user.name=basis-lab", "-c",
+                            "user.email=41898282+github-actions[bot]@users.noreply.github.com",
+                            "commit", "-q", "-m", f"ledger checkpoint {self.run_id} ${self.ledger.total_usd:.2f}"],
+                           capture_output=True, timeout=30)
+            subprocess.run(["git", "-C", d, "push", "-q", "origin", "lab-state"], capture_output=True, timeout=60)
+            self._pushed_at = self.ledger.total_usd
+        except Exception:  # noqa: BLE001 — accounting checkpoint must never kill a run
+            pass
 
     def close_run(self, status: str, slug: str | None = None, pr: str | None = None) -> dict:
         rec = {

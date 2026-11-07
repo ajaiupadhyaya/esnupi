@@ -63,6 +63,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASIS_TOPIC: ${{ github.event.inputs.topic }}
+          BASIS_LEDGER_PUSH: "1"
         run: python -m basis_lab.run --ledger ../.lab-state/ledger.json
         continue-on-error: true
 

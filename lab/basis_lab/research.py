@@ -144,6 +144,13 @@ def child_env(run_dir: Path) -> dict[str, str]:
     return keep
 
 
+def _limit_resources() -> None:
+    """Cap generated code at 6 GB of memory so a runaway script can't take down the runner."""
+    import resource
+    gb = 6 * 1024**3
+    resource.setrlimit(resource.RLIMIT_AS, (gb, gb))
+
+
 def run_py(run_dir: Path, filename: str, timeout: int) -> tuple[int, str]:
     try:
         cp = subprocess.run(
@@ -153,6 +160,7 @@ def run_py(run_dir: Path, filename: str, timeout: int) -> tuple[int, str]:
             capture_output=True,
             text=True,
             timeout=timeout,
+            preexec_fn=_limit_resources if os.name == "posix" else None,
         )
         out = (cp.stdout or "") + ("\n[stderr]\n" + cp.stderr if cp.stderr.strip() else "")
         return cp.returncode, out
