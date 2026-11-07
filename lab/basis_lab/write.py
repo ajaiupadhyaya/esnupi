@@ -87,8 +87,10 @@ def write_issue(cfg, budget: Budget, repo: Path, run_dir: Path, proposal: dict, 
         runlog=runlog.read_text()[-4000:] if runlog.exists() else "",
         data_request=("\n--- data_request.md (mention under 'What I'd do next') ---\n" + dr.read_text()[:4000]) if dr.exists() else "",
     )
-    resp = budget.call("write", model=cfg["models"]["writer"], max_tokens=12000,
+    resp = budget.call("write", model=cfg["models"]["writer"], max_tokens=20000,
                        system=_system(repo, cfg, style), messages=[{"role": "user", "content": task}])
+    if resp.stop_reason == "max_tokens":
+        raise RuntimeError("writer hit the output limit; draft would be truncated")
     mdx = clean_mdx(text_of(resp))
     log(f"writer: draft {len(mdx.split())} words")
     return mdx
@@ -96,10 +98,12 @@ def write_issue(cfg, budget: Budget, repo: Path, run_dir: Path, proposal: dict, 
 
 def revise_issue(cfg, budget: Budget, repo: Path, draft: str, report: dict, log) -> str:
     style = (repo / "lab/style/STYLE.md").read_text()
-    resp = budget.call("write", model=cfg["models"]["writer"], max_tokens=12000,
+    resp = budget.call("write", model=cfg["models"]["writer"], max_tokens=20000,
                        system=_system(repo, cfg, style),
                        messages=[{"role": "user", "content": REVISE_TASK.format(
                            report=json.dumps(report, indent=2, ensure_ascii=False), draft=draft)}])
+    if resp.stop_reason == "max_tokens":
+        raise RuntimeError("writer hit the output limit on revision")
     mdx = clean_mdx(text_of(resp))
     log(f"writer: revision {len(mdx.split())} words")
     return mdx

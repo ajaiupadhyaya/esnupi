@@ -150,18 +150,55 @@ def text_of(resp: Any) -> str:
 
 
 def extract_json(text: str) -> Any:
-    """Pull the last JSON object/array out of a model reply (tolerates ```json fences)."""
+    """Pull the largest valid JSON object/array out of a model reply.
+
+    Tolerates ```json fences, prose before/after, and text blocks that were split
+    around server-tool calls. Raises ValueError if nothing parses (e.g. truncated).
+    """
     import re
 
+    dec = json.JSONDecoder()
     fenced = re.findall(r"```(?:json)?\s*(.*?)```", text, flags=re.S)
-    candidates = fenced[::-1] + [text]
-    for c in candidates:
-        c = c.strip()
-        for opener, closer in (("{", "}"), ("[", "]")):
-            i, j = c.find(opener), c.rfind(closer)
-            if i != -1 and j > i:
-                try:
-                    return json.loads(c[i : j + 1])
-                except json.JSONDecodeError:
-                    continue
-    raise ValueError("No JSON found in model output:\n" + text[:2000])
+    best = None
+    for c in fenced + [text]:
+        for m in re.finditer(r"[\{\[]", c):
+            try:
+                obj, end = dec.raw_decode(c, m.start())
+            except json.JSONDecodeError:
+                continue
+            if best is None or end - m.start() > best[0]:
+                best = (end - m.start(), obj)
+    if best is None:
+        raise ValueError("No valid JSON in model output (truncated?):\n" + text[:1500])
+    return best[1]
+
+
+def ask_json(budget: "Budget", stage: str, log=print, require: str | None = None, **kwargs: Any) -> tuple[Any, Any]:
+    """Call the model, parse JSON; on failure, resume pause_turn / max_tokens or ask once
+    for a corrected reply. Returns (parsed, last_response)."""
+    messages = list(kwargs.pop("messages"))
+    text = ""
+    for attempt in range(4):
+        resp = budget.call(stage, messages=messages, **kwargs)
+        text += text_of(resp)
+        stop = getattr(resp, "stop_reason", "")
+        if stop == "pause_turn":  # server tool still running: resend to resume
+            messages = messages + [{"role": "assistant", "content": resp.content}]
+            continue
+        try:
+            if stop == "max_tokens":
+                raise ValueError("cut off at the output limit")
+            obj = extract_json(text)
+            if require and not (isinstance(obj, dict) and require in obj):
+                raise ValueError(f"missing required key '{require}'")
+            return obj, resp
+        except ValueError as e:
+            log(f"{stage}: unparseable JSON (stop={stop}); asking for a corrected reply")
+            messages = messages + [
+                {"role": "assistant", "content": resp.content},
+                {"role": "user", "content": f"Your reply was not valid JSON ({'cut off at the output limit' if stop == 'max_tokens' else str(e)[:200]}). "
+                 "Reply again with ONLY the complete JSON object, more concisely, no prose and no tool calls."},
+            ]
+            # Keep `tools` as-is: history may hold server_tool_use blocks that need them.
+            text = ""
+    raise ValueError(f"{stage}: no valid JSON after retries")
