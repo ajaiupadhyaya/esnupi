@@ -8,3 +8,11 @@ dist
 music/
 tsconfig.tsbuildinfo
 
+
+# BASIS Lab
+lab/runs/*/data/
+lab/runs/_work-*/
+lab/state/
+.lab-state/
+__pycache__/
+lab/runs/*/logs/research_transcript.jsonl

@@ -1,0 +1,92 @@
+# BASIS Lab configuration. Edit freely; the pipeline reads this on every run.
+
+[budget]
+# Hard ceiling across ALL runs, tracked in ledger.json on the `lab-state` branch.
+# Raise this when you're happy with the trial (e.g. to 90 for a monthly budget).
+total_usd = 10.00
+# Hard ceiling for a single run. The run aborts (no PR) if it would exceed this.
+per_run_usd = 3.50
+# Don't start a run unless at least this much budget remains.
+min_to_start_usd = 1.50
+# Per-stage soft caps (USD). A stage that hits its cap is told to wrap up.
+scout_usd = 0.40
+research_usd = 2.20
+write_usd = 0.80
+referee_usd = 0.30
+
+[models]
+scout = "claude-sonnet-5-5"
+research = "claude-sonnet-5-5"
+writer = "claude-opus-5-5"
+referee = "claude-sonnet-5-5"
+
+# USD per million tokens. Source: platform.claude.com/docs/en/about-claude/pricing (Nov 2026).
+[pricing.claude-opus-5-5]
+input = 4.00
+cache_write = 5.00
+cache_read = 0.20
+output = 20.00
+
+[pricing.claude-sonnet-5-5]
+input = 2.00
+cache_write = 2.50
+cache_read = 0.10
+output = 10.00
+
+[pricing.claude-haiku-5-5]
+input = 0.10
+cache_write = 0.125
+cache_read = 0.01
+output = 0.50
+
+[tools]
+web_search_type = "web_search_20250305"
+web_fetch_type = "web_fetch_20250910"
+web_search_usd = 0.01          # $10 per 1,000 searches
+scout_max_searches = 6
+research_max_searches = 8
+research_max_fetches = 12
+fetch_max_content_tokens = 15000
+research_max_turns = 30
+python_timeout_s = 300
+
+[sources]
+# RSS/Atom feeds read for free (no tokens) by the scout before it calls the model.
+# Dead feeds are skipped and logged; add or remove as you like.
+feeds = [
+  "https://blog.janestreet.com/feed.xml",
+  "https://quantocracy.com/feed/",
+  "https://libertystreeteconomics.newyorkfed.org/feed/",
+  "https://www.federalreserve.gov/feeds/feds_notes.xml",
+  "https://rss.arxiv.org/rss/q-fin",
+  "https://alphaarchitect.com/feed/",
+  "https://www.bis.org/doclist/all_rss.rss",
+  "https://www.aqr.com/Insights/Research/rss",
+]
+# Firms without usable feeds. The scout web-searches these for recent posts.
+search_targets = [
+  "Citadel Securities insights",
+  "D. E. Shaw research",
+  "J.P. Morgan Asset Management insights",
+  "Two Sigma insights",
+  "Man Group Man Institute",
+]
+# Free data the researcher may use. University sources (WRDS, Bloomberg) are
+# never fetched automatically; the researcher writes a data request instead.
+free_data = [
+  "FRED (fred.stlouisfed.org) — macro, rates, spreads; CSV via fredgraph.csv?id=SERIES",
+  "SEC EDGAR — filings and XBRL company facts (data.sec.gov), needs a User-Agent",
+  "Kenneth French Data Library — factor returns",
+  "Yahoo Finance via yfinance — daily equity/ETF/FX prices",
+  "U.S. Treasury fiscal data and yield curve CSVs",
+  "BLS public API v1 (no key)",
+  "CFTC Commitments of Traders",
+  "World Bank / IMF open data",
+]
+
+[style]
+# Example issues fed to the writer as gold-standard references (prompt-cached).
+exemplars = [
+  "src/content/basis/005-is-the-number-any-good.mdx",
+  "src/content/basis/003-where-credit-becomes-fragile.mdx",
+]
