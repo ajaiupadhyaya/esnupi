@@ -1,0 +1,94 @@
+{
+  "verdict": "revise",
+  "issues": [
+    {
+      "severity": "major",
+      "quote": "wide enough to include a gap the size of the CPI result.",
+      "problem": "This is true for the 10-year breakeven interval (−0.95 to +0.38) but false for 5y5y (−0.20 to +1.20), which excludes −0.50. The Limits row repeats the error: 'The tests cannot rule out a gap the size of the CPI result'. The 5y5y test is therefore mild evidence against a −0.50 gap on that inflation measure. The Summary line 'Neither confirms or refutes' also understates this.",
+      "fix": "Say the 10-year breakeven interval includes −0.50. Say the 5y5y interval (−0.20 to +1.20) does not, so it is in tension with the CPI result. Fix the Limits row and the Summary to match. The tension is also a reason to be cautious about the pooled YES."
+    },
+    {
+      "severity": "major",
+      "quote": "Split the sample at 2000 and most of that gap goes",
+      "problem": "Within-era gaps are −0.28 and −0.25 against a pooled −0.50, so about half remains in each era. 'Most goes', 'mostly an era gap' (title) and 'Most of that gap is a difference between eras' overstate this. The within-era intervals are wider because the samples are smaller, so 'includes zero' is not evidence of no effect. The exploratory difference-in-differences gaps within eras (−0.43, −0.35) are about 52–64% of the pooled −0.67.",
+      "fix": "Replace with 'about half the gap remains within each era, with intervals too wide to tell'. Retitle, for example 'an inflation gap that roughly halves within eras'. Align the lead, Summary and Section 5 with this."
+    },
+    {
+      "severity": "major",
+      "quote": "| 1962–1999 | 142 / 57 | −0.41% | −0.14% | −0.28 (−0.64 to +0.13) |",
+      "problem": "In analysis.py each era subsample is run through `run(...)`, which recomputes the 10% equity cutoff within that era. This is not disclosed. Tail counts do not reconcile with the pooled test: 142+55 is 197, not 194, and 57+86 is 143, not 145. They also differ from the decade table, which uses the full-sample −2.40% cutoff (1962–99 gives 131 high and 53 low). The era gaps are therefore not like-for-like with the pooled gap, so the 'about half' comparison is partly confounded by a different tail definition.",
+      "fix": "Say the era rows redefine the worst 10% inside each era. Also report era gaps using the fixed −2.40% cutoff so they are comparable with the pooled estimate and the decade table. Explain the count differences."
+    },
+    {
+      "severity": "major",
+      "quote": "It pools eras, and the full-sample interaction is mostly the pre-2000 era against the post-2000 one.",
+      "problem": "No regression was run with era terms or by era. The only supporting evidence is that the 2003–2026 interaction shrinks, which is a subsample result, not an era decomposition. The assertion is untested.",
+      "fix": "Run the regression with an era dummy and its interaction, or separately for 1962–1999 and 2000–2026. Otherwise soften to 'may largely reflect'."
+    },
+    {
+      "severity": "minor",
+      "quote": "The gap survives every planned check: block lengths from 4 to 52 weeks, 5% and 20% tails, core CPI, an extra month of lag, and price return without carry.",
+      "problem": "Price return without carry is labelled exploratory in Section 4, results.json and analysis.py, so it is not a 'planned check'. The pre-specification docstring in analysis.py lists only the primary test and the breakeven repeat. The claim that block lengths, tails, core CPI and lag were planned before seeing outcomes is not documented in the code.",
+      "fix": "Remove price return from the 'planned' list, or flag it as exploratory in the same sentence. Either amend the docstring to record what was pre-specified, or change 'planned' to 'robustness checks'."
+    },
+    {
+      "severity": "minor",
+      "quote": "Defining the tail within each regime gives −0.57.",
+      "problem": "The value is −0.5650 (−0.56496), which rounds to −0.56, not −0.57. The table row repeats −0.57.",
+      "fix": "Change to −0.56 in the table and prose."
+    },
+    {
+      "severity": "minor",
+      "quote": "With an average equity tail week near −2.4% or worse, that is a material part of what a hedge is for.",
+      "problem": "−2.40% is the cutoff, not the mean. Mean tail-week equity returns in the logs are roughly −2.9% to −4.7% by period. 'Material part of what a hedge is for' is vague and has no number behind it.",
+      "fix": "Quote the mean tail-week S&P return from the analysis, add it to results.json, and express the gap relative to it. Or drop the sentence."
+    },
+    {
+      "severity": "minor",
+      "quote": "IEF's slope below 1 reflects its shorter duration.",
+      "problem": "This is untested. A slope of ETF on proxy below 1 can also come from proxy noise (attenuation) or from the proxy's duration differing from the ETF's, and no ETF duration figure is cited.",
+      "fix": "Say 'is consistent with' and mention attenuation, or cite IEF's duration."
+    },
+    {
+      "severity": "minor",
+      "quote": "In 2022 alone, 16 tail weeks averaged −0.69% for the bond (interval −1.11% to −0.37%)",
+      "problem": "This is a stationary bootstrap with a mean 13-week block on a 52-week sample (about 4 blocks), so the interval is fragile. It is also exploratory with a post-hoc period choice.",
+      "fix": "Note the tiny effective sample, or report it descriptively without an interval."
+    },
+    {
+      "severity": "minor",
+      "quote": "In exploratory five-year blocks, the correlation is +0.19 to +0.49 in every block from 1965 to 1999.",
+      "problem": "The `corr_by_5yr_block` values and the regression coefficients (−0.048, 0.142, 0.082, +0.071, +0.160 and their s.e.) are cut off in the supplied results.json, so I could not confirm them. Only the +0.067 (0.045) BE10 regression matches the log. The first partial block (1960–64) is silently excluded, and the last block is labelled 2025–26 in the draft but 2025–29 in the code.",
+      "fix": "Confirm every figure against the full results.json. State that the 1960–64 block is omitted and why."
+    },
+    {
+      "severity": "minor",
+      "quote": "[The U.S. Oil Sector's Role in Restraining Prices](https://libertystreeteconomics.newyorkfed.org/2026/11/the-u-s-oil-sectors-role-in-restraining-prices/), Liberty Street Economics, November 2026, as context only.",
+      "problem": "This source is not referenced anywhere in the body. The oil/supply-demand idea is attributed to Li and Yoldas.",
+      "fix": "Remove it, or cite it where it is used."
+    },
+    {
+      "severity": "minor",
+      "quote": "## 3. The pre-specified result",
+      "problem": "The note appears to be well over the 1,500–2,800 word limit, at roughly 3,500 words including tables. Sections 5 and 6 carry many exploratory numbers. Figures 2 and 3 are not explicitly referenced in the prose, and 'How this was made' lacks a statement about positions.",
+      "fix": "Trim the exploratory material, for example merge the 2022/2000–2020 paragraph and the five-year block correlations. Reference Figures 2 and 3 in the text. Add 'I hold no position in Treasuries or equity index products' if true."
+    }
+  ],
+  "interview_questions": [
+    "Your within-era gaps are about half the pooled gap and their intervals are wide. Why call it 'mostly an era gap' rather than 'inflation effect of roughly half the size, unresolved'? What does an era-fixed-effects estimate with a CI give?",
+    "The era subsamples recompute the worst-10% cutoff within each era, so tail weeks differ from the pooled test. How much of the −0.50 to −0.28 shrinkage comes from the tail redefinition?",
+    "The 5y5y interval (−0.20 to +1.20) excludes −0.50. Why is that 'inconclusive' rather than evidence against an inflation-regime effect on a market-based measure?",
+    "Your bond proxy is validated only after 2002, yet the claim rests on the 1970s–80s. What errors could constant-maturity yields and a par-bond duration model introduce there, for example with interest-rate volatility, and could they correlate with CPI regime?",
+    "You tried thresholds of 2%, 2.5%, 4% and 5%, the era split, difference-in-differences and decade cuts after seeing the primary result. How would you count the forking paths, and what is the effective number of independent episodes in the 194 high-regime tail weeks?"
+  ],
+  "author_checklist": [
+    "Open the full results.json (it is truncated here) and verify the regression table values, the 2003–2026 CPI regression (+0.071, s.e. 0.048), the downside regression (+0.160, s.e. 0.052) and every `corr_by_5yr_block` figure quoted.",
+    "Confirm that the era-split rows use era-specific tail cutoffs. Decide whether to disclose this or rerun with the −2.40% cutoff, and reconcile the 142/55 and 57/86 counts with the pooled and decade counts.",
+    "Decide honestly which robustness checks were pre-specified before the primary result and make the wording and the analysis.py docstring agree.",
+    "Check the Li and Yoldas (2026) attributions (correlation with yield changes, supply/demand-shock argument, oil covariate) against the source, and confirm the URLs and dates resolve.",
+    "Rewrite the title, dek, lead, Limits row and Summary so they say 'about half' within eras, and so the 5y5y interval is described accurately.",
+    "Cut the length towards 2,800 words and check that all three figures render, with their alt text matching the final chart titles."
+  ],
+  "one_line": "The numbers largely trace to results.json, but the headline 'mostly an era gap' overstates a roughly 50% shrinkage in wide, non-like-for-like era subsamples, and the 5y5y interval is misdescribed as including the CPI-sized gap.",
+  "unmatched_numbers": []
+}

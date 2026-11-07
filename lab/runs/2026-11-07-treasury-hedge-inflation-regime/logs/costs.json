@@ -1,0 +1,221 @@
+{
+  "run_usd": 1.9359319,
+  "by_stage": {
+    "scout": 0.09991799999999999,
+    "research": 0.7354358999999998,
+    "write": 0.65947,
+    "referee": 0.441108
+  },
+  "calls": [
+    {
+      "stage": "scout",
+      "model": "claude-sonnet-5-5",
+      "in": 13409,
+      "cache_w": 0,
+      "cache_r": 0,
+      "out": 7310,
+      "searches": 0,
+      "usd": 0.09992
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 4,
+      "cache_w": 1188,
+      "cache_r": 5550,
+      "out": 520,
+      "searches": 0,
+      "usd": 0.00873
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 924,
+      "cache_r": 6738,
+      "out": 2635,
+      "searches": 0,
+      "usd": 0.02934
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 3138,
+      "cache_r": 7662,
+      "out": 15171,
+      "searches": 0,
+      "usd": 0.16033
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 15212,
+      "cache_r": 10800,
+      "out": 85,
+      "searches": 0,
+      "usd": 0.03996
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 323,
+      "cache_r": 26012,
+      "out": 10697,
+      "searches": 0,
+      "usd": 0.11038
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 11156,
+      "cache_r": 26335,
+      "out": 366,
+      "searches": 0,
+      "usd": 0.03419
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 550,
+      "cache_r": 37491,
+      "out": 751,
+      "searches": 0,
+      "usd": 0.01264
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 1022,
+      "cache_r": 38041,
+      "out": 211,
+      "searches": 0,
+      "usd": 0.00847
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 4,
+      "cache_w": 25356,
+      "cache_r": 81876,
+      "out": 4684,
+      "searches": 0,
+      "usd": 0.11843
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 4942,
+      "cache_r": 64419,
+      "out": 852,
+      "searches": 0,
+      "usd": 0.02732
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 2672,
+      "cache_r": 69361,
+      "out": 513,
+      "searches": 0,
+      "usd": 0.01875
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 789,
+      "cache_r": 72033,
+      "out": 6124,
+      "searches": 0,
+      "usd": 0.07042
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 6164,
+      "cache_r": 72822,
+      "out": 690,
+      "searches": 0,
+      "usd": 0.0296
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 848,
+      "cache_r": 78986,
+      "out": 920,
+      "searches": 0,
+      "usd": 0.01922
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 1520,
+      "cache_r": 79834,
+      "out": 991,
+      "searches": 0,
+      "usd": 0.0217
+    },
+    {
+      "stage": "research",
+      "model": "claude-sonnet-5-5",
+      "in": 2,
+      "cache_w": 1249,
+      "cache_r": 81354,
+      "out": 1470,
+      "searches": 0,
+      "usd": 0.02596
+    },
+    {
+      "stage": "write",
+      "model": "claude-opus-5-5",
+      "in": 26435,
+      "cache_w": 13145,
+      "cache_r": 0,
+      "out": 11451,
+      "searches": 0,
+      "usd": 0.40048
+    },
+    {
+      "stage": "referee",
+      "model": "claude-sonnet-5-5",
+      "in": 39120,
+      "cache_w": 0,
+      "cache_r": 0,
+      "out": 13739,
+      "searches": 0,
+      "usd": 0.21563
+    },
+    {
+      "stage": "write",
+      "model": "claude-opus-5-5",
+      "in": 11679,
+      "cache_w": 0,
+      "cache_r": 13145,
+      "out": 10482,
+      "searches": 0,
+      "usd": 0.25899
+    },
+    {
+      "stage": "referee",
+      "model": "claude-sonnet-5-5",
+      "in": 39459,
+      "cache_w": 0,
+      "cache_r": 0,
+      "out": 14656,
+      "searches": 0,
+      "usd": 0.22548
+    }
+  ]
+}

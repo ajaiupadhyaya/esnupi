@@ -1,0 +1,268 @@
+{
+  "items": [
+    {
+      "source": "Jane Street Blog",
+      "title": "Our software engineering interviews are changing (a little)",
+      "url": "https://blog.janestreet.com/software-engineering-interviews-are-changing-a-little/",
+      "date": "Mon, 02 Nov 2026",
+      "summary": "Over the last few years, LLMs have changed how software gets built and that\u2019s no different for us at Jane Street. Most of our engineers now use them every day not only for writing code, but also for reading, debugging, and reviewing code, and plenty of things that aren\u2019t code at all."
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "Flex Model: an event-driven feature engineering system",
+      "url": "https://blog.janestreet.com/flex-model-an-event-driven-feature-engineering-system/",
+      "date": "Tue, 13 Oct 2026",
+      "summary": "Neural networks are a tool we use heavily in many trading strategies. But raw market data can\u2019t be fed to a neural net as-is. It\u2019s an unstructured input that needs normalization and feature extraction first."
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "Building and testing a config management orchestrator for Windows",
+      "url": "https://blog.janestreet.com/config-management-orchestrator-for-windows/",
+      "date": "Tue, 06 Oct 2026",
+      "summary": "The following is part of a series of posts about 2026 summer intern projects\u2014for more, see \u201cWhat the interns have wrought, special jumbo 2026 edition\u201d"
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "Scaling and benchmarking a critical message bus using a new indexing strategy",
+      "url": "https://blog.janestreet.com/scaling-and-benchmarking-a-critical-message-bus/",
+      "date": "Mon, 05 Oct 2026",
+      "summary": "The following is part of a series of posts about 2026 summer intern projects\u2014for more, see \u201cWhat the interns have wrought, special jumbo 2026 edition\u201d"
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "How recurring network maintenance exposed 6 bugs",
+      "url": "https://blog.janestreet.com/how-recurring-network-maintenance-exposed-6-bugs/",
+      "date": "Fri, 02 Oct 2026",
+      "summary": "Jane Street does a lot of network maintenance over the weekends. In each maintenance, a cabinet may lose connectivity for 15 to 25 minutes. Our internal Kafka infrastructure is supposed to be resilient to these partitions, and reconnect when connectivity resumes. For several months this year, it didn\u2019t: processes segfaulted, leaked hundreds of thousands of sockets, or crashed in a surge of half a "
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "Results from the ASIC puzzle",
+      "url": "https://blog.janestreet.com/asic-puzzle-results/",
+      "date": "Fri, 02 Oct 2026",
+      "summary": ""
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "A resilient kernel log reporter",
+      "url": "https://blog.janestreet.com/linux-engineering-kernel-reporter-index/",
+      "date": "Thu, 01 Oct 2026",
+      "summary": "The following is part of a series of posts about 2026 summer intern projects\u2014for more, see \u201cWhat the interns have wrought, special jumbo 2026 edition\u201d"
+    },
+    {
+      "source": "Jane Street Blog",
+      "title": "A FUSE server for our in-house storage backend",
+      "url": "https://blog.janestreet.com/linux-engineering-depot-fuse-index/",
+      "date": "Thu, 01 Oct 2026",
+      "summary": "The following is part of a series of posts about 2026 summer intern projects\u2014for more, see \u201cWhat the interns have wrought, special jumbo 2026 edition\u201d"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 11/04/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-11042026/",
+      "date": "Thu, 05 Nov 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Wednesday, 11/04/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Why optimising for the left tail of outcomes is like playing chess&#8230; [Investment Idiocy] A short one today. Suppose I offer you N trading strategies to choose between. [&#8230;] The post Recent Quant Links from Quantocracy as of 11/04/"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 11/01/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-11012026/",
+      "date": "Mon, 02 Nov 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Sunday, 11/01/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Strategy of the Week #3: The Pre-FOMC Drift in S&#38;P 500 Futures [Delphic Alpha] Buy S&#38;P 500 futures at the 16:00 New York close on the trading day [&#8230;] The post Recent Quant Links from Quantocracy as of 11/01/2026 appeared first on"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/31/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10312026/",
+      "date": "Sun, 01 Nov 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Saturday, 10/31/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Outperforming the S&#38;P500 with macro factors [Macrosynergy] We present a cost-efficient method for outperforming the broad U.S. equity market. It uses deep learning and macroeconomic factors to optimize [&#8230;] The post Recent Quant Lin"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/27/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10272026/",
+      "date": "Wed, 28 Oct 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Tuesday, 10/27/2026. To see our most recent links, visit the Quant Mashup. Read on readers! The Part Time Trader Part 5: Half a Million Backtests &#38; a Coin Flip [Algorithmic Advantage] Half a million tests can map an opportunity or manufacture a winner; [&#8230;] The post Recent Quant Links from Quantocracy as of 10/27/2026 appea"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/24/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10242026/",
+      "date": "Sun, 25 Oct 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Saturday, 10/24/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Shorting Leveraged ETFs: Role of Borrowing Costs and Rebalancing in Volatility-Decay Strategies [Quantpedia] Leveraged ETFs provide amplified exposure to an underlying index, but their daily reset mechanism creates [&#8230;] The post Recent "
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/22/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10222026/",
+      "date": "Fri, 23 Oct 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Thursday, 10/22/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Momentum timed with the rate of change (ROC) on the S&#38;P 500&#8217;s ten steepest trends [Quanter Lab] Momentum is one of the oldest ideas in trading: buy what [&#8230;] The post Recent Quant Links from Quantocracy as of 10/22/2026 appear"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/18/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10182026/",
+      "date": "Mon, 19 Oct 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Sunday, 10/18/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Less Wrong [Quantitativo] The biggest risk is that you have a losing strategy when you think you have a winning one. Jeff Yass Last month, while listening to [&#8230;] The post Recent Quant Links from Quantocracy as of 10/18/2026 appeared firs"
+    },
+    {
+      "source": "Quantocracy, Author at Quantocracy",
+      "title": "Recent Quant Links from Quantocracy as of 10/15/2026",
+      "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10152026/",
+      "date": "Fri, 16 Oct 2026",
+      "summary": "This is a summary of links recently featured on Quantocracy as of Thursday, 10/15/2026. To see our most recent links, visit the Quant Mashup. Read on readers! Financial Mentor&#8217;s OptimumV [Allocate Smartly] This is a test of OptimumV from Todd Tresidder of Financial Mentor. Backtested results from 1987 follow. Results are net of transaction costs [&#8230;] The post Recent Quant Links from Qua"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "The U.S. Oil Sector\u2019s Role in Restraining Prices",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/11/the-u-s-oil-sectors-role-in-restraining-prices/",
+      "date": "Thu, 05 Nov 2026",
+      "summary": "The start of the Middle East conflict in early 2026 caused an unprecedented drop in global petroleum supply. In response, oil prices jumped\u2014but not to unprecedentedly high levels. The U.S. oil sector was a key factor in moderating the shock. For one, its steady increases in drilling helped create a large oversupply in the global market before the conflict, making it less of a challenge to offset t"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "How Market Position Shapes Credit Card Interest Rates",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/11/how-market-position-shapes-credit-card-interest-rates/",
+      "date": "Wed, 04 Nov 2026",
+      "summary": "Why is it that two borrowers who look much alike can be offered very different rates when applying for a credit card? In a recent paper , we address this question by examining how the rate offered changes when the lender\u2019s funding cost falls. Data on 14 million newly issued cards show that when a lender's funding costs decline, the lender passes less of that decline on to the offer rate when it ho"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "How Do Banking Supervisors Deal with Failing Banks?",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/11/how-do-banking-supervisors-deal-with-failing-banks/",
+      "date": "Mon, 02 Nov 2026",
+      "summary": "In this post, we discuss insights from a recent staff report on the role of banking supervision in identifying and disciplining failing banks. We show that bank failures typically result from supervisory closure decisions based on hard information about book equity. Yet hard information is itself partly produced by supervision, as our evidence suggests that supervisors require troubled banks to re"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "Evaluating New LinkedIn Labor Market Tightness Indicators",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/10/evaluating-new-linkedin-labor-market-tightness-indicators/",
+      "date": "Fri, 30 Oct 2026",
+      "summary": "Measures of labor market tightness (LMT) describe how difficult it is for firms to find workers. The labor market is considered tight if there are few job seekers available relative to job openings, implying stronger wage pressures as employers compete for scarce job seekers. Thus, good measures of LMT are important for predicting wage inflation and calibrating monetary policy. Recently, the hirin"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "Revenue per Worker Is Up. Are Firms Getting a Larger Share?",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/10/revenue-per-worker-is-up-are-firms-getting-a-larger-share/",
+      "date": "Thu, 15 Oct 2026",
+      "summary": "From the Great Recession until 2019, U.S. labor productivity growth disappointed. Nonfarm-business output per hour grew about 1 percent a year from 2010 to 2019, down from 3 percent in the late 1990s. This slowdown was especially pronounced in manufacturing, and it coincided with a slowdown in the growth of revenue per worker among public firms. However, since 2019, growth has picked up to twice t"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "Has the AI Boom Impacted the U.S. Current Account?",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/10/has-the-ai-boom-impacted-the-u-s-current-account/",
+      "date": "Wed, 14 Oct 2026",
+      "summary": "The AI boom is showing up in different corners of the U.S. economy, including international trade. Imports of semiconductors, servers, and computing equipment have climbed sharply yet the U.S. current account deficit has been largely unchanged. To better understand how the AI boom has not substantially affected the trade balance, consider that the current account is dictated by the gap between dom"
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "Prices, Prices, Prices: Overall Inflation and the Costs You Care About",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/10/prices-prices-prices-overall-inflation-and-the-costs-you-care-about/",
+      "date": "Fri, 09 Oct 2026",
+      "summary": "As fall starts to show itself in cooler weather, I want to discuss a topic that usually raises temperatures: inflation. Like a budget-conscious consumer, the Federal Reserve is highly attuned to changes in the price of goods and services; minimizing such swings is one of the Fed\u2019s primary duties, after all. But how does the Fed\u2019s view of prices differ from that of a consumer? And how does the Fed "
+    },
+    {
+      "source": "Liberty Street Economics",
+      "title": "AI Adoption and Employment Expectations: Evidence from a Survey of Small Business Owners",
+      "url": "https://libertystreeteconomics.newyorkfed.org/2026/10/ai-adoption-and-employment-expectations-evidence-from-a-survey-of-small-business-owners/",
+      "date": "Thu, 08 Oct 2026",
+      "summary": "There is little consensus on the effect of AI adoption on employment. Economy-wide measures of pay and headcount have moved little even as AI adoption has spread rapidly, yet narrower measures document declining hiring for workers at the start of their careers or in AI-exposed occupations . In this post, we revisit this topic for U.S. small businesses. We use data from the 2025 Small Business Cred"
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Treasury Issuance and Dealer Balance Sheets",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/treasury-issuance-and-dealer-balance-sheets-20261030.html",
+      "date": "Fri, 30 Oct 2026",
+      "summary": "Jonathan Glicoes, Lubomir Petrasek , Zack Saravay , and Mary Tian Primary dealers play an important role as intermediaries in Treasury securities and repo markets, and demand for their intermediation rises on issuance dates. Recent increases in Treasury issuance have raised questions about dealers' capacity to meet this increased demand."
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Government Bonds\u2019 Safe-Haven Property and Inflationary Pressures",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/government-bonds-safe-haven-property-and-inflationary-pressures-20261016.html",
+      "date": "Fri, 16 Oct 2026",
+      "summary": "Canlin Li and Emre Yoldas Earlier this year, escalation of the conflict in the Middle East resulted in sharp declines in major stock indexes as energy prices rose and the global economic outlook deteriorated, but prices of long-term government bonds in major advanced economies also declined (Figure 1). This prompted some commentators to question the premise that government bonds in these major adv"
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Ripples in the Reserve Pool: Unveiling Liquidity Signals from the Federal Funds Market",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/ripples-in-the-reserve-pool-unveiling-liquidity-signals-from-the-federal-funds-market-20261016.html",
+      "date": "Fri, 16 Oct 2026",
+      "summary": "Sriya Anbil , Sebastian Infante, and Zeynep Senyuz When the Federal Reserve shifted to an ample-reserves framework, many observers started to question the relevance of the fed funds market. With reserves ample or abundant and rates anchored by administered floors, interbank borrowing declined sharply, and the market appeared to serve mainly as an arbitrage venue for non-bank institutions."
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Introducing Private Credit into the Financial Accounts of the United States",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/introducing-private-credit-into-the-financial-accounts-of-the-united-states-20261016.html",
+      "date": "Fri, 16 Oct 2026",
+      "summary": "Katie Brinkman, Christine Dobridge , Tim Dore , Simon Glossner , Elizabeth Holmquist , Nam Nguyen, Maria Perozek , and Irina Stefanescu Over the past decade, private credit has played an increasingly important role in providing funding to middle-market businesses. While there are several definitions of private credit, here we define it as privately negotiated loans to businesses that are originate"
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: The Rise of Semiliquid Funds for Retail Investors",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/the-rise-of-semiliquid-funds-for-retail-investors-20261014.html",
+      "date": "Wed, 14 Oct 2026",
+      "summary": "Logan George and Chaehee Shin Investment funds differ in how investors can access their capital. The redemption rules governing how and when investors can withdraw have evolved endogenously in response to shifting investor demand and regulatory constraints. While the immediate liquidity of open-end mutual funds and exchange-traded funds has long dominated the retail market, the landscape has been "
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Convenience Yields, Risk Premiums, and the Interpretation of Oil Futures Prices During Times of Geopolitical Conflict",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/convenience-yields-risk-premiums-and-the-interpretation-of-oil-futures-prices-during-geo-conflict-20261009.html",
+      "date": "Fri, 9 Oct 2026 ",
+      "summary": "Erik Heitfield , Yang-Ho Park and Erfan Danesh Earlier this year the Middle East conflict led to one of the largest global oil supply shocks in history (Bordoff and O'Sullivan, 2026). Past empirical research has found that commodity futures prices provide accurate predictions of future spot prices under normal market conditions (Reeve and Vigfusson, 2011; Chernenko et al., 2004)."
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Beyond the Current Account: U.S. Financial Flows and Global Imbalances",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/beyond-the-current-account-u-s-financial-flows-and-global-imbalances-20261009.html",
+      "date": "Fri, 9 Oct 2026 ",
+      "summary": "Cody Kallen and Alexandra Tabova Global imbalances have returned to the center of international policy discussions, including at the G7 and G20. These discussions have traditionally focused on current account (CA) balances and, in particular, on the drivers and consequences of persistent trade surpluses and deficits."
+    },
+    {
+      "source": "FRB: FEDS Notes",
+      "title": "FEDS Note: Assessing Monetary Policy Globally: Evidence from LLMs and Semi-structural Models",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/assessing-monetary-policy-globally-evidence-from-llms-and-semi-structural-models-20261009.html",
+      "date": "Fri, 9 Oct 2026 ",
+      "summary": "WanTing Xu and Diego Vil\u00e1n Over the past decades, central bank communication has become an increasingly important component of modern monetary policy frameworks. Policy rates, asset purchases, and balance-sheet tools remain central to the transmission of monetary policy, but speeches, press conferences, forward guidance, and other forms of public communication have all played a direct role in shap"
+    },
+    {
+      "source": "Alpha Architect",
+      "title": "Are Value and Momentum Still Everywhere?",
+      "url": "https://alphaarchitect.com/value-momentum-everywhere/",
+      "date": "Fri, 06 Nov 2026",
+      "summary": "Asness, Moskowitz, and Pedersen\u2019s \u201cValue and Momentum Everywhere\u201d provided evidence that value and momentum earned positive average returns across individual stocks, equity indexes, bonds, currencies, and commodities. Thirteen years after publication, we use AQR\u2019s public data to see how the factors held up out of sample, and what the decay might mean. Are Value and Momentum Still Everywhere? was o"
+    },
+    {
+      "source": "Alpha Architect",
+      "title": "Financial Intermediary Relationships and Public Market Access",
+      "url": "https://alphaarchitect.com/public-market-access/",
+      "date": "Mon, 02 Nov 2026",
+      "summary": "With limited operating histories, uncertain future earnings, and substantial intangible assets, startups often face significant information barriers when seeking access to public markets. But how valuable are these connections? If a venture capital firm loses its relationship with an investment bank, can it simply find another underwriter? Or does the disruption affect its ability to bring compani"
+    },
+    {
+      "source": "Alpha Architect",
+      "title": "Financial Advice Boosts Retirement Saving, but Not for Those Who Need It Most",
+      "url": "https://alphaarchitect.com/financial-advice-retirement/",
+      "date": "Tue, 27 Oct 2026",
+      "summary": "The authors' findings offer evidence of a positive role for financial advice. Advisor-initiated conversations substantially increase retirement saving activity, particularly investments in retirement funds. Financial Advice Boosts Retirement Saving, but Not for Those Who Need It Most was originally published at Alpha Architect . Please read the Alpha Architect disclosures at your convenience."
+    },
+    {
+      "source": "Alpha Architect",
+      "title": "Stock Price Bubble Dissection Requires a look at Fundamentals and Speculation",
+      "url": "https://alphaarchitect.com/stock-price-bubble/",
+      "date": "Tue, 20 Oct 2026",
+      "summary": "The authors of this research propose a new approach to identifying stock market bubbles by combining traditional valuation data with surveys of investors' expectations. Their findings also challenge the idea that bubbles matter only to financial markets. The authors show that increases in speculative stock valuations can stimulate economic activity, reduce unemployment, and influence monetary poli"
+    },
+    {
+      "source": "Alpha Architect",
+      "title": "Diversification All the Way Down",
+      "url": "https://alphaarchitect.com/diversification/",
+      "date": "Fri, 16 Oct 2026",
+      "summary": "Diversification is not a one-time decision. It should be applied within factors, across factors, and even across time if the goal is to build a more robust multifactor portfolio. That may sound obvious in theory, but in practice many factor portfolios still lean heavily on a single signal, a single style, or a single market regime. Diversification All the Way Down was originally published at Alpha"
+    }
+  ],
+  "errors": [
+    "https://rss.arxiv.org/rss/q-fin: no entries",
+    "https://www.bis.org/doclist/all_rss.rss: HTTPError: 404 Client Error: Not Found for url: https://www.bis.org/doclist/all_rss.rss",
+    "https://www.aqr.com/Insights/Research/rss: no entries"
+  ]
+}
