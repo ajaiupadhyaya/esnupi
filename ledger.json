@@ -1,5 +1,5 @@
 {
-  "total_usd": 0.2031,
+  "total_usd": 1.7221,
   "runs": [
     {
       "run_id": "2026-11-07-1644",
@@ -25,6 +25,21 @@
         "research": 0.022
       },
       "calls": 2
+    },
+    {
+      "run_id": "2026-11-07-1651",
+      "finished": "2026-11-07T17:02:46+00:00",
+      "status": "ready",
+      "slug": "bond-safe-haven-inflation-regime",
+      "pr": null,
+      "usd": 1.519,
+      "by_stage": {
+        "scout": 0.0924,
+        "research": 0.4498,
+        "write": 0.5794,
+        "referee": 0.3973
+      },
+      "calls": 17
     }
   ]
 }
