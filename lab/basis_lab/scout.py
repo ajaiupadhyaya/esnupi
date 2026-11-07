@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from .llm import Budget, extract_json, text_of
+from .llm import Budget, ask_json
 
 SCOUT_SYSTEM = """You are the topic scout for BASIS, a quantitative research-notes series by
 AJ Upadhyaya, a finance student targeting quant research and trading roles (Jane Street,
@@ -45,7 +45,7 @@ Return ONLY a JSON object:
   "signal_to_recruiters": 1-5,
   "risk": "What could make this fail to produce a result"
 } ], "pick": "<slug of the best one>", "why_pick": "one sentence"}
-Give 5 proposals, ranked best first."""
+Give 5 proposals, ranked best first. Keep each field to one or two sentences."""
 
 
 def fetch_feeds(urls: list[str], per_feed: int = 8, timeout: int = 15) -> tuple[list[dict], list[str]]:
@@ -110,10 +110,12 @@ def run_scout(cfg: dict, budget: Budget, repo: Path, run_dir: Path, topic: str |
             "version of it, and still give 4 alternatives."
         )
 
-    resp = budget.call(
+    data, _ = ask_json(
+        budget,
         "scout",
+        log=log, require="proposals",
         model=cfg["models"]["scout"],
-        max_tokens=6000,
+        max_tokens=16000,
         system=SCOUT_SYSTEM,
         tools=[
             {
@@ -124,17 +126,8 @@ def run_scout(cfg: dict, budget: Budget, repo: Path, run_dir: Path, topic: str |
         ],
         messages=[{"role": "user", "content": json.dumps(user, ensure_ascii=False)}],
     )
-    # Server tools can pause long turns; resume until done.
-    msgs = [{"role": "user", "content": json.dumps(user, ensure_ascii=False)}]
-    text = text_of(resp)
-    while getattr(resp, "stop_reason", "") == "pause_turn":
-        msgs.append({"role": "assistant", "content": resp.content})
-        resp = budget.call("scout", model=cfg["models"]["scout"], max_tokens=6000, system=SCOUT_SYSTEM,
-                           tools=[{"type": cfg["tools"]["web_search_type"], "name": "web_search",
-                                   "max_uses": cfg["tools"]["scout_max_searches"]}], messages=msgs)
-        text = text_of(resp)
-
-    data: dict[str, Any] = extract_json(text)
+    if isinstance(data, list):
+        data = {"proposals": data}
     props = data.get("proposals", [])
     if not props:
         raise RuntimeError("Scout returned no proposals")
