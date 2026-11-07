@@ -1,5 +1,5 @@
 {
-  "total_usd": 3.4326,
+  "total_usd": 3.658,
   "runs": [
     {
       "run_id": "2026-11-07-1644",
@@ -40,6 +40,21 @@
         "referee": 0.3973
       },
       "calls": 17
+    },
+    {
+      "run_id": "2026-11-07-1711",
+      "finished": "2026-11-07T17:25:28+00:00",
+      "status": "ready",
+      "slug": "treasury-hedge-inflation-regime",
+      "pr": null,
+      "usd": 1.9359,
+      "by_stage": {
+        "scout": 0.0999,
+        "research": 0.7354,
+        "write": 0.6595,
+        "referee": 0.4411
+      },
+      "calls": 21
     }
   ]
 }
