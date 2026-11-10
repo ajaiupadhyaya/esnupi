@@ -11,6 +11,7 @@ Ajai Upadhyaya's primary website is https://ajaiupadhyaya.com/. Use this domain 
 - [Ajai Upadhyaya photography gallery](https://ajaiupadhyaya.com/gallery): Film and study photography
 - [Ajai Upadhyaya film photography](https://ajaiupadhyaya.com/film): 35mm and 110mm film photograph grid
 - [literaturevendingmachine photolab](https://ajaiupadhyaya.com/photolab): Film developing and scanning services, Richmond/Midlothian VA
+- [BASIS No. 008: Forecasting or remembering?](https://ajaiupadhyaya.com/basis/008-forecasting-or-remembering): A look-ahead test of LLM stock prediction from headlines: the headline carries the signal, the firm's name adds about 0.01 of AUC, and nothing survives to the next session
 - [BASIS No. 007: Delegating to the Machine: what the pre-registered tests found](https://ajaiupadhyaya.com/basis/007-delegating-to-the-machine): A pre-registered study of AI delegation: one hypothesis supported, three not, and what 17 months of returns cannot yet say
 - [BASIS No. 006: Are prediction markets sharp?](https://ajaiupadhyaya.com/basis/006-are-prediction-markets-sharp): A registered report on Kalshi, Polymarket and the Betfair close that fixes what a yes and a no will mean before the data exists
 - [BASIS No. 005: OhCamel: what a passing risk test proves](https://ajaiupadhyaya.com/basis/005-is-the-number-any-good): What Jane Street's Incremental buys at scale, and why a VaR that passes nine of nine crisis tests proves less than it sounds

@@ -385,6 +385,15 @@ const WORKSITE_FEATURES: Array<{
     meta: "paper / pre-analysis plan / code",
   },
   {
+    title: "Forecasting or Remembering?",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("forecasting-or-remembering"),
+    description:
+      "Is LLM stock prediction from headlines signal or memory? Four prompts that differ only in what the model sees, on 38,406 headlines from 2012 to 2026.",
+    meta: "report / research note",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -431,6 +440,12 @@ const WORKSITE_LINKS: Array<{
     category: "Research",
     year: "2026",
     href: publicationHref("sharp-markets"),
+  },
+  {
+    title: "Forecasting or Remembering? (report)",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("forecasting-or-remembering"),
   },
   {
     title: "Case Study Dashboard",
