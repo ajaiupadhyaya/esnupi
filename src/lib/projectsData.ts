@@ -133,8 +133,31 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: "private-credit-modeling",
+    id: "forecasting-or-remembering",
     index: "03",
+    accession: "Esn-0013",
+    kind: "drive",
+    title: "Forecasting or Remembering?",
+    year: "2026",
+    role: "Empirical finance · LLM evaluation · Look-ahead bias",
+    blurb:
+      "Is LLM stock prediction from headlines signal or memory? Four prompts that differ only in what Qwen2.5 sees: the headline carries the signal, the firm's name adds about 0.01 of AUC, and nothing survives to the next session.",
+    tags: ["LLMs", "Look-ahead bias", "News", "Asset Pricing", "2026"],
+    status: "complete",
+    hex: "6c 6f 6f 6b 61 68 65 61 64 00 00 00 00 00 00 13",
+    links: [reportLink("forecasting-or-remembering")],
+    // House-style report (esnupi Publications No. 31), built from the lookahead-probe results.
+    report: {
+      src: "/reports/forecasting-or-remembering.pdf",
+      date: "November 2026",
+      pages: 10,
+      abstract:
+        "Qwen2.5-7B and 32B scored 18,144 FNSPID headlines four ways: with date, firm and headline; without the date; with the firm's name hidden; and with no headline. On the same-session move the full prompt reaches an AUC of 0.565 and 0.570, the name-hidden prompt 0.555 and 0.561, and no headline 0.507 and 0.509. Most of the signal sits in headlines that report the move; on the next session the AUC is 0.505 to 0.508. On 20,262 Benzinga headlines either side of the training cutoff, every prompt that reads the headline loses about 0.02, the name-hidden one included.",
+    },
+  },
+  {
+    id: "private-credit-modeling",
+    index: "04",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -155,7 +178,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "04",
+    index: "05",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -176,7 +199,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "05",
+    index: "06",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -198,7 +221,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "06",
+    index: "07",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -224,7 +247,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "07",
+    index: "08",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -246,7 +269,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "08",
+    index: "09",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -260,7 +283,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "09",
+    index: "10",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
@@ -281,7 +304,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "sports-quant-ideas",
-    index: "10",
+    index: "11",
     accession: "Esn-0104",
     kind: "kext",
     title: "Sports + Quant",
@@ -294,7 +317,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "prediction-markets",
-    index: "11",
+    index: "12",
     accession: "Esn-0105",
     kind: "kext",
     title: "Prediction Markets Analysis",
@@ -307,7 +330,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "injury-cv",
-    index: "12",
+    index: "13",
     accession: "Esn-0106",
     kind: "kext",
     title: "Injury-Risk Computer Vision",
@@ -319,7 +342,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "wallmachine",
-    index: "13",
+    index: "14",
     accession: "Esn-0107",
     kind: "kext",
     title: "Wall Machine",

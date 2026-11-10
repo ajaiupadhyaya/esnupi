@@ -1,0 +1,92 @@
+export const meta = {
+  number: 8,
+  title: "Forecasting or remembering?",
+  date: "2026-11-10",
+  dek: "Given a headline, Qwen2.5 sorts the day's winners from its losers better than a coin flip. Almost none of that survives to the next session, and the part that could be memory is about a hundredth of AUC.",
+};
+
+Papers keep showing that a language model reading news headlines can sort stocks into winners and losers. The obvious worry is that the model has read the future: it was trained on text written after the headline, so it may simply remember how the stock moved. I tested that the plainest way I could think of. Same headlines, same target, four prompts that differ only in what the model is allowed to see.
+
+**[Read the report (PDF) →](/publications#forecasting-or-remembering)**
+
+## Summary
+
+- **What I ran.** Qwen2.5-7B and Qwen2.5-32B scored 18,144 FNSPID headlines on 124 large US stocks and ETFs, 2012 to mid-2020, then 20,262 timestamped Benzinga headlines on either side of the model's training cutoff. Each headline was scored four ways: with the date, firm and headline; without the date; with the firm's name hidden; and with no headline at all.
+- **What carries the signal.** The headline. With it, the model ranks the same-session move at an AUC of 0.565 (7B) and 0.570 (32B). Without it, 0.507 and 0.509, which is a coin flip within the noise.
+- **What memory could add.** Hiding the firm's name costs 0.011 of AUC for 7B and 0.009 for 32B. Removing the date costs nothing measurable for 7B and 0.003 for 32B. That is the most the model's knowledge of the firm, or of how the story ended, can be worth here.
+- **Reading, not forecasting.** Most of the edge sits in the 10% of headlines that report the move itself ("Gilead Shares Fall 2.7% Premarket…"). On the next trading session the AUC is 0.505 to 0.508 and every interval includes 0.5.
+- **After the cutoff.** On headlines the model cannot have seen, every prompt that reads the headline loses about 0.02 of AUC, the name-hidden one included. One model cannot say whether that is memorised text or a changed market.
+
+## 1. Four prompts, one target
+
+| Prompt | The model sees | What a gap to the full prompt would mean |
+| --- | --- | --- |
+| **full** | date, firm, ticker, headline | (the number papers report) |
+| **no_date** | firm, ticker, headline | how much the date helps it recall |
+| **masked** | the headline, with the firm's name and ticker replaced by "the company" | what knowing the firm adds |
+| **no_news** | date, firm, ticker, no headline | pure memory: should be 0.5 |
+
+The target is the sign of the stock's return minus SPY's, from the close before the news date to the close of the first trading day on or after it. The model answers with one token, UP or DOWN, and I read the probability off the log-probabilities, so no answer is ever missing (0.0% in every run). The score is AUC: the chance that a headline followed by an up day gets a higher P(UP) than one followed by a down day. Every interval is a 95% bootstrap that resamples whole trading days, because headlines on the same day share the same market.
+
+AUC only cares about the order of the scores, which matters here. With no headline the 7B model answers DOWN almost every time (a mean P(UP) of 0.01), so its accuracy is meaningless, but its ranking can still be judged.
+
+## 2. The headline does the work
+
+![FNSPID, same session: the full prompt reaches an AUC of 0.565 for 7B and 0.570 for 32B, hiding the name gives 0.555 and 0.561, and no headline gives 0.507 and 0.509](/basis/forecasting-or-remembering/what-the-model-uses.svg)
+
+Every condition is scored on the same draws, so the gaps get their own intervals. Hiding the name costs 7B +0.011 [+0.006, +0.016] and 32B +0.009 [+0.002, +0.016]. The date is worth +0.0004 [−0.0014, +0.0023] to 7B and +0.003 [+0.0005, +0.005] to 32B.
+
+That name gap is an upper bound on memory, not a measurement of it. Knowing that a headline is about Gilead rather than "the company" can help honestly: a drug trial result means more for some firms than others. What it cannot be is large. A model that remembered how each stock moved would not need the headline at all, and without one it scores 0.507.
+
+Glasserman and Lin (2023) ran the same masking test on GPT-3.5 and found the opposite: anonymised headlines did better in-sample, which they read as the firm's name distracting the model. A different model, a different horizon and a long-short return rather than an AUC could each explain the sign. Here, the name helps a little.
+
+## 3. Reading, not forecasting
+
+The target window ends at the close of the session in which the news broke. A headline written that afternoon may simply report the move. A word filter, checked by hand against four rounds of random samples, flags 1,840 headlines, 10.1% of the sample, that report a price move. On the last round about 93% of what it flagged was a real move report, but it caught only about half of them.
+
+![FNSPID: on headlines that report a move the full prompt reaches about 0.72, on all other headlines about 0.55, and on the next session 0.51 with intervals that include 0.5](/basis/forecasting-or-remembering/reading-not-forecasting.svg)
+
+On those headlines the full prompt reaches 0.712 (7B) and 0.724 (32B). On everything else it falls to 0.545 and 0.549. Because the filter misses about half the move headlines, even 0.55 is an upper bound on what the model gets from news that does not describe the outcome.
+
+The next session is the window a trader could actually use, and there the AUC is 0.508 for 7B and 0.507 for 32B, intervals [0.500, 0.516] and [0.498, 0.516]. None of the gaps between prompts is distinguishable from zero on any subset.
+
+The trading numbers say the same thing. A daily long-short portfolio on the full prompt has a same-session Sharpe ratio of 3.6 (7B) and 4.2 (32B), which is not tradeable: news that breaks after the close is scored against a session that already ended. On the next session it is 0.7, and the no-headline control, which knows nothing, gets 0.3 to 0.9. I did not compute intervals for these.
+
+One cell deserves a flag rather than a claim. On move days, the 32B model with no headline reaches 0.538 [0.508, 0.564]. It may be recalling which days were big for which firms. It is one of many cells I looked at, so I treat it as a lead.
+
+## 4. Before and after the cutoff
+
+FNSPID stops in mid-2020, and Qwen2.5 was trained on text from well after that. To get news it cannot have read, I pulled timestamped Benzinga headlines from Alpaca's news API for the same tickers: 9,223 from July 2019 to June 2023, before any plausible cutoff, and 11,039 from January 2025 to October 2026, after the model's release in September 2024. Qwen does not publish a cutoff, so I left out the eighteen months in between.
+
+![Benzinga headlines that do not report a move: from 2019–23 to 2025–26 the full prompt loses 0.019 (7B) and 0.021 (32B) of AUC and the name-hidden prompt 0.022 and 0.017, while the no-headline prompt's changes cross zero](/basis/forecasting-or-remembering/after-the-cutoff.svg)
+
+On headlines that do not report a move, the full prompt drops from 0.560 to 0.541 (7B) and from 0.562 to 0.542 (32B). The name-hidden prompt drops just as far: −0.022 [−0.038, −0.005] and −0.017 [−0.034, −0.001]. The gap between them barely moves: +0.003 for 7B and −0.004 for 32B, both intervals crossing zero. The no-headline prompt sits near 0.5 in both windows. Scoring each headline against the session after its timestamp gives the same pattern, and the next session shows nothing in either window.
+
+There are two readings, and this design cannot separate them.
+
+1. **The model remembers headline text.** Hiding the name removes the firm, not the sentence. If the model saw the 2021 headline and the story that followed, it could still recognise it with the name scrubbed.
+2. **The world changed.** Headline style, the mix of stories and the market itself all differ between 2019–23 and 2025–26. A drop of 0.02 needs no memory at all.
+
+## 5. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Two models, one family | Qwen2.5-7B and 32B, released 2024. Not the GPT-class models in most of the papers, and not today's models |
+| The same-session target overlaps the news | The move filter catches about half the headlines that report the outcome, so "other headlines" is an upper bound |
+| After-close timing in FNSPID | About two-thirds of the full FNSPID dataset carries a time of day; news that breaks after the close is scored against a session that already ended. The Benzinga timestamp check gives the same pattern |
+| Benzinga coverage thins before 2021 | The pre-cutoff window leans toward 2021–23 |
+| Survivorship | 23 delisted FNSPID tickers have no Yahoo prices and drop out; the universe is large, liquid names |
+| Two datasets, different mix | Benzinga items tagged with more than three tickers are dropped, so it has fewer market wraps: compare patterns across datasets, not levels |
+| Many cells | Subsets × prompts × targets × models. Isolated p ≈ 0.03 cells are weak |
+
+## 6. What I'd do next
+
+1. **Ask a model that has read 2025–26.** A model trained through the post-cutoff window, such as Qwen3.8-27B (released August 2026), on the same headlines. If its 2025–26 AUC does not drop, the Qwen2.5 drop was memory. If it drops too, the world changed.
+2. **Time-stamp the returns.** Minute bars would split each headline into before and after its own print, instead of a filter that catches half of the move reports.
+3. **Replace the filter.** A model-based classifier for "this headline reports the move", audited the same way.
+
+## Sources
+
+Data: [FNSPID](https://huggingface.co/datasets/sabareesh88/FNSPID_external) (Hugging Face), Benzinga headlines via Alpaca's news API, and daily prices from Yahoo Finance. Headline text and prices are not redistributed. Models: Qwen2.5-7B-Instruct and Qwen2.5-32B-Instruct, served with vLLM on two rented A100s, about $3 of GPU time in total. Related work: Glasserman and Lin, [Assessing look-ahead bias in stock return predictions generated by GPT sentiment analysis](https://arxiv.org/abs/2309.17322) (2023), and Lopez-Lira and Tang, [Can ChatGPT forecast stock price movements?](https://arxiv.org/abs/2304.07619) (2023), whose results are on next-day returns with a different model.
+
+This page is one experiment on one model family, not investment advice. The design (the four prompts, the target and the dedupe rules) came from my brief; the code, runs, analysis, figures and drafts were produced with Claude under my direction, and the choice of what to test after the first run is mine to argue with.
