@@ -168,13 +168,18 @@ export const PROJECTS: Project[] = [
     tags: ["GPUs", "Depreciation", "Hedonic pricing", "Accounting", "2026"],
     status: "complete",
     hex: "72 65 6e 74 61 6c 00 00 67 70 75 00 00 00 00 14",
-    links: [reportLink("rental-implied-depreciation")],
-    // House-style report (esnupi Publications No. 32), condensed from the gpu-econ-life working paper.
+    links: [
+      reportLink("rental-implied-depreciation"),
+      { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7692700", kind: "press" },
+      { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24143074", kind: "external" },
+      { label: "Data DOI", href: "https://doi.org/10.5281/zenodo.24143180", kind: "external" },
+    ],
+    // The working paper exactly as released (tag v1.0.1).
     report: {
       src: "/reports/rental-implied-depreciation.pdf",
-      title: "Rental-Implied Depreciation of AI Accelerators",
+      title: "Rental-Implied Depreciation of AI Accelerators: Why the Estimates Disagree",
       date: "November 2026",
-      pages: 9,
+      pages: 19,
       abstract:
         "A panel of 24,210 listing-months of posted rents for seven NVIDIA chips, V100 to B200, 2017 to 2026. Holding seller and contract fixed, the V100's rent changes by −0.38 log points over nine years. 96% of on-demand and reserved observations never move; spot prices fall late and list prices that move fall early. With seven chips, valid inference finds no significant rate or shape. An H100 rents for $4.50 an hour against $0.30 of running cost, so economic life is set by obsolescence: about 4.1 years in a power-constrained model.",
     },
