@@ -156,8 +156,32 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: "private-credit-modeling",
+    id: "rental-implied-depreciation",
     index: "04",
+    accession: "Esn-0014",
+    kind: "drive",
+    title: "Rental-Implied Depreciation",
+    year: "2026",
+    role: "Empirical finance · Identification · Accounting",
+    blurb:
+      "How fast do AI accelerators lose value? Nine years of posted GPU rents, four identification strategies and a seven-firm earnings restatement: rents fall slowly, the shape flips with the market, and rents never reach running costs.",
+    tags: ["GPUs", "Depreciation", "Hedonic pricing", "Accounting", "2026"],
+    status: "complete",
+    hex: "72 65 6e 74 61 6c 00 00 67 70 75 00 00 00 00 14",
+    links: [reportLink("rental-implied-depreciation")],
+    // House-style report (esnupi Publications No. 32), condensed from the gpu-econ-life working paper.
+    report: {
+      src: "/reports/rental-implied-depreciation.pdf",
+      title: "Rental-Implied Depreciation of AI Accelerators",
+      date: "November 2026",
+      pages: 9,
+      abstract:
+        "A panel of 24,210 listing-months of posted rents for seven NVIDIA chips, V100 to B200, 2017 to 2026. Holding seller and contract fixed, the V100's rent changes by −0.38 log points over nine years. 96% of on-demand and reserved observations never move; spot prices fall late and list prices that move fall early. With seven chips, valid inference finds no significant rate or shape. An H100 rents for $4.50 an hour against $0.30 of running cost, so economic life is set by obsolescence: about 4.1 years in a power-constrained model.",
+    },
+  },
+  {
+    id: "private-credit-modeling",
+    index: "05",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -178,7 +202,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "05",
+    index: "06",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -199,7 +223,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "06",
+    index: "07",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -221,7 +245,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "07",
+    index: "08",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -247,7 +271,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "08",
+    index: "09",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -269,7 +293,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "09",
+    index: "10",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -283,7 +307,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "10",
+    index: "11",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
@@ -304,7 +328,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "sports-quant-ideas",
-    index: "11",
+    index: "12",
     accession: "Esn-0104",
     kind: "kext",
     title: "Sports + Quant",
@@ -317,7 +341,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "prediction-markets",
-    index: "12",
+    index: "13",
     accession: "Esn-0105",
     kind: "kext",
     title: "Prediction Markets Analysis",
@@ -330,7 +354,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "injury-cv",
-    index: "13",
+    index: "14",
     accession: "Esn-0106",
     kind: "kext",
     title: "Injury-Risk Computer Vision",
@@ -342,7 +366,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "wallmachine",
-    index: "14",
+    index: "15",
     accession: "Esn-0107",
     kind: "kext",
     title: "Wall Machine",

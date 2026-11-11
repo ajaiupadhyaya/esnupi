@@ -394,6 +394,15 @@ const WORKSITE_FEATURES: Array<{
     meta: "report / research note",
   },
   {
+    title: "Rental-Implied Depreciation",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("rental-implied-depreciation"),
+    description:
+      "How fast do AI accelerators lose value? 24,210 listing-months of GPU rents, four identification strategies, and what it means for hyperscaler book lives.",
+    meta: "report / working paper",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -446,6 +455,12 @@ const WORKSITE_LINKS: Array<{
     category: "Research",
     year: "2026",
     href: publicationHref("forecasting-or-remembering"),
+  },
+  {
+    title: "Rental-Implied Depreciation (report)",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("rental-implied-depreciation"),
   },
   {
     title: "Case Study Dashboard",
