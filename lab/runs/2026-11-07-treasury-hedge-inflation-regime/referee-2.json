@@ -1,0 +1,104 @@
+{
+  "verdict": "revise",
+  "issues": [
+    {
+      "severity": "major",
+      "quote": "Treasuries in equity selloffs: an inflation gap that roughly halves within eras",
+      "problem": "The title, dek and lead headline an exploratory result whose tail definition differs from the primary test. The era rows redefine the worst 10% inside each era, and the draft itself says part of the move from −0.50 to about −0.28 may come from that. Both within-era intervals include zero. The caveat is buried in section 5, while the headline presents 'halves' as a finding.",
+      "fix": "Rerun the era gaps on the fixed −2.40% cutoff before publishing. From the decade table I get roughly −0.32 before 2000 and −0.21 after, but compute it in code. Report those numbers. Soften the title, for example 'with an inflation gap that shrinks but does not clearly vanish within eras'. Mark it exploratory in the dek."
+    },
+    {
+      "severity": "major",
+      "quote": "The other half of the pooled gap comes from comparing eras.",
+      "problem": "This is stated as fact. The draft has just said the −0.28 and −0.25 may partly reflect the changed tail definition. The within-era intervals include zero, so 'half' has no uncertainty attached. No era-adjusted model was fitted, and the regression section says so.",
+      "fix": "Say 'may come from comparing eras' or give the fixed-cutoff era numbers with an interval for the share. Add 'about half' only as a point estimate with a caveat."
+    },
+    {
+      "severity": "major",
+      "quote": "the 5y5y test is mildly in tension with the CPI result",
+      "problem": "The 5y5y test covers 2003 to 2026 only. The CPI test in the same window gives −0.13 (−0.76 to +0.56), and the 5y5y interval (−0.20 to +1.20) includes −0.13. The 'tension' compares a short-window estimate with the full-sample −0.50. Breakevens also measure expectations and term premia, not realised inflation. The same framing recurs in the dek, Summary and Limits.",
+      "fix": "Compare the 5y5y gap with the same-window CPI gap and say the two are not distinguishable. Drop or heavily qualify 'tension' and 'mild evidence against' in the lead, dek, Summary and Limits. State that the breakeven tests are mostly uninformative because the window is short."
+    },
+    {
+      "severity": "major",
+      "quote": "+0.142 (0.031)",
+      "problem": "The regression table (−0.048 (0.020), +0.142 (0.031), +0.082 (0.038)) cannot be checked against the supplied results.json, which is truncated at regression_full. The run log confirms only the be10 regression (+0.067, s.e. 0.045). The +0.071 (0.048) and +0.160 (0.052) figures are also unverified here.",
+      "fix": "Confirm every regression coefficient and s.e. in the draft against the full results.json before merging."
+    },
+    {
+      "severity": "minor",
+      "quote": "−0.45 on breakeven terciles (−1.06 to +0.29)",
+      "problem": "results.json gives a lower bound of −1.0548, which rounds to −1.05. The draft appears to have rounded from the run log's three-decimal −1.055.",
+      "fix": "Change to −1.05."
+    },
+    {
+      "severity": "minor",
+      "quote": "Before 2000, bonds tended to fall in equity tail weeks whatever CPI was doing",
+      "problem": "The low-inflation pre-2000 mean is −0.14% with an interval from −0.47 to +0.16, and bonds rose in 46% to 63% of those weeks by decade. 'Tended to fall' is too strong. The same applies to 'after 2000 they tended to rise' in high-inflation weeks (mean +0.37%, interval −0.07 to +0.91).",
+      "fix": "Describe the point estimates and say the pre-2000 low-regime interval includes zero."
+    },
+    {
+      "severity": "minor",
+      "quote": "The test, the 3% threshold and the bootstrap were fixed before I looked at outcomes.",
+      "problem": "Nothing in the supplied materials shows the pre-specification beyond a code docstring. A pipeline-generated analysis makes this claim worth documenting.",
+      "fix": "Point to a dated commit or brief that contains the spec. Otherwise reword to 'were set in the brief before the analysis ran'."
+    },
+    {
+      "severity": "minor",
+      "quote": "As a second view of the full sample, I regressed",
+      "problem": "The regression was not in the pre-specified list, yet it is not labelled post hoc. The Limits row 'Post hoc work' lists only the downside regression.",
+      "fix": "Say the regression was added after the primary test, and add it to the Limits row."
+    },
+    {
+      "severity": "minor",
+      "quote": "The 13-week blocks only partly reflect that, though intervals are stable from 4 to 52 weeks.",
+      "problem": "Stability across block lengths does not show validity. The regimes last years to decades, so even 52-week blocks understate dependence in regime membership. The effective number of independent episodes is small. The year-clustered bootstrap is deferred to future work.",
+      "fix": "State plainly that the CI likely understates uncertainty. Run the year-cluster or era-block bootstrap now, since it is cheap."
+    },
+    {
+      "severity": "minor",
+      "quote": "A gap of −0.50 means that in a typical bad equity week the bond did half a percent worse when inflation was high.",
+      "problem": "The statistic is a difference in means, not a typical week. Bond returns in tail weeks are widely dispersed.",
+      "fix": "Write 'in the average tail week, the bond returned 0.50 points less'."
+    },
+    {
+      "severity": "minor",
+      "quote": "High-minus-low inflation gap in mean 10-year Treasury weekly return during the worst equity weeks: the primary estimate is −0.50 points",
+      "problem": "The alt texts for figures 1 and 3 are noun phrases, not full sentences. The figure 3 alt gives only min and max, not the finding (three eras) that the prose draws from it. The three-era reading is not supported in the supplied results beyond the min and max values.",
+      "fix": "Rewrite as full sentences that state the finding. Support the three-era claim with the 5-year block correlations from results.json."
+    },
+    {
+      "severity": "minor",
+      "quote": "The decade breakdown shows how uneven that is.",
+      "problem": "The piece is well over the 1,500 to 2,800 word guide, probably 3,500 or more. The lead runs about seven sentences against the guide's 3 to 5. Section 5 holds the era split, the decade table, the 2022 aside and the difference-in-differences.",
+      "fix": "Cut the 2022 aside and shorten the difference-in-differences paragraph. Trim the lead to five sentences."
+    },
+    {
+      "severity": "minor",
+      "quote": "`crsp.tfz_dly` with the fixed-term indexes in `crsp.tfz_ft`",
+      "problem": "The WRDS table names and the description of the Li and Yoldas (2026) data and method are asserted without a source and cannot be verified from the materials.",
+      "fix": "Verify the CRSP table names and the Li and Yoldas details against the actual references, or describe them generically."
+    }
+  ],
+  "interview_questions": [
+    "Your era rows use era-specific tail cutoffs. What is the within-era gap on the fixed −2.40% cutoff, and does 'about half remains' survive?",
+    "The 5y5y gap is +0.46 and the same-window CPI gap is −0.13. Why call that tension rather than two uninformative estimates?",
+    "How many independent inflation-regime episodes are in 1962 to 2026? Why should a 13-week stationary bootstrap give a valid interval when the regime variable persists for years?",
+    "You added the 2000 split after seeing the result. How sensitive are the within-era numbers to the break date, and how many other splits did you try?",
+    "The proxy is validated only after 2002 against IEF, and the slope of 0.85 is attributed partly to noise. How do you know the proxy's error is not correlated with inflation or yield levels in the 1970s and 1980s?"
+  ],
+  "author_checklist": [
+    "Open the full results.json and verify every regression coefficient and s.e. in section 6, including +0.071 (0.048) and +0.160 (0.052).",
+    "Rerun the era gaps on the fixed −2.40% cutoff and update the title, dek, lead, Summary, section 5 and Limits to match.",
+    "Check the Li and Yoldas (2026) citation: title, date, URL, and the claims about its data and sign convention. Confirm the CRSP table names.",
+    "Confirm there is a dated commit or brief showing the 3% threshold, 13-week block and breakeven tests were fixed before the outcomes were seen.",
+    "Fix the −1.06 rounding and confirm the figures render with their alt text. Trim the piece toward the word limit."
+  ],
+  "one_line": "The numbers largely match results.json and the honesty scaffolding is strong, but the headline 'roughly halves within eras' and the 5y5y 'tension' claim rest on mismatched definitions and windows and need to be fixed or softened.",
+  "unmatched_numbers": [
+    "131",
+    "143,",
+    "197,",
+    "63"
+  ]
+}

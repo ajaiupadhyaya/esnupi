@@ -1,0 +1,192 @@
+{
+  "proposals": [
+    {
+      "slug": "treasury-hedge-inflation-regime",
+      "title": "Do Treasuries stop hedging equity selloffs when inflation is high?",
+      "question": "In weeks when US equities fall sharply, do 10-year Treasuries earn a lower or negative return when trailing inflation is above 3% than when it is below 3%?",
+      "claim": "Using weekly data from 1962 to 2026, take the worst 10% of S&P 500 weeks. YES if mean 10y Treasury return in those weeks is lower in the high-inflation regime (real-time CPI YoY above 3%) than in the low one, and a block-bootstrap 95% CI for the difference excludes zero. NO if the CI includes zero. The same test is repeated with 5y5y or 10y breakeven terciles for 2003–2026.",
+      "inspired_by": [
+        {
+          "title": "FEDS Note: Government Bonds' Safe-Haven Property and Inflationary Pressures",
+          "url": "https://www.federalreserve.gov/econres/notes/feds-notes/government-bonds-safe-haven-property-and-inflationary-pressures-20261016.html"
+        },
+        {
+          "title": "Liberty Street: The U.S. Oil Sector's Role in Restraining Prices (2026 oil shock)",
+          "url": "https://libertystreeteconomics.newyorkfed.org/2026/11/the-u-s-oil-sectors-role-in-restraining-prices/"
+        }
+      ],
+      "data": [
+        {
+          "source": "FRED",
+          "series_or_endpoint": "DGS10 (from 1962), CPIAUCNS, CPILFESL, T10YIE (from 2003)",
+          "why": "The 10y yield gives a duration-based bond return. Lagged CPI is the real-time inflation regime. Breakevens are the market-based regime."
+        },
+        {
+          "source": "Yahoo Finance (yfinance)",
+          "series_or_endpoint": "^GSPC weekly closes; IEF and TLT from 2002",
+          "why": "Equity returns. IEF and TLT validate the yield-based bond return proxy against real ETF returns."
+        }
+      ],
+      "method": "Build weekly Wed-to-Wed bond returns as carry minus modified duration times the yield change, plus a convexity term, and check them against IEF/TLT after 2002. Lag CPI by one month to mimic the release schedule. Estimate the conditional mean bond return in equity-tail weeks by regime, and also a regression with an equity-return × inflation-regime interaction. Inference uses a stationary block bootstrap, and results are reported for the 1970s and the post-2021 periods separately.",
+      "will_not_show": "It does not show that inflation causes the hedge to fail, or that a particular inflation level is a trading signal. Few tail weeks fall in the high-inflation regime, and they cluster in the 1970s–80s and 2022.",
+      "feasibility": 5,
+      "signal_to_recruiters": 5,
+      "risk": "There may be too few high-inflation tail weeks for a tight interval. The duration proxy may also miss pre-1980s market conventions, so the result could be an honest 'inconclusive'."
+    },
+    {
+      "slug": "pre-fomc-drift-out-of-sample",
+      "title": "Is the pre-FOMC drift still there after publication?",
+      "question": "Does the S&P 500 still earn an abnormal return from the close before an FOMC announcement to the announcement-day close, in the years since the effect was documented?",
+      "claim": "YES if the mean announcement-window return from 2012 to 2026 exceeds the mean non-FOMC-day return by a t-stat above 2 (HAC or bootstrap), with a point estimate at least half the original-sample size. NO otherwise. The window is split into 2012–2019 and 2020–2026.",
+      "inspired_by": [
+        {
+          "title": "Quantocracy: Strategy of the Week #3, The Pre-FOMC Drift in S&P 500 Futures",
+          "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-11012026/"
+        }
+      ],
+      "data": [
+        {
+          "source": "Yahoo Finance (yfinance)",
+          "series_or_endpoint": "^GSPC and SPY daily open/close, 1994–2026",
+          "why": "Close-to-close and open-to-close returns around announcement days. Daily bars cannot isolate the 24-hour pre-announcement window exactly."
+        },
+        {
+          "source": "FRED",
+          "series_or_endpoint": "DFEDTARU / DFEDTAR, plus the Fed's public FOMC calendar",
+          "why": "Cross-check scheduled-meeting dates against target-rate changes. Dates are hard-coded from the public calendar."
+        }
+      ],
+      "method": "Compute the day-before close to announcement-day close return on scheduled FOMC dates, and compare it with all other days. Estimate the difference with a dummy regression and heteroskedasticity-robust s.e. Add a placebo that randomly assigns the same number of days per year, 10,000 draws, to calibrate false positives.",
+      "will_not_show": "It does not show that the drift is tradeable after costs or that futures show the same effect. Daily bars blur the intraday timing that the original result depends on.",
+      "feasibility": 4,
+      "signal_to_recruiters": 4,
+      "risk": "Hard-coded FOMC dates could contain errors, and about 8 events a year gives low power. A null result would be underpowered rather than conclusive."
+    },
+    {
+      "slug": "value-momentum-everywhere-decay",
+      "title": "Has the value-momentum diversification benefit decayed since 2013?",
+      "question": "Across French-library regions, did the Sharpe ratio of a 50/50 value-momentum combination and the negative correlation between the two factors fall after 2013?",
+      "claim": "YES if the post-2013 combined Sharpe ratio is lower than the pre-2013 one in at least 4 of 5 regions, and the pooled difference has a bootstrap 95% CI below zero. A correlation that has risen from its pre-2013 level to above −0.2 counts as a second YES. NO otherwise.",
+      "inspired_by": [
+        {
+          "title": "Alpha Architect: Are Value and Momentum Still Everywhere?",
+          "url": "https://alphaarchitect.com/value-momentum-everywhere/"
+        }
+      ],
+      "data": [
+        {
+          "source": "Kenneth French Data Library",
+          "series_or_endpoint": "HML and WML (momentum) factors for North America, Europe, Japan, Asia-Pacific ex-Japan and Developed ex-US, monthly CSV",
+          "why": "Free, long, comparable regional value and momentum series that reproduce the paper's setup without the AQR download."
+        },
+        {
+          "source": "Kenneth French Data Library",
+          "series_or_endpoint": "F-F_Research_Data_Factors (Mkt-RF, RF)",
+          "why": "Excess-return and market-beta adjustment."
+        }
+      ],
+      "method": "Compute annualised Sharpe ratios, the value-momentum correlation, and a 50/50 combination for each region before and after the 2013 split. Use a circular block bootstrap for differences. Also test a break at an unknown date with a sup-Wald test to check the result does not depend on the chosen split.",
+      "will_not_show": "It does not show why the factors decayed (crowding, publication, or regime), and it covers equities only, not bonds, currencies or commodities.",
+      "feasibility": 5,
+      "signal_to_recruiters": 4,
+      "risk": "Pooling across regions overstates independence, since the regional factors are correlated. The pre-2013 versus post-2013 gap may be statistically indistinguishable given one large value drawdown."
+    },
+    {
+      "slug": "vix-interval-coverage-2026",
+      "title": "Did VIX-implied ranges cover the 2026 shock?",
+      "question": "How often did the S&P 500's 21-day return fall inside the VIX-implied 1σ and 2σ intervals over 1990–2026, and was coverage worse in the 2026 Middle East oil shock?",
+      "claim": "YES (miscalibrated) if empirical 2σ coverage over 2026 or the full sample differs from the nominal 95.4% by more than a binomial or block-bootstrap 95% interval allows. The 1σ band should hold about 68.3% of outcomes. NO if both are inside the interval.",
+      "inspired_by": [
+        {
+          "title": "FEDS Note: Convenience Yields, Risk Premiums, and the Interpretation of Oil Futures Prices During Geopolitical Conflict",
+          "url": "https://www.federalreserve.gov/econres/notes/feds-notes/convenience-yields-risk-premiums-and-the-interpretation-of-oil-futures-prices-during-geo-conflict-20261009.html"
+        },
+        {
+          "title": "Quantocracy: Why optimising for the left tail of outcomes is like playing chess",
+          "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-11042026/"
+        }
+      ],
+      "data": [
+        {
+          "source": "FRED",
+          "series_or_endpoint": "VIXCLS",
+          "why": "Daily implied 30-day volatility, 1990 onward."
+        },
+        {
+          "source": "Yahoo Finance (yfinance)",
+          "series_or_endpoint": "^GSPC daily close",
+          "why": "Realised 21-trading-day returns."
+        }
+      ],
+      "method": "Each day, form the interval ±k·VIX/100·√(21/252) around zero. Record whether the realised 21-day log return falls inside it, and compute coverage and a Christoffersen-style independence test. Because overlapping windows are autocorrelated, use non-overlapping windows and Newey-West or block-bootstrap intervals. Report separately for 2008, 2020, 2022 and 2026.",
+      "will_not_show": "It does not show that implied volatility is a poor forecast in a trading sense. A persistent gap partly reflects the variance risk premium, which is expected.",
+      "feasibility": 5,
+      "signal_to_recruiters": 3,
+      "risk": "The result is likely to say VIX overstates dispersion on average, which is well known. The new content is whether 2026 differs, and that rests on a handful of independent windows."
+    },
+    {
+      "slug": "leveraged-etf-decay-formula",
+      "title": "Does volatility-decay maths predict leveraged ETF drag?",
+      "question": "Do 2x and 3x ETFs' realised 1-year return shortfalls versus L times the index match the −½L(L−1)σ² decay formula plus fees, or is there residual drag?",
+      "claim": "YES if the mean rolling-1-year gap between realised 3x returns and the formula prediction, net of expense ratio, is within ±1% a year with a bootstrap 95% CI containing 0. NO if the CI excludes 0, which would indicate extra costs such as swap financing.",
+      "inspired_by": [
+        {
+          "title": "Quantpedia via Quantocracy: Shorting Leveraged ETFs, Role of Borrowing Costs and Rebalancing in Volatility-Decay Strategies",
+          "url": "https://quantocracy.com/recent-quant-links-from-quantocracy-as-of-10242026/"
+        }
+      ],
+      "data": [
+        {
+          "source": "Yahoo Finance (yfinance)",
+          "series_or_endpoint": "SPY, QQQ, SSO, QLD, UPRO, TQQQ (adjusted close)",
+          "why": "Paired 1x and levered ETF returns since 2009–2010."
+        },
+        {
+          "source": "FRED",
+          "series_or_endpoint": "DTB3 or SOFR",
+          "why": "Financing-cost component of the predicted drag."
+        }
+      ],
+      "method": "Over rolling 252-day windows, compute the realised levered return, L times the 1x return, and the prediction from daily-compounded returns and realised variance. Regress the realised drag on the predicted drag, financing cost and fees. Use overlapping-window-robust s.e. and a block bootstrap.",
+      "will_not_show": "It does not show that shorting leveraged ETFs is profitable, because borrow fees and margin costs are not in free data.",
+      "feasibility": 5,
+      "signal_to_recruiters": 3,
+      "risk": "The result is close to an identity, so the residual may be tiny and uninteresting. It is also hard to separate fees from swap spreads using public data."
+    }
+  ],
+  "pick": "treasury-hedge-inflation-regime",
+  "why_pick": "It is the requested question, it is directly testable with decades of free FRED and Yahoo data, and the 2026 Fed note on bonds failing as havens gives it a timely hook.",
+  "picked": {
+    "slug": "treasury-hedge-inflation-regime",
+    "title": "Do Treasuries stop hedging equity selloffs when inflation is high?",
+    "question": "In weeks when US equities fall sharply, do 10-year Treasuries earn a lower or negative return when trailing inflation is above 3% than when it is below 3%?",
+    "claim": "Using weekly data from 1962 to 2026, take the worst 10% of S&P 500 weeks. YES if mean 10y Treasury return in those weeks is lower in the high-inflation regime (real-time CPI YoY above 3%) than in the low one, and a block-bootstrap 95% CI for the difference excludes zero. NO if the CI includes zero. The same test is repeated with 5y5y or 10y breakeven terciles for 2003–2026.",
+    "inspired_by": [
+      {
+        "title": "FEDS Note: Government Bonds' Safe-Haven Property and Inflationary Pressures",
+        "url": "https://www.federalreserve.gov/econres/notes/feds-notes/government-bonds-safe-haven-property-and-inflationary-pressures-20261016.html"
+      },
+      {
+        "title": "Liberty Street: The U.S. Oil Sector's Role in Restraining Prices (2026 oil shock)",
+        "url": "https://libertystreeteconomics.newyorkfed.org/2026/11/the-u-s-oil-sectors-role-in-restraining-prices/"
+      }
+    ],
+    "data": [
+      {
+        "source": "FRED",
+        "series_or_endpoint": "DGS10 (from 1962), CPIAUCNS, CPILFESL, T10YIE (from 2003)",
+        "why": "The 10y yield gives a duration-based bond return. Lagged CPI is the real-time inflation regime. Breakevens are the market-based regime."
+      },
+      {
+        "source": "Yahoo Finance (yfinance)",
+        "series_or_endpoint": "^GSPC weekly closes; IEF and TLT from 2002",
+        "why": "Equity returns. IEF and TLT validate the yield-based bond return proxy against real ETF returns."
+      }
+    ],
+    "method": "Build weekly Wed-to-Wed bond returns as carry minus modified duration times the yield change, plus a convexity term, and check them against IEF/TLT after 2002. Lag CPI by one month to mimic the release schedule. Estimate the conditional mean bond return in equity-tail weeks by regime, and also a regression with an equity-return × inflation-regime interaction. Inference uses a stationary block bootstrap, and results are reported for the 1970s and the post-2021 periods separately.",
+    "will_not_show": "It does not show that inflation causes the hedge to fail, or that a particular inflation level is a trading signal. Few tail weeks fall in the high-inflation regime, and they cluster in the 1970s–80s and 2022.",
+    "feasibility": 5,
+    "signal_to_recruiters": 5,
+    "risk": "There may be too few high-inflation tail weeks for a tight interval. The duration proxy may also miss pre-1980s market conventions, so the result could be an honest 'inconclusive'."
+  }
+}

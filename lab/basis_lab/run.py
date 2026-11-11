@@ -141,7 +141,7 @@ def main(argv=None) -> int:
                              lifetime=(ledger.total_usd, budget.total_cap))
         (run_dir / "PR_BODY.md").write_text(brief)
         _out(status=status, slug=slug, number=number, title=title.replace("\n", " "),
-             branch=f"basis-lab/{run_dir.name}", run_dir=str(run_dir.relative_to(REPO)),
+             branch=f"basis-draft/{run_dir.name}", run_dir=str(run_dir.relative_to(REPO)),
              verdict=report.get("verdict", ""))
         _summary(brief)
     except BudgetExceeded as e:

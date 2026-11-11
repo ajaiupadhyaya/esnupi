@@ -153,8 +153,11 @@ def hbar_chart(
     """Horizontal bars, one per label. Highlighted indices are blue, others black."""
     rows = len(labels)
     h = 80 + rows * 30 + 30
-    L, R, T = 220, W - 70, 70
     lo, hi = min(0, min(values)), max(0, max(values))
+    # Label column sized to the longest label (13px sans ≈ 7px/char); leave room left of
+    # the bars for negative value labels, and right of them for positive ones.
+    L = min(430, max(160, 7.0 * max(len(str(x)) for x in labels) + 16)) + (64 if lo < 0 else 0)
+    R, T = W - (70 if hi > 0 else 12), 70
     X = lambda v: L + (v - lo) / ((hi - lo) or 1) * (R - L)
     out = _header(title, subtitle, h, alt)
     out.append(f'<line x1="{X(0):.1f}" y1="{T}" x2="{X(0):.1f}" y2="{T + rows * 30}" stroke="{BLACK}"/>')
@@ -208,8 +211,49 @@ def interval_chart(
     return _write(path, out)
 
 
+def _wrap(text: str, max_chars: int) -> list[str]:
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        if cur and len(cur) + 1 + len(w) > max_chars:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = f"{cur} {w}".strip()
+    return lines + ([cur] if cur else [])
+
+
+def wrap_header(svg: str) -> str:
+    """Wrap a long title (17px bold) / subtitle (12px mono) to the 760px width and push the
+    plot down to make room. Works on any SVG made by this module, old or new."""
+    import re
+
+    m = re.match(r'(<svg[^>]*viewBox="0 0 (\d+) (\d+)"[^>]*>)\s*(<rect[^>]*/>)(<text[^>]*>)(.*?)</text>(<text[^>]*>)(.*?)</text>(.*)</svg>\s*$', svg, re.S)
+    if not m:
+        return svg
+    open_tag, w, h, rect, t_open, title, s_open, sub, body = m.groups()
+    if "<tspan" in title:
+        return svg  # already wrapped
+    from html import unescape
+    tl = _wrap(unescape(title), 74)
+    sl = _wrap(unescape(sub), 102)
+    t_open_n = t_open.replace('y="22.0"', 'y="22"')
+    title_svg = "".join(
+        f'{t_open_n.replace("y=\"22\"", f"y=\"{22 + 21 * i}\"")}{escape(line)}</text>' for i, line in enumerate(tl)
+    )
+    y_sub = 22 + 21 * (len(tl) - 1) + 22
+    sub_svg = "".join(
+        f'{s_open.replace("y=\"44.0\"", f"y=\"{y_sub + 16 * i}\"")}{escape(line)}</text>' for i, line in enumerate(sl)
+    )
+    dy = 21 * (len(tl) - 1) + 16 * (len(sl) - 1)
+    new_h = int(h) + dy
+    open_tag = open_tag.replace(f'viewBox="0 0 {w} {h}"', f'viewBox="0 0 {w} {new_h}"')
+    rect = rect.replace(f'height="{h}"', f'height="{new_h}"')
+    return f'{open_tag}\n{rect}{title_svg}{sub_svg}<g transform="translate(0,{dy})">{body}</g></svg>\n'
+
+
 def _write(path: str, parts: list[str]) -> str:
     svg = "\n".join(parts[:2]) + "".join(parts[2:])
+    svg = wrap_header(svg)
     with open(path, "w", encoding="utf-8") as f:
-        f.write(svg + "\n")
+        f.write(svg + ("" if svg.endswith("\n") else "\n"))
     return path

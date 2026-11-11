@@ -1,0 +1,16 @@
+{
+  "finished": true,
+  "summary": "Deliverables exist: analysis.py (runs end to end, cache in data/), results.json, figures/fig1-3 svg, notes.md, data_request.md.\n\nPrimary CPI test: YES. Weekly 1962\u20132026, n=3,383. In the worst 10% of S&P weeks (cutoff \u22122.40%), 10y Treasuries returned \u22120.17% a week when real-time CPI YoY was above 3% (194 tail weeks) and +0.33% otherwise (145). Gap \u22120.50 pp, stationary block-bootstrap 95% CI [\u22120.85, \u22120.20]. Block lengths 4\u201352 weeks, 5% and 20% tails, core CPI, an extra CPI lag, excluding carry, and defining the tail within each regime all give the same sign with CIs excluding zero. The regression interaction (HAC) is +0.142 (s.e. 0.031).\n\nBreakeven tests (2003\u20132026): both NO. 10y tercile gap \u22120.34 pp, CI [\u22120.95, +0.38]. 5y5y gap +0.46 pp (wrong sign), CI [\u22120.20, +1.20]. Only 35\u201349 tail weeks per tercile, so these are inconclusive rather than contradicting.\n\nMain caveat (exploratory, added after the primary result): era and inflation regime are confounded. Within 1962\u20131999 the gap is \u22120.28 pp, CI [\u22120.64, +0.13]. Within 2000\u20132026 it is \u22120.25 pp, CI [\u22120.77, +0.37]. The pooled gap is larger because high-CPI weeks are mostly 1966\u20131999 and low-CPI tail weeks are mostly 2000\u20132020. A difference-in-differences version still excludes zero in the full sample and in 1962\u20131999.\n\nSub-periods: the 1970s have 65 tail weeks, all high-CPI, with mean \u22120.30% (CI [\u22120.59, \u22120.06]). 2022 has 16 tail weeks with mean \u22120.69%. 2000\u20132020 has mean +0.74%.\n\nProxy validation against IEF after 2002: correlation 0.98. Pre-2002 accuracy is unvalidated. CPI release timing is approximated (15th of the following month, not ALFRED vintages). The fig3 title was rewritten to match verified return-correlation signs. notes.md lists 8 limits and next steps.",
+  "turns": 16,
+  "missing": [],
+  "repro": {
+    "ran": true,
+    "exit": 0,
+    "results_written": true,
+    "figures": [
+      "fig1_gap_by_spec.svg",
+      "fig2_mean_bond_return_tail_weeks.svg",
+      "fig3_rolling_corr.svg"
+    ]
+  }
+}
