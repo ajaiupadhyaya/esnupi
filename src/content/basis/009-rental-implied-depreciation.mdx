@@ -1,0 +1,69 @@
+export const meta = {
+  number: 9,
+  title: "How fast do GPUs lose value? Nine years of rents",
+  date: "2026-11-11",
+  dek: "Posted GPU rents fall slowly, the shape of the decline flips with the market you read, and seven chip generations cannot pin down a rate. Rents never reach running costs, so book lives stand or fall on obsolescence.",
+};
+
+Reported earnings at the biggest AI spenders now hang on one estimate: how many years a server lasts. Microsoft, Alphabet, Amazon, Meta, Oracle and CoreWeave all lengthened server lives between 2020 and 2025, to five or six years, and Amazon walked part of that back in 2025. Published estimates of how fast accelerators actually lose value run from roughly flat to about 40% a year. I rebuilt the question from the one price that is visible over time: what it costs to rent a GPU for an hour.
+
+**[Read the report (PDF) →](/publications#rental-implied-depreciation)**
+
+## Summary
+
+- **What I built.** A panel of 24,210 listing-months of posted rents for seven NVIDIA chips, V100 (2017) to B200 (2024), October 2017 to November 2026: AWS's price files, the SkyPilot catalog history, archived neocloud pricing pages and my own daily collection, across on-demand, spot and reserved contracts.
+- **What the rent did.** Holding seller, region and contract fixed, the V100's rent changed by −0.38 log points over nine years, about 32%. The H100's rose 0.24 in its first year, fell to −0.50 at three years, and was back to −0.04 at four in the 2026 shortage.
+- **What most prices are.** 96% of on-demand and reserved month-to-month observations show no change. AWS has charged $3.06 an hour for an on-demand V100 in every year from 2017 to 2026.
+- **What sets the shape.** Spot prices fall late in a chip's life. List prices that do move fall early. The published estimates disagree partly because they read different markets.
+- **What the data can't say.** With seven chip generations there are seven clusters, and the bootstrap I planned to use covers the truth only 66–72% of the time on this panel. With a valid one, no strategy finds a significant rate or shape.
+- **What ends a chip's life.** An H100 rents for $4.50 an hour against about $0.30 of power and maintenance. Rents never fall to running cost, so a chip is retired when a newer one would earn more in the same scarce power slot. A retirement model puts that at about 4.1 years.
+
+## 1. The rent each chip actually earned
+
+![Each chip's own rent path: the V100 drifts down to about −0.4 log points by year nine, the A100 40GB falls to −0.45 at five years and recovers, the H100 rises to +0.24 in year one, falls to −0.50 at three and recovers near zero](/basis/rental-implied-depreciation/what-the-rent-did.svg)
+
+These paths need no assumption about what is age and what is time: they are what happened, with the seller and the contract held fixed. They are not smooth decays. They are long flat stretches, sharp falls and rebounds when demand surged, and the 2026 shortage pulled every chip still on sale back up.
+
+The rest of the paper tries to project newer chips from older ones, and that is where the trouble starts. Age equals the calendar minus the chip's release date, so a model with chip and month effects cannot tell a falling age profile from a rising market (Hall 1968). I ran four ways around that side by side: price a chip's vintage by its specifications; measure obsolescence against the best chip on sale (after Geske, Ramey and Shapiro); watch prices around each successor's launch; and identify only the curvature, sweeping an assumed rate from 0 to −0.40 a year.
+
+## 2. The market you read sets the sign
+
+![Dot plot of the early-minus-late rate of decline: +0.47 for all listings with a narrow interval under the planned bootstrap and an interval from −0.44 to 1.03 under the restricted one; +0.87 for spot prices; −0.13 for on-demand; −0.52 for list prices that change at least once](/basis/rental-implied-depreciation/the-market-sets-the-sign.svg)
+
+The measure here is the annual decline in years 0–2 minus the decline in years 2–4. A front-loaded decline, the shape that would make straight-line books too generous early, shows up as a negative number. Pooled over every listing, it is +0.47: prices fall late, not early. Split by market, spot prices give +0.87, and list prices that change at least once give −0.52, in the front-loaded direction.
+
+Then there is precision. The +0.47 looked decisive under the wild bootstrap I had planned to use. An adversarial review, written by a fresh reader with only the code and the tables, said it would be too narrow, so I simulated this exact panel with no true shape and counted how often each method's 95% interval covered zero. The planned bootstrap covered it 66–72% of the time. The restricted version covered it about 98% of the time, and under it the pooled shape has p = 0.29. None of the strategies that identify a rate finds a significant decline over years 0–4 either.
+
+## 3. Rents never reach running costs
+
+![H100 value as a share of value at release: along the realized rent path it declines almost linearly to zero at nine years, above the five- and six-year straight lines; an assumed 0.40 a year decline falls below them early](/basis/rental-implied-depreciation/value-against-book.svg)
+
+Turning rents into asset values (present value of rent net of power and maintenance), an H100 on the realized path loses 32% of its value by year three, slower than any five- or six-year straight line. The only path that front-loads the loss is an assumed decline of 0.40 a year, and run backwards from today's rent it implies an H100 launch price of $16.02 an hour, far above anything in the panel.
+
+The bigger point is that the curves end where I stop them, not where rent meets cost. At $4.50 an hour against $0.30, rents stay many times operating cost for the whole observed life. A chip is retired because a newer one would earn more in the same slot of scarce data-centre power. A Monte Carlo of exactly that decision gives a median life of 4.1 years. With abundant power it is 11 years, and the companies' five- to six-year lives sit between the two.
+
+## 4. What it does to earnings
+
+Depreciating each year's estimated GPU spending under the realized-path schedule instead of the disclosed lives would raise the five hyperscalers' latest operating income by 2.6% to 15.5%, at a GPU share of server spending of one half. Only the assumed steep decline produces the large overstatements in the public debate: Oracle's fiscal 2026 operating income would be 11.0% lower. The sign follows the rent path, not the method.
+
+## 5. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Posted prices | 94% of the panel is hyperscaler list and spot prices. Marketplaces restrict automated collection and big buyers' contracts are private |
+| Seven generations | Seven clusters for every inference statement; more vintages, not more months, would narrow the range |
+| Shape identification | The curvature comes from differences in calendar trends across chips; if demand rotated between vintages, it is not identified |
+| Costs | Hosting, network and staff costs are left out for lack of a sourced figure, so values are upper bounds |
+| Restatement inputs | No firm discloses the GPU share of server spending; it is a 0.3–0.8 grid |
+
+## 6. What I'd do next
+
+1. **Transacted prices.** A marketplace or contract panel by tenor, read the same way, would say whether the list-price result survives in prices that clear.
+2. **Two more years of Hopper and Blackwell.** Every new generation adds a cluster; that is the binding constraint on what this design can identify.
+3. **A sourced hosting cost**, so economic life can end where rent meets full cost rather than at a horizon.
+
+## Sources
+
+Rents: AWS Price List offer files, the SkyPilot catalog history (used, not redistributed), Internet Archive snapshots of Lambda, CoreWeave and Paperspace pricing pages, and my own daily collection. Chip specifications: Epoch AI hardware data (CC BY 4.0). Electricity: EIA Form 861M. Deflator: BLS CPI-U. Filings: SEC EDGAR. Prior estimates: Amissah-Ocran and Ayumu, [Collateral Without a Curve](https://doi.org/10.54660/.IJMRGE.2026.7.5.49-62) (2026); Chincholikar and Chawla, [secondary-market transactions](https://zenodo.org/records/21894454) (2026); Huang, [GPU rental value curves](https://zenodo.org/records/22053861) (2026); CCIR, [GPU rental rates by generation](https://ccir.io/research/rental-rates-by-generation) (2026). Method: Hall, [Technical change and capital from the point of view of the dual](https://doi.org/10.2307/2974405) (1968); MacKinnon and Webb, [Wild bootstrap inference for wildly different cluster sizes](https://doi.org/10.1002/jae.2508) (2017).
+
+This is a working paper, not investment advice. The questions, hypotheses and calls are mine; the code, analysis, figures and drafts were produced with Claude under my direction, and every number comes from a script run on archived data.
