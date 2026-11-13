@@ -174,7 +174,7 @@ export const PROJECTS: Project[] = [
       { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24143073", kind: "external" },
       { label: "Data DOI", href: "https://doi.org/10.5281/zenodo.24143180", kind: "external" },
     ],
-    // The working paper exactly as released (tag v1.0.2).
+    // The working paper exactly as released (tag v1.0.3).
     report: {
       src: "/reports/rental-implied-depreciation.pdf",
       title: "Rental-Implied Depreciation of AI Accelerators: Why the Estimates Disagree",

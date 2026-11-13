@@ -2,7 +2,7 @@ export const meta = {
   number: 9,
   title: "How fast do GPUs lose value? Nine years of rents",
   date: "2026-11-11",
-  dek: "Posted GPU rents fall slowly, the shape of the decline flips with the market you read, and seven chip generations cannot pin down a rate. Rents never reach running costs, so book lives stand or fall on obsolescence.",
+  dek: "Posted GPU rents fall slowly, the shape of the decline flips with the market you read, and seven chips cannot pin down a rate. Rents never reach running costs, so book lives stand or fall on obsolescence.",
 };
 
 Reported earnings at the biggest AI spenders now hang on one estimate: how many years a server lasts. Microsoft, Alphabet, Amazon, Meta, Oracle and CoreWeave all lengthened server lives between 2020 and 2025, to five or six years, and Amazon walked part of that back in 2025. Published estimates of how fast accelerators actually lose value run from roughly flat to about 40% a year. I rebuilt the question from the one price that is visible over time: what it costs to rent a GPU for an hour.
@@ -15,7 +15,7 @@ Reported earnings at the biggest AI spenders now hang on one estimate: how many 
 - **What the rent did.** Holding seller, region and contract fixed, the V100's rent changed by −0.38 log points over nine years, about 32%. The H100's rose 0.24 in its first year, fell to −0.50 at three years, and was back to −0.04 at four in the 2026 shortage.
 - **What most prices are.** 96% of on-demand and reserved month-to-month observations show no change. AWS has charged $3.06 an hour for an on-demand V100 in every year from 2017 to 2026.
 - **What sets the shape.** Spot prices fall late in a chip's life. List prices that do move fall early. The published estimates disagree partly because they read different markets.
-- **What the data can't say.** With seven chip generations there are seven clusters, and the bootstrap I planned to use covers the truth only 66–72% of the time on this panel. With a valid one, no strategy finds a significant rate or shape.
+- **What the data can't say.** With seven chips there are seven clusters, and the bootstrap I planned to use covers the truth only 66–72% of the time on this panel. With a valid one, no strategy finds a significant rate or shape.
 - **What ends a chip's life.** An H100 rents for $4.50 an hour against about $0.30 of power and maintenance. Rents never fall to running cost, so a chip is retired when a newer one would earn more in the same scarce power slot. A retirement model puts that at about 4.1 years.
 
 ## 1. The rent each chip actually earned
@@ -51,7 +51,7 @@ Depreciating each year's estimated GPU spending under the realized-path schedule
 | Limit | What it means |
 | --- | --- |
 | Posted prices | 94% of the panel is hyperscaler list and spot prices. Marketplaces restrict automated collection and big buyers' contracts are private |
-| Seven generations | Seven clusters for every inference statement; more vintages, not more months, would narrow the range |
+| Seven chips | Seven clusters for every inference statement; more vintages, not more months, would narrow the range |
 | Shape identification | The curvature comes from differences in calendar trends across chips; if demand rotated between vintages, it is not identified |
 | Costs | Hosting, network and staff costs are left out for lack of a sourced figure, so values are upper bounds |
 | Restatement inputs | No firm discloses the GPU share of server spending; it is a 0.3–0.8 grid |
@@ -59,7 +59,7 @@ Depreciating each year's estimated GPU spending under the realized-path schedule
 ## 6. What I'd do next
 
 1. **Transacted prices.** A marketplace or contract panel by tenor, read the same way, would say whether the list-price result survives in prices that clear.
-2. **Two more years of Hopper and Blackwell.** Every new generation adds a cluster; that is the binding constraint on what this design can identify.
+2. **Two more years of Hopper and Blackwell.** Every new chip adds a cluster; that is the binding constraint on what this design can identify.
 3. **A sourced hosting cost**, so economic life can end where rent meets full cost rather than at a horizon.
 
 ## Sources
