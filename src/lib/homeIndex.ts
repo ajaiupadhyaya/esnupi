@@ -27,11 +27,11 @@ export type IndexEntry = {
 };
 
 export const INDEX_SECTIONS: { kind: IndexKind; label: string }[] = [
+  { kind: "experience", label: "Experience" },
   { kind: "work", label: "Works" },
   { kind: "experiment", label: "Experiments" },
   { kind: "code", label: "Code" },
   { kind: "writing", label: "Writing" },
-  { kind: "experience", label: "Experience" },
 ];
 
 const gh = (repo: string) => `https://github.com/ajaiupadhyaya/${repo}`;
