@@ -1,5 +1,5 @@
 {
-  "total_usd": 3.7486,
+  "total_usd": 4.6433,
   "runs": [
     {
       "run_id": "2026-11-07-1644",
@@ -67,6 +67,21 @@
         "scout": 0.0906
       },
       "calls": 1
+    },
+    {
+      "run_id": "2026-11-16-2324",
+      "finished": "2026-11-16T23:37:16+00:00",
+      "status": "error",
+      "slug": "correlation-acceleration-vs-vix",
+      "pr": null,
+      "usd": 0.8947,
+      "by_stage": {
+        "scout": 0.1968,
+        "research": 0.2937,
+        "write": 0.3021,
+        "referee": 0.1021
+      },
+      "calls": 13
     }
   ]
 }
