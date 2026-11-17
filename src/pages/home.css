@@ -121,49 +121,30 @@ html[data-home-page] body {
 .ajh-fig {
   margin: 0;
   width: 240px;
-}
-
-.ajh-fig__cap {
-  margin-bottom: 10px;
-  min-height: calc(3 * 1.38em);
-  font-variant-numeric: tabular-nums;
+  max-width: 100%;
 }
 
 .ajh-fig__plate {
   position: relative;
   display: block;
-  width: 240px;
-  height: 264px;
+  width: 100%;
+  aspect-ratio: 240 / 264;
   padding: 0;
   border: 0;
-  background: #fff;
+  background: transparent;
   cursor: crosshair;
+  touch-action: pan-y;
+}
+
+.ajh-fig__plate:focus-visible {
+  outline: 1px solid #fff;
+  outline-offset: 5px;
 }
 
 .ajh-fig__plate canvas {
   display: block;
   width: 100%;
   height: 100%;
-  image-rendering: pixelated;
-}
-
-.ajh-fig__x {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--ajh-blue);
-  pointer-events: none;
-}
-
-.ajh-fig__x i {
-  position: absolute;
-  left: -6px;
-  width: 13px;
-  height: 3px;
-  margin-top: -1px;
-  background: var(--ajh-blue);
-  box-shadow: 0 0 0 1px #fff;
 }
 
 /* ○ / ● nav */
