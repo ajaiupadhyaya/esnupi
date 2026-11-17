@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const WIDTH = 240;
 const HEIGHT = 264;
@@ -14,7 +14,6 @@ export function ParticleFigure() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const spawnRef = useRef<(point: Point) => void>(() => {});
-  const [count, setCount] = useState(INITIAL_COUNT);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -159,7 +158,6 @@ export function ParticleFigure() {
           vx: Math.cos(angle) * 1.5, vy: Math.sin(angle) * 1.5, radius,
         });
       }
-      setCount(particles.length);
       paint();
     };
     const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; sync(); });
@@ -190,11 +188,6 @@ export function ParticleFigure() {
 
   return (
     <figure className="ajh-fig">
-      <figcaption className="ajh-cap ajh-fig__cap">
-        Fig. 1: Particle network,<br />
-        move to connect, click to grow<br />
-        <span aria-live="polite">{count} particles</span>
-      </figcaption>
       <button
         ref={buttonRef}
         type="button"

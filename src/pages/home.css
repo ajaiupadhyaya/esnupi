@@ -124,12 +124,6 @@ html[data-home-page] body {
   max-width: 100%;
 }
 
-.ajh-fig__cap {
-  margin-bottom: 10px;
-  min-height: calc(3 * 1.38em);
-  font-variant-numeric: tabular-nums;
-}
-
 .ajh-fig__plate {
   position: relative;
   display: block;
