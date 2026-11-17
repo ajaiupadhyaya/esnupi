@@ -144,6 +144,13 @@ def child_env(run_dir: Path) -> dict[str, str]:
     return keep
 
 
+def _limit_resources() -> None:
+    """Cap generated code at 6 GB of memory so a runaway script can't take down the runner."""
+    import resource
+    gb = 6 * 1024**3
+    resource.setrlimit(resource.RLIMIT_AS, (gb, gb))
+
+
 def run_py(run_dir: Path, filename: str, timeout: int) -> tuple[int, str]:
     try:
         cp = subprocess.run(
@@ -153,6 +160,7 @@ def run_py(run_dir: Path, filename: str, timeout: int) -> tuple[int, str]:
             capture_output=True,
             text=True,
             timeout=timeout,
+            preexec_fn=_limit_resources if os.name == "posix" else None,
         )
         out = (cp.stdout or "") + ("\n[stderr]\n" + cp.stderr if cp.stderr.strip() else "")
         return cp.returncode, out
@@ -277,6 +285,10 @@ def run_research(cfg: dict, budget: Budget, run_dir: Path, proposal: dict, log) 
         if resp.stop_reason == "pause_turn":
             continue  # server tool still working; resend to resume
         tool_uses = [b for b in content if b.get("type") == "tool_use"]
+        server_ids = {b["id"] for b in content if b.get("type") == "server_tool_use"}
+        resolved = {b.get("tool_use_id") for b in content if str(b.get("type", "")).endswith("_tool_result")}
+        if not tool_uses and server_ids - resolved:
+            continue  # a server tool is still pending: resend unchanged to let it finish
         if not tool_uses:
             if resp.stop_reason == "max_tokens":
                 messages.append({"role": "user", "content": "You hit the output limit. Continue, using smaller tool calls."})
@@ -305,7 +317,10 @@ def run_research(cfg: dict, budget: Budget, run_dir: Path, proposal: dict, log) 
         note = f"[budget: ${left:.2f} left for research; turn {turn}/{t['research_max_turns']}]"
         if left < 0.25 * budget.stage_cap("research") or turn >= t["research_max_turns"] - 3:
             note += " WRAP UP NOW: consolidate analysis.py, write results.json, figures and notes.md, then call finish."
-        results.append({"type": "text", "text": note})
+        # The reply must contain ONLY tool_result blocks: if the model paired a server tool
+        # (web_fetch/web_search) with a client tool, the API resumes that server call only
+        # when the next user message is pure tool results. So the note rides inside one.
+        results[-1]["content"] = f"{results[-1]['content']}\n\n{note}"
         messages.append({"role": "user", "content": results})
         if finished:
             break

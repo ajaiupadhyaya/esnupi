@@ -3,7 +3,7 @@
 [budget]
 # Hard ceiling across ALL runs, tracked in ledger.json on the `lab-state` branch.
 # Raise this when you're happy with the trial (e.g. to 90 for a monthly budget).
-total_usd = 10.00
+total_usd = 9.70  # $10 trial minus ~$0.30 from run 42394431813, whose runner died before the ledger saved
 # Hard ceiling for a single run. The run aborts (no PR) if it would exceed this.
 per_run_usd = 3.50
 # Don't start a run unless at least this much budget remains.
@@ -11,8 +11,8 @@ min_to_start_usd = 1.50
 # Per-stage soft caps (USD). A stage that hits its cap is told to wrap up.
 scout_usd = 0.40
 research_usd = 2.20
-write_usd = 0.80
-referee_usd = 0.30
+write_usd = 1.00
+referee_usd = 0.60
 
 [models]
 scout = "claude-sonnet-5-5"
