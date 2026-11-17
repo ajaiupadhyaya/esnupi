@@ -63,6 +63,7 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           BASIS_TOPIC: ${{ github.event.inputs.topic }}
+          BASIS_LEDGER_PUSH: "1"
         run: python -m basis_lab.run --ledger ../.lab-state/ledger.json
         continue-on-error: true
 
@@ -92,7 +93,8 @@ jobs:
           git push -q origin "$BRANCH"
           gh pr create --draft --base main --head "$BRANCH" \
             --title "BASIS draft No. $(printf '%03d' "$NUMBER"): $TITLE" \
-            --body-file "$RUN_DIR/PR_BODY.md"
+            --body-file "$RUN_DIR/PR_BODY.md" \
+          || echo "::warning::Branch $BRANCH was pushed, but the PR could not be opened. Enable Settings > Actions > General > 'Allow GitHub Actions to create and approve pull requests', or open it from the branch."
 
       - name: Keep run files
         if: always()

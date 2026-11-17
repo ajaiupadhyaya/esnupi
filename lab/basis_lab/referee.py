@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from .llm import Budget, extract_json, text_of
+from .llm import Budget, ask_json
 
 REFEREE_SYSTEM = """You are an exacting referee for a quantitative research note that will appear on
 the author's personal site, read by quant recruiters and researchers. You did not write it.
@@ -98,14 +98,13 @@ def referee(cfg, budget: Budget, repo: Path, run_dir: Path, mdx: str, log) -> di
     payload = (
         f"<style_guide>\n{style}\n</style_guide>\n\n"
         f"<draft>\n{mdx}\n</draft>\n\n"
-        f"<results_json>\n{(run_dir / 'results.json').read_text()[:25000]}\n</results_json>\n\n"
+        f"<results_json>\n{(run_dir / 'results.json').read_text()[:90000]}\n</results_json>\n\n"
         f"<run_log_tail>\n{(run_dir / 'logs/final_run.txt').read_text()[-4000:] if (run_dir / 'logs/final_run.txt').exists() else ''}\n</run_log_tail>\n\n"
         f"<analysis_py>\n{(run_dir / 'analysis.py').read_text()[:30000]}\n</analysis_py>\n\n"
         f"<machine_number_audit unmatched=\"{len(unmatched)}\">{json.dumps(unmatched)}</machine_number_audit>"
     )
-    resp = budget.call("referee", model=cfg["models"]["referee"], max_tokens=5000,
-                       system=REFEREE_SYSTEM, messages=[{"role": "user", "content": payload}])
-    report = extract_json(text_of(resp))
+    report, _ = ask_json(budget, "referee", log=log, require="verdict", model=cfg["models"]["referee"], max_tokens=16000,
+                         system=REFEREE_SYSTEM, messages=[{"role": "user", "content": payload}])
     report["unmatched_numbers"] = unmatched
     n_block = sum(1 for i in report.get("issues", []) if i.get("severity") == "blocking")
     log(f"referee: {report.get('verdict')} — {n_block} blocking, {len(unmatched)} unmatched numbers")

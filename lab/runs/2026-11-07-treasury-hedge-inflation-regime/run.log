@@ -1,0 +1,23 @@
+17:11:17 scout: 37 feed items, 3 feed errors
+17:12:15 scout: picked 'treasury-hedge-inflation-regime' — Do Treasuries stop hedging equity selloffs when inflation is high?
+17:12:21 research[1]: run_python(probe.py) -> ok
+17:12:43 research[2]: run_python(h.py) -> ok
+17:14:19 research[3]: write_file(analysis.py) -> ok
+17:14:20 research[4]: run_python(analysis.py) -> ERR
+17:15:08 research[5]: run_python(analysis.py) -> ERR
+17:15:14 research[6]: run_python(runner.py) -> ok
+17:15:21 research[7]: run_python(runner.py) -> ok
+17:15:37 research[8]: run_python(runner.py) -> ok
+17:16:26 research[9]: run_python(runner.py) -> ok
+17:16:32 research[10]: run_python(chk.py) -> ok
+17:16:54 research[11]: run_python(runner.py) -> ok
+17:17:37 research[12]: write_file(notes.md) -> ok
+17:17:59 research[13]: run_python(chk2.py) -> ok
+17:18:23 research[14]: run_python(runner.py) -> ok
+17:18:46 research[15]: run_python(runner.py) -> ok
+17:18:58 research[16]: write_file(data_request.md) -> ok
+17:19:15 research: reproducibility re-run exit=0, figures=['fig1_gap_by_spec.svg', 'fig2_mean_bond_return_tail_weeks.svg', 'fig3_rolling_corr.svg']
+17:20:54 writer: draft 3252 words
+17:22:28 referee: revise — 0 blocking, 0 unmatched numbers
+17:23:44 writer: revision 3502 words
+17:25:28 referee: revise — 0 blocking, 4 unmatched numbers
