@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MonteCarloFigure } from "@/components/home/MonteCarloFigure";
+import { ParticleFigure } from "@/components/home/ParticleFigure";
 import { MosaicPhoto } from "@/components/home/MosaicPhoto";
 import { Signature } from "@/components/home/Signature";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
@@ -133,7 +133,7 @@ export default function Home() {
           </p>
         </div>
 
-        <MonteCarloFigure />
+        <ParticleFigure />
 
         <nav className="ajh-nav" aria-label="Sections">
           <ul>
