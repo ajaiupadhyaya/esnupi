@@ -164,13 +164,12 @@ export const PROJECTS: Project[] = [
     year: "2026",
     role: "Empirical finance · Identification · Accounting",
     blurb:
-      "How fast do AI accelerators lose value? Nine years of posted GPU rents, four identification strategies and a seven-firm earnings restatement: rents fall slowly, the shape flips with the market, and rents never reach running costs.",
+      "Under revision. How fast do AI accelerators lose value? Nine years of posted GPU rents, four identification strategies and a seven-firm earnings restatement: rents fall slowly, the shape flips with the market, and rents never reach running costs.",
     tags: ["GPUs", "Depreciation", "Hedonic pricing", "Accounting", "2026"],
-    status: "complete",
+    status: "ongoing",
     hex: "72 65 6e 74 61 6c 00 00 67 70 75 00 00 00 00 14",
     links: [
       reportLink("rental-implied-depreciation"),
-      { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7692700", kind: "press" },
       { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24143073", kind: "external" },
       { label: "Data DOI", href: "https://doi.org/10.5281/zenodo.24143180", kind: "external" },
     ],
@@ -181,7 +180,7 @@ export const PROJECTS: Project[] = [
       date: "November 2026",
       pages: 20,
       abstract:
-        "A panel of 24,210 listing-months of posted rents for seven NVIDIA chips, V100 to B200, 2017 to 2026. Holding seller and contract fixed, the V100's rent changes by −0.38 log points over nine years. 96% of on-demand and reserved observations never move; spot prices fall late and list prices that move fall early. With seven chips, valid inference finds no significant rate or shape. An H100 rents for $4.50 an hour against $0.30 of running cost, so economic life is set by obsolescence: about 4.1 years in a power-constrained model.",
+        "Draft under revision (November 2026); results may change. A panel of 24,210 listing-months of posted rents for seven NVIDIA chips, V100 to B200, 2017 to 2026. Holding seller and contract fixed, the V100's rent changes by −0.38 log points over nine years. 96% of on-demand and reserved observations never move; spot prices fall late and list prices that move fall early. With seven chips, valid inference finds no significant rate or shape. An H100 rents for $4.50 an hour against $0.30 of running cost, so economic life is set by obsolescence: about 4.1 years in a power-constrained model.",
     },
   },
   {
