@@ -478,13 +478,6 @@ const EXPERIENCE: IndexEntry[] = [
     year: "2020–21",
   },
   {
-    id: "uva-bs",
-    kind: "experience",
-    title: "University of Virginia",
-    blurb: "B.S., Economics and Computer Science",
-    year: "2023–26",
-  },
-  {
     id: "apo",
     kind: "experience",
     title: "Alpha Phi Omega",
