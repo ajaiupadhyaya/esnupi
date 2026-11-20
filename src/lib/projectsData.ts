@@ -199,7 +199,7 @@ export const PROJECTS: Project[] = [
     links: [
       reportLink("the-rational-transformer"),
       { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7733526", kind: "press" },
-      { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24387529", kind: "external" },
+      { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24387528", kind: "external" },
     ],
     // House-style report (esnupi Publications No. 33), the report-series edition of the academic paper on SSRN and Zenodo.
     report: {
