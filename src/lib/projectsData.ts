@@ -184,8 +184,35 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: "private-credit-modeling",
+    id: "the-rational-transformer",
     index: "05",
+    accession: "Esn-0015",
+    kind: "drive",
+    title: "The Rational Transformer",
+    year: "2026",
+    role: "Pre-registered research · Expectations · Machine learning",
+    blurb:
+      "Is a forecasting network's error a bias, or only missing information? Small transformers trained on AR(1) series match the Bayesian with the same window of data at every memory length, and never overreact beyond it. Preprint on SSRN and Zenodo, code public.",
+    tags: ["Transformers", "Bayesian learning", "Expectations", "Pre-registration", "2026"],
+    status: "complete",
+    hex: "72 61 74 69 6f 6e 61 6c 00 61 72 31 00 00 00 15",
+    links: [
+      reportLink("the-rational-transformer"),
+      { label: "SSRN", href: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7733526", kind: "press" },
+      { label: "Zenodo DOI", href: "https://doi.org/10.5281/zenodo.24387529", kind: "external" },
+    ],
+    // House-style report (esnupi Publications No. 33), the report-series edition of the academic paper on SSRN and Zenodo.
+    report: {
+      src: "/reports/the-rational-transformer.pdf",
+      date: "November 2026",
+      pages: 15,
+      abstract:
+        "Causal transformers trained from scratch on AR(1) series with persistence drawn from U[0, 1], at four sizes and five memory lengths, are compared with the exact Bayes forecaster that holds the same prior and the same window of data, under rules frozen before any confirmatory run. The largest model with full memory is equivalent to Bayes on 12 of 12 verdicts. Cut to 2, 4, 8 or 16 observations it is equivalent to window-Bayes on 12 of 12 at every window. In 0 of 8 combinations at persistence 0.6 and 0.8 does it overreact where window-Bayes underreacts; the upper end of every 95% interval is at or below +0.0008, against a threshold of +0.02. The verdicts hold only at the end of training, and the smallest model departs toward underreaction.",
+    },
+  },
+  {
+    id: "private-credit-modeling",
+    index: "06",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -206,7 +233,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "06",
+    index: "07",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -227,7 +254,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "07",
+    index: "08",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -249,7 +276,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "08",
+    index: "09",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -275,7 +302,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "09",
+    index: "10",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -297,7 +324,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "10",
+    index: "11",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -311,7 +338,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "11",
+    index: "12",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
@@ -332,7 +359,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "sports-quant-ideas",
-    index: "12",
+    index: "13",
     accession: "Esn-0104",
     kind: "kext",
     title: "Sports + Quant",
@@ -345,7 +372,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "prediction-markets",
-    index: "13",
+    index: "14",
     accession: "Esn-0105",
     kind: "kext",
     title: "Prediction Markets Analysis",
@@ -358,7 +385,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "injury-cv",
-    index: "14",
+    index: "15",
     accession: "Esn-0106",
     kind: "kext",
     title: "Injury-Risk Computer Vision",
@@ -370,7 +397,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "wallmachine",
-    index: "15",
+    index: "16",
     accession: "Esn-0107",
     kind: "kext",
     title: "Wall Machine",

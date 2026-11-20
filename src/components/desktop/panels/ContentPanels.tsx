@@ -403,6 +403,15 @@ const WORKSITE_FEATURES: Array<{
     meta: "report / working paper",
   },
   {
+    title: "The Rational Transformer",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("the-rational-transformer"),
+    description:
+      "Is a forecasting network's error a bias, or missing information? Small transformers on AR(1) series, four sizes and five memory lengths, against the Bayesian with the same data.",
+    meta: "report / SSRN / code",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -461,6 +470,12 @@ const WORKSITE_LINKS: Array<{
     category: "Research",
     year: "2026",
     href: publicationHref("rental-implied-depreciation"),
+  },
+  {
+    title: "The Rational Transformer (report)",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("the-rational-transformer"),
   },
   {
     title: "Case Study Dashboard",

@@ -1,0 +1,92 @@
+export const meta = {
+  number: 10,
+  title: "The Rational Transformer: bias, or missing information?",
+  date: "2026-11-20",
+  dek: "Small networks trained only to minimise forecast error end up on the forecast of a Bayesian who sees the same data. They never overreact the way people do.",
+};
+
+When people forecast a simple time series, they overreact to the latest number, and more so when the series is noisy. It is tempting to call any forecaster that misses the full-information answer biased. But a rational forecaster who has to learn how persistent a series is misses it too. I trained small transformers on series where the right answer is known exactly, and asked whether what they get wrong is a bias or only the information they lack.
+
+**[Read the report (PDF) →](/publications#the-rational-transformer)** The full academic paper is a preprint [on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7733526), under review there, and is [archived at Zenodo](https://doi.org/10.5281/zenodo.24387529). The [code, pre-registration and every result](https://github.com/ajaiupadhyaya/rational-transformer) are public.
+
+## Summary
+
+- **What I ran.** Causal transformers trained from scratch on AR(1) series, with persistence drawn afresh for every sequence, at four sizes and five memory lengths: 96 runs. Each is compared with the exact Bayes forecaster that holds the same prior and sees the same window of data. Hypotheses, margins and decision rules were fixed before any confirmatory run.
+- **With full memory, the network is Bayes.** The largest model matches the exact Bayes forecaster on 12 of 12 pre-registered verdicts.
+- **With a short memory, it is the short-memory Bayesian.** Cut to the last 2, 4, 8 or 16 observations, it matches a Bayesian with the same window on 12 of 12 verdicts at all four windows.
+- **No human-style overreaction.** In 0 of 8 tests does it overreact where the matching Bayesian underreacts. The largest upper end of a 95% interval is +0.0008, against a threshold of +0.02.
+- **What keeps it honest.** The match appears only at the end of training. The smallest model does not match, and it errs toward underreaction. A short-memory Bayesian with an unknown mean overreacts by itself, so I do not claim that people overreact beyond one.
+
+## 1. Why a rational learner looks biased
+
+Afrouzi, Kwon, Landier, Ma and Thesmar (2023) showed people AR(1) series and asked for forecasts. Regress a forecast on the current value and the slope is an implied persistence. If it is above the true persistence ρ, the forecast moves too much with the latest value: overreaction. People's implied persistence sits above ρ for every ρ below one, by 0.11 to 0.45, and by more when ρ is low.
+
+A forecaster who does not know ρ and learns it from the data is right only on average. At any one ρ its estimate is pulled toward its prior, so its implied persistence is too high when ρ is low and too low when ρ is high. A forecaster that sees only the last few observations is pulled harder, because it has less data. With the mean and scale known, a Bayesian has an implied persistence of 0.12 at ρ = 0 and one with four observations has 0.38; at ρ = 0.8 they have 0.80 and 0.72.
+
+So the fair benchmark is not the truth. It is window-Bayes: the exact Bayes forecaster with the same prior and the same window. Part of the human pattern, more overreaction at low persistence, is what window-Bayes does anyway. The place to look for something else is high persistence, at ρ = 0.6 and 0.8, where window-Bayes underreacts and people still overreact.
+
+Window-Bayes is also the forecast that minimises expected squared error given that window. A network that trained perfectly would match it by construction. The result below is therefore about what training actually reaches, and nothing guarantees that it gets there.
+
+## 2. What I ran
+
+| Piece | What it is |
+| --- | --- |
+| **Data** | AR(1) series of 80 steps, ρ drawn from U[0, 1] once per sequence, forecasts scored at steps 41 to 80 |
+| **Models** | Four sizes, from 1 layer of width 32 to 8 layers of width 256, each trained for 30,000 steps on squared error only |
+| **Memory** | The input is cut to the last 2, 4, 8 or 16 observations, or left whole |
+| **Benchmark** | Exact Bayes, and window-Bayes for each window, computed on a grid |
+| **Seeds** | 3 to 5 training runs per cell; each verdict is a 95% interval of the seed mean |
+
+Two measures decide each verdict. The gap is the model's implied persistence minus its benchmark's. Excess error is the model's squared error over the benchmark's, in percentage points. A model is equivalent to its benchmark if the whole 95% interval lies inside a margin set in advance: ±0.02 of gap and ±1 point of excess error. Six values of ρ and two measures make 12 verdicts per cell.
+
+The rules were frozen in a tagged pre-registration in the project repository on 17 November 2026, before any confirmatory run. It was not lodged with an independent registry, and the repository was made public after the runs had finished, so the tag dates are my record and not an independent timestamp.
+
+## 3. The network sits on its Bayesian
+
+![Largest model against the matching Bayesian at true persistence 0.6 and 0.8: at windows of 2, 4, 8 and 16 observations and with full memory the gap lies between −0.0010 and +0.0004, far inside the ±0.02 margin](/basis/the-rational-transformer/inside-the-band.svg)
+
+**H1, supported.** The largest model with full memory is equivalent to Bayes on all 12 verdicts. Every excess-error interval lies within [−0.013, +0.037] points and every gap interval within ±0.0013.
+
+**H2, rational given its information.** At each of the four windows the largest model is equivalent to window-Bayes on all 12 verdicts. The widest interval ends are 0.42 points of excess error and 0.011 of gap, both at 16 observations and ρ = 0. What the windowed network gets wrong against full Bayes is accounted for, within the margins, by the window.
+
+**H3, not supported.** The test asked whether the network overreacts beyond window-Bayes at ρ = 0.6 or 0.8, the human direction. In 0 of 8 window-ρ combinations is the gap above +0.02, at 95% or after adjustment. No mean gap is above zero; the eight lie between −0.0010 and zero. The upper end of every 95% interval is at or below +0.0008, so an overreaction of more than about a thousandth in slope is excluded at that level.
+
+Equivalent means inside the margin, not identical. At ρ = 0 the network overstates persistence by 0.001 to 0.007 at every memory length, a small and systematic amount.
+
+## 4. Where it does not hold
+
+![Gap against window-Bayes at 16 observations by model size: the smallest model is at −0.037 and −0.031, outside the −0.02 margin on the underreaction side, while sizes s, m and l sit within 0.002 of zero](/basis/the-rational-transformer/the-smallest-model.svg)
+
+**Size.** The two middle sizes also match their benchmarks on all 60 verdicts each. The smallest model, one layer of width 32, is "different" on 22 of 60 and inconclusive on 5 more. Its departures have a shape: it pulls low-persistence series up and mid-persistence series down, toward a middling persistence. With full memory its implied persistence is 0.16 above Bayes at ρ = 0 and 0.05 below it at ρ = 0.6. Below the benchmark at ρ = 0.6 and 0.8 is underreaction, the opposite of the human pattern.
+
+**Training length.** The match arrives late. At 10,000 of 30,000 steps the windowed models at the largest size are equivalent on at most 2 of 12 verdicts per window, with excess errors of up to 11 points. They are equivalent on all 12 only at the last checkpoint, after the learning rate has decayed to zero. A shorter budget would leave departures that look like bias and are under-training.
+
+## 5. People and the Bayesians
+
+The main runs give the forecaster the mean and scale of the series. For the comparison with people I trained a second family where both are unknown, with full memory and with four observations. Four was fixed by the budget, not fitted to people.
+
+![Implied persistence against true persistence with the mean and scale unknown: full-memory Bayes runs from 0.14 to 0.98, a Bayesian with four observations from 0.62 to 0.98, and people from 0.45 to 0.99 with 95% intervals that include the four-observation curve from 0.2 upward](/basis/the-rational-transformer/people-and-the-bayesians.svg)
+
+The networks are not drawn because they sit on their curves: every mean gap is within ±0.0073. The four-observation network overreacts strongly against the truth, with an implied persistence of 0.625 at ρ = 0, but no more than a Bayesian with four observations does.
+
+People sit between the two curves at ρ = 0 and 0.2. At ρ = 0.4, 0.6 and 0.8 their point estimates, 0.77, 0.85 and 0.91, are above the four-observation curve at 0.72, 0.79 and 0.88, but each interval still includes it. At ρ = 0 people are below it: 0.45, interval 0.35 to 0.56, against 0.62.
+
+This does not show that people overreact beyond an information-limited Bayesian. With the mean unknown, both Bayes curves are themselves above the truth at ρ = 0.6 and 0.8, so the premise of H3, a matched Bayesian that underreacts there, does not carry over to this family. What the figure does show is that a Bayesian with a short window and an unknown mean reproduces the direction of the human curve. It also compares curves, not data: people forecast the experiment's series, and the networks forecast simulated ones.
+
+## 6. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Simulated data | Every confirmatory claim is about networks trained and tested on AR(1) series. Nothing here says how a large language model or a person behaves |
+| One architecture | One network design, one training length, one learning-rate schedule |
+| End of training only | The verdicts hold at 30,000 steps. At 10,000 the windowed models were not yet equivalent |
+| Capacity | The claim holds from 2 layers and width 64 upward, not for the smallest model |
+| Fewer seeds off the main cells | Size m and the unknown-mean family have three seeds per cell; neither enters a decision |
+| Pre-registration | A tagged document in my own repository, with a logged set of deviations, not an independent registry |
+| Cost | About 41 rented GPU-hours: about $14.35 for the sweep, about $15.06 with the pilot, estimated from instance time and not yet reconciled against the bill. The two smallest sizes trained on a laptop |
+
+## Sources
+
+The [report](/publications#the-rational-transformer), [SSRN preprint](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7733526), [Zenodo record](https://doi.org/10.5281/zenodo.24387529) and [code repository](https://github.com/ajaiupadhyaya/rational-transformer). Human forecasts: Afrouzi, Kwon, Landier, Ma and Thesmar, [Overreaction in expectations: evidence and theory](https://doi.org/10.1093/qje/qjad009) (2023), Experiment 1. The report is the report-series edition of the paper on SSRN and Zenodo.
+
+This is a study of small networks on simulated data, not investment advice. The research question, the hypotheses and the calls are mine; the code, runs, analysis, figures and drafts were produced with Claude under my direction, and every number comes from a script run on the archived results.
