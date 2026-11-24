@@ -1,5 +1,5 @@
 {
-  "total_usd": 4.6433,
+  "total_usd": 4.7342,
   "runs": [
     {
       "run_id": "2026-11-07-1644",
@@ -82,6 +82,18 @@
         "referee": 0.1021
       },
       "calls": 13
+    },
+    {
+      "run_id": "2026-11-24-0142",
+      "finished": "2026-11-24T01:43:14+00:00",
+      "status": "error",
+      "slug": null,
+      "pr": null,
+      "usd": 0.0909,
+      "by_stage": {
+        "scout": 0.0909
+      },
+      "calls": 1
     }
   ]
 }
