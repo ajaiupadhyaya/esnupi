@@ -211,8 +211,31 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: "private-credit-modeling",
+    id: "who-remembers-the-data",
     index: "06",
+    accession: "Esn-0016",
+    kind: "drive",
+    title: "Who Remembers the Data?",
+    year: "2026",
+    role: "Pre-registered research · LLM evaluation · Look-ahead bias",
+    blurb:
+      "Do language models forecast macro data or remember it? Seventeen open models on eleven FRED series, named and masked: no memorisation gap for Qwen2.5-72B, a significant one for four newer models, and Inkling simply remembers.",
+    tags: ["LLMs", "Look-ahead bias", "Macro forecasting", "Pre-registration", "2026"],
+    status: "complete",
+    hex: "6d 65 6d 6f 72 79 00 00 66 72 65 64 00 00 00 16",
+    links: [reportLink("who-remembers-the-data")],
+    // House-style report (esnupi Publications No. 34), built from the lookahead sweep results.
+    report: {
+      src: "/reports/who-remembers-the-data.pdf",
+      date: "November 2026",
+      pages: 12,
+      abstract:
+        "Seventeen open models answered 10,527 prompts on eleven FRED series, 2000 to 2026: forecasts with the series named, the same forecasts masked and rescaled, and recall of single months. Each model's horizon is the change point in its recall error; D is the gain from names before the horizon minus after it. Rules were fixed before any answer was read. For Qwen2.5-72B, D = 0.005 [−0.028, 0.035]: not supported. Kimi-K2, phi-4, DeepSeek-V3 and Qwen3-235B pass with Bonferroni correction. Inkling's named error is 0.17 of a random walk's before its horizon, descriptive only. Two runs are void, and one published cutoff is missed by 20 months.",
+    },
+  },
+  {
+    id: "private-credit-modeling",
+    index: "07",
     accession: "Esn-0001",
     kind: "drive",
     title: "Private Credit Modeling",
@@ -233,7 +256,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "gpu-depreciation-cycle",
-    index: "07",
+    index: "08",
     accession: "Esn-0002",
     kind: "drive",
     title: "GPU Depreciation Cycle",
@@ -254,7 +277,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "computer-vision-investment-research",
-    index: "08",
+    index: "09",
     accession: "Esn-0003",
     kind: "drive",
     title: "Computer Vision for Investment Research",
@@ -276,7 +299,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "case-study-dashboard",
-    index: "09",
+    index: "10",
     accession: "Esn-0004",
     kind: "drive",
     title: "Case Study Dashboard",
@@ -302,7 +325,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "machine-learning-investment-research",
-    index: "10",
+    index: "11",
     accession: "Esn-0101",
     kind: "kext",
     title: "Machine Learning strategies for investment research",
@@ -324,7 +347,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "financial-modeling-wealth-management",
-    index: "11",
+    index: "12",
     accession: "Esn-0102",
     kind: "kext",
     title: "Financial Modeling for Wealth Management",
@@ -338,7 +361,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "autonomous-option-pricing-model",
-    index: "12",
+    index: "13",
     accession: "Esn-0103",
     kind: "kext",
     title: "Autonomous Option Pricing Model",
@@ -359,7 +382,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "sports-quant-ideas",
-    index: "13",
+    index: "14",
     accession: "Esn-0104",
     kind: "kext",
     title: "Sports + Quant",
@@ -372,7 +395,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "prediction-markets",
-    index: "14",
+    index: "15",
     accession: "Esn-0105",
     kind: "kext",
     title: "Prediction Markets Analysis",
@@ -385,7 +408,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "injury-cv",
-    index: "15",
+    index: "16",
     accession: "Esn-0106",
     kind: "kext",
     title: "Injury-Risk Computer Vision",
@@ -397,7 +420,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "wallmachine",
-    index: "16",
+    index: "17",
     accession: "Esn-0107",
     kind: "kext",
     title: "Wall Machine",

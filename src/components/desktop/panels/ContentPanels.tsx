@@ -412,6 +412,15 @@ const WORKSITE_FEATURES: Array<{
     meta: "report / SSRN / code",
   },
   {
+    title: "Who Remembers the Data?",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("who-remembers-the-data"),
+    description:
+      "Do language models forecast macro data or remember it? Seventeen open models, eleven FRED series named and masked, under a pre-registered test.",
+    meta: "report / research note",
+  },
+  {
     title: "Case Study Dashboard",
     category: "Projects",
     year: "2026",
@@ -476,6 +485,12 @@ const WORKSITE_LINKS: Array<{
     category: "Research",
     year: "2026",
     href: publicationHref("the-rational-transformer"),
+  },
+  {
+    title: "Who Remembers the Data? (report)",
+    category: "Research",
+    year: "2026",
+    href: publicationHref("who-remembers-the-data"),
   },
   {
     title: "Case Study Dashboard",

@@ -1,0 +1,98 @@
+export const meta = {
+  number: 11,
+  title: "Who remembers the data?",
+  date: "2026-11-26",
+  dek: "Seventeen open models forecast eleven FRED series with the names shown and hidden. For Qwen2.5-72B, the model the test was built around, naming the series helps no more before its knowledge horizon than after it. For four newer models it does, and Inkling simply remembers.",
+};
+
+No. 008 ended with a question it could not answer: when a language model "forecasts" from data it may have read, how much is forecasting and how much is memory? This issue asks it on macro data instead of headlines, across seventeen open models, with the test fixed in writing before any answer was read.
+
+**[Read the report (PDF) →](/publications#who-remembers-the-data)**
+
+## Summary
+
+- **What I ran.** 17 open models, from Qwen1.5 to Inkling, each answered the same 10,527 prompts on 11 public FRED series from 2000 to October 2026. Each model saw every forecast twice: once with the series named and dated, and once masked, with the name and dates withheld and the numbers rescaled. Recall questions ("What was the 10-year yield in March 2019?") place each model's knowledge horizon. The test, the kill rule and the Bonferroni correction were written down before the run.
+- **The primary test fails.** For Qwen2.5-72B, the model the plan named, the gain from naming the series is the same before and after its horizon: D = 0.005, 90% interval [−0.028, 0.035]. Under the rule I fixed in advance, the hypothesis is not supported for this model.
+- **Four other models pass.** Kimi-K2 (D = 0.393), phi-4 (0.107), DeepSeek-V3 (0.095) and Qwen3-235B (0.080) have intervals above zero that survive a Bonferroni correction over 16 tests. For them, knowing which series and which month helps measurably more on months they have read about.
+- **Inkling remembers.** Before its horizon (February 2026), its named forecasts have 17% of a random walk's error. Masked, its error is back to the random walk's (1.08). After the horizon its named error is worse than a random walk (1.25). There are only seven months after its horizon, so I report this without a test.
+- **What went wrong.** Two models (Phi-3-medium and Qwen1.5-72B) ignored the answer format, so their results are void. OLMo 2's horizon lands 20 months before the cutoff on its model card, which by my own rule says the horizon estimate can miss badly.
+
+## 1. One prompt, three ways
+
+| Prompt | The model sees | It measures |
+| --- | --- | --- |
+| **named** | 24 months of a named series with dates, e.g. "10-year US Treasury yield … through March 2019", then "forecast April 2019" | forecasting plus whatever it remembers |
+| **masked** | the same 24 numbers through a random positive linear rescaling, labelled t−23 … t, with the identity and dates withheld | forecasting from the numbers alone |
+| **recall** | "What was the 10-year yield for March 2019?" | memory only |
+
+The series are chosen to be nearly unrevised: CPI inflation, the fed funds rate, 2- and 10-year Treasury yields, the 30-year mortgage rate, WTI oil, the VIX, two exchange rates, Michigan sentiment and unemployment. Errors are in standard deviations of each series' monthly change, capped at 10. Each model was asked for a JSON answer and sampled five times at temperature 0.7 (three times for Inkling), and the median sample is the forecast. The baselines use only data dated at or before each origin: a random walk and an AR(1) on first differences.
+
+The test works in two steps:
+
+1. **Where does memory stop?** From the recall answers alone, find the single month after which recall error at least doubles. That is the model's horizon. It is never estimated from the forecasts it later splits.
+2. **Does naming help more before it?** Write G for the log of masked error over named error, i.e. the gain from names. D is G before the horizon minus G after it. Some gain from names is honest, since knowing a series is the fed funds rate tells you something real. The after-horizon window measures that honest part. D is the excess before the horizon, which is memory.
+
+## 2. Where each model stops remembering
+
+![Recall error stays near 0.1 or below for every model, then rises above 1 after each model's horizon: Qwen2.5-72B in late 2023, DeepSeek-V3 in mid-2024, Kimi-K2 in late 2024 and Inkling in early 2026](/basis/who-remembers-the-data/recall-step.svg)
+
+The step is sharp. Inkling recalls monthly values from 2010 to 2025 to within a few hundredths of a standard deviation, which is close to exact. Every other model's recall error also jumps by an order of magnitude at some month.
+
+![Estimated horizons move forward with each Qwen generation; phi-4's matches its published June 2024 cutoff; OLMo 2's falls in April 2022, twenty months before the December 2023 on its card](/basis/who-remembers-the-data/horizons.svg)
+
+I registered two checks on these horizons before reading any answers:
+
+- **Generation order.** Each generation should know more than the last. Qwen1.5 → Qwen2 → Qwen2.5 → Qwen3, phi-3 → phi-4 and DeepSeek-V2.5 → V3 give one inversion in 20 checkable pairs: Qwen2-7B lands one month after Qwen2.5-7B, inside both intervals.
+- **Published cutoffs.** Only three models publish one. phi-4's horizon is 2024-07 against a June 2024 card, a match. OLMo-2-32B's is 2022-04 against December 2023, a miss of 20 months. Phi-3-medium's run is void (section 5).
+
+The OLMo miss matters. The horizon marks where recall falls apart, and that can come well before the last month of training data when the newest months are thinly covered. If a horizon is too early, months the model knows land in the "after" window. That makes the honest part look bigger and pushes D toward zero. So a mislocated horizon hides memory rather than inventing it.
+
+## 3. The gap, model by model
+
+![Memorisation gap D with 90% intervals: Kimi-K2 0.393, phi-4 0.107, DeepSeek-V3 0.095 and Qwen3-235B 0.080 survive Bonferroni; Qwen2.5-72B is 0.005 with an interval across zero](/basis/who-remembers-the-data/memorisation-gap.svg)
+
+Intervals come from resampling calendar years within each window, 2,000 times. Of the 16 tests:
+
+- 4 survive Bonferroni.
+- 5 more have a 90% interval above zero only.
+- 6 include zero, one of them the void Phi-3 run.
+- 1 goes the other way: Qwen2.5-7B gains more from names after its horizon. It does not survive the correction and has no obvious mechanism, so I treat it as noise until it repeats.
+
+All four survivors have horizons from mid-2024 on, and no model with an earlier horizon survives. Later horizons also leave shorter post-horizon windows (21 to 27 months), so part of that pattern may be precision rather than memory. The Qwen2.5 family, which the test was built around, shows little: 72B at 0.005, 32B at 0.042 with an interval across zero, and 14B at 0.085, which does not survive the correction. The greedy pass of the 72B agrees with the sampled one (0.006).
+
+## 4. Inkling
+
+![Inkling's named forecasts have 0.17 of a random walk's error before its horizon and 1.25 after; masked, 1.08 and 0.98. Kimi-K2, DeepSeek-V3 and Qwen2.5-72B shown for comparison](/basis/who-remembers-the-data/named-and-masked.svg)
+
+No forecaster beats a random walk by a factor of six on monthly macro data. The AR(1) baseline manages 0.97. Inkling's named error before its horizon is 0.17, and masking the same numbers puts it back at 1.08. That is not skill on the numbers. It is the model knowing what came next. After February 2026 the same named prompts score 1.25, worse than repeating the last value.
+
+The formal test needs at least 12 months after the horizon, and there are 7, so D = 2.10 is descriptive only. The gap is big enough that more months will not change the picture, but I fixed the rule in advance and I am keeping it.
+
+## 5. What failed
+
+- **Two models ignored the format.** Phi-3-medium answered in prose every time, and Qwen1.5-72B 70% of the time ("To forecast the value for February 2013, …"). The parser then took a year as the forecast for 33% and 27% of their parsed answers. That is why Phi-3-medium looks 13 to 15 times worse than a random walk. I report both as void and did not re-run them with a stricter parser, because changing the pipeline after seeing results is the thing the plan exists to prevent. Every other model answered in JSON at least 97.6% of the time.
+- **A horizon that missed.** OLMo 2, section 2.
+- **One regime after every horizon.** The post-horizon windows are 21 to 53 months, all from 2022 to 2026. Resampling years covers noise, not a regime that is simply different.
+
+## 6. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Open models only | Seventeen open-weight models, none of the closed frontier models most papers use |
+| One prompt per kind | Wording sensitivity is not measured |
+| Masking can leak | 2008 and 2020 have shapes a model may recognise through any rescaling; that hides memory, it does not invent it |
+| Revisions | FRED serves the latest vintage; unemployment and sentiment carry small revisions |
+| Inkling reasoned | It had 1,024 tokens and could reason first; the others had 48 |
+| Many models | Bonferroni over 16 tests; the five unadjusted passes are leads, not findings |
+
+## 7. What I'd do next
+
+1. **Re-run Inkling in mid-2027.** Twelve months after its horizon, the pre-registered test applies to it.
+2. **Fix the horizon estimate.** Use a model's recall of dated events (text, not numbers) as a second horizon, and require the two to agree.
+3. **Check the format before trusting the numbers.** A pre-registered rule that voids any model with more than 5% prose answers, so the call is made before the results are seen.
+
+## Sources
+
+Data: eleven public series from [FRED](https://fred.stlouisfed.org/), Federal Reserve Bank of St. Louis, pulled on 25 November 2026. Models: Qwen1.5, Qwen2, Qwen2.5 and Qwen3 (Alibaba), DeepSeek-V2.5 and V3, Kimi-K2 (Moonshot), phi-4 and Phi-3-medium (Microsoft), OLMo 2 (AI2) and Inkling (Thinking Machines), served with vLLM on one rented eight-GPU AMD MI355X node for 2 hours 12 minutes, $48.65 of promotional credit. Published cutoffs come from the developers' own model cards.
+
+This page is one experiment, not investment advice. The question and the decision rules are mine. The code, runs, analysis, figures and drafts were produced with Claude under my direction. The extra models were added mid-run, after the first sweep finished early but before any answer was read, and that amendment is recorded in the plan.
