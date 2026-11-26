@@ -1,0 +1,161 @@
+export const meta = {
+  number: 8,
+  title: "Do Treasuries hedge equity selloffs worse when inflation is high?",
+  date: "2026-11-07",
+  dek: "In the worst S&P 500 weeks since 1962, 10-year Treasuries did 0.50 points a week worse when CPI inflation was above 3%. The pre-specified test passes, but high inflation sits mostly in one era, and this sample cannot separate inflation from era.",
+};
+
+In the worst 10% of S&P 500 weeks since 1962, a 10-year Treasury proxy returned −0.17% a week when real-time CPI inflation was above 3% and +0.33% when it was not. The gap is −0.50 percentage points, with a block-bootstrap 95% interval of −0.85 to −0.20, so the pre-specified claim passes. The catch is timing: most high-inflation weeks fall before 2000 and most low-inflation weeks after, so the test cannot tell inflation from era. In an exploratory split at 2000, with each era's own tail cutoff, the gap is −0.28 points before and −0.25 after, and both intervals include zero. The market-based tests on inflation breakevens only run from 2003 and are too short to settle it either way.
+
+**[Read the code →](https://github.com/ajaiupadhyaya/esnupi/tree/main/lab/runs/2026-11-07-treasury-hedge-inflation-regime)** It rebuilds every number and figure here from FRED and Yahoo data retrieved on 7 November 2026.
+
+## Summary
+
+- **What it is.** A test of whether 10-year Treasuries hedge sharp equity selloffs less well when trailing inflation is high. The data are 3,383 weekly returns from 1962 to 2026, a duration-based bond return built from the 10-year yield, and a one-month-lagged CPI regime. The test, the 3% threshold and the bootstrap were fixed in the research brief (`proposals.json`) before any outcome data were downloaded.
+- **What it found.** In 194 high-inflation tail weeks bonds averaged −0.17%, against +0.33% in 145 low-inflation tail weeks. Bonds rose in 40% of the first group and 66% of the second. The gap holds across robustness checks on block length from 4 to 52 weeks, 5% and 20% tails, core CPI and an extra month of lag, and in an exploratory version without carry.
+- **What the market-based tests found.** With 10-year breakeven terciles from 2003, the gap is −0.34 points (interval −0.95 to +0.38), which includes the CPI-sized gap. With the 5y5y forward it is +0.46 points, the opposite sign (interval −0.20 to +1.20). Both intervals include the CPI test's own estimate over the same 2003–2026 window, −0.13, so neither settles anything.
+- **What it does not show.** It does not show that inflation causes the hedge to fail. The high-inflation regime sits mostly in 1966 to 1999 and the low one mostly in 2000 to 2020. Within each era the gap is smaller and its intervals include zero, so this sample cannot separate inflation from era. It is not a trading signal.
+
+## 1. The question and the test fixed in advance
+
+A Treasury hedges an equity book if it gains when stocks fall hard. The question is whether that payoff is weaker when inflation is high. The test was set before I ran it:
+
+1. **Tail weeks.** The worst 10% of weekly S&P 500 returns, Wednesday to Wednesday, from 1962 to 2026. The cutoff is a weekly fall of 2.40% or more.
+2. **Regime.** CPI-U year-on-year inflation above 3%, treating each month's figure as known from the 15th of the following month. Under that rule 51.7% of weeks are high-inflation.
+3. **Verdict.** YES if the mean bond return in tail weeks is lower in the high regime and a 95% block-bootstrap interval for the difference excludes zero. NO otherwise.
+4. **Market-based repeat.** The same test with terciles of the 10-year breakeven (`T10YIE`) and the 5y5y forward (`T5YIFR`), 2003 to 2026, top tercile minus bottom, lagged one week.
+
+The bootstrap is a stationary bootstrap (Politis and Romano, 1994) with a mean block of 13 weeks and 4,000 replicates. It resamples equity return, bond return and regime together in time order, recomputes the 10% cutoff in each replicate, and reports percentile intervals. The seed is 20261107.
+
+## 2. A bond return built from a yield
+
+There is no free daily total-return series for a 10-year Treasury back to 1962. So I built one from FRED's constant-maturity yield, `DGS10`. Each week the bond is a 10-year semiannual par bond with a coupon equal to last week's yield. Its return is carry, minus modified duration times the yield change, plus half the convexity times the squared change. Duration and convexity are computed from the bond at last week's yield. Average modified duration is 7.6. There is no roll-down, financing cost or bid-ask.
+
+The proxy can be checked only after August 2002, against two ETFs, over 1,266 weeks.
+
+| Check against | Weekly correlation | Correlation in 130 tail weeks | Slope of ETF on proxy | Mean, proxy vs ETF | RMSE |
+| --- | --- | --- | --- | --- | --- |
+| IEF (7–10 year) | 0.982 | 0.979 | 0.85 | 0.061% vs 0.068% | 0.23 pp |
+| TLT (20+ year) | 0.916 | 0.919 | 1.64 | 0.061% vs 0.082% | 0.99 pp |
+
+The proxy tracks IEF closely, including in the weeks that matter here. IEF's slope below 1 is consistent with a shorter duration than the proxy's. Noise in the proxy would also pull the slope below 1, and I have not separated the two. This says the proxy is a good stand-in for a 7–10 year Treasury after 2002. It says nothing direct about how good it is in the 1960s or 1970s.
+
+## 3. The pre-specified result
+
+| Test | Tail weeks, high / low | Mean bond return, high | Mean bond return, low | Gap, high minus low (95% CI) | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| CPI above 3%, 1962–2026 | 194 / 145 | −0.17% | +0.33% | −0.50 (−0.85 to −0.20) | YES |
+| 10-year breakeven terciles, 2003–2026 | 41 / 49 | +0.30% | +0.65% | −0.34 (−0.95 to +0.38) | NO |
+| 5y5y forward terciles, 2003–2026 | 35 / 47 | +0.68% | +0.22% | +0.46 (−0.20 to +1.20) | NO |
+| CPI above 3%, 2003–2026 only | 49 / 76 | +0.38% | +0.51% | −0.13 (−0.76 to +0.56) | n/a |
+
+The gaps are weekly returns in percentage points. A gap of −0.50 means that in a typical bad equity week the bond did half a percent worse when inflation was high. In the high regime the bond's own interval, −0.40% to +0.06%, includes zero, so the hedge did not reliably pay. In the low regime it did, at +0.12% to +0.58%. In 99.9% of bootstrap draws the gap is negative. A naive Welch t-test on the same weeks gives t = −3.61, p = 0.0004. It ignores clustering in time, and the bootstrap interval is the one to quote.
+
+![In the worst equity weeks the high-minus-low inflation gap in 10-year Treasury returns is −0.50 points (95% interval −0.85 to −0.20) on CPI, while the 2003–2026 estimates, including CPI over that window, all have intervals that cross zero](/basis/treasury-hedge-inflation-regime/fig1_gap_by_spec.svg)
+
+The breakeven tests do not settle it, and they do not agree with each other. They have 35 to 49 tail weeks per tercile. The 10-year breakeven points the same way as CPI, and its interval of −0.95 to +0.38 includes a gap the size of the CPI result. The 5y5y points the other way, at +0.46 (−0.20 to +1.20). That interval excludes the full-sample −0.50, but the fair comparison is the same window: the CPI test itself, restricted to 2003 to 2026, gives −0.13 points and an interval from −0.76 to +0.56, and both breakeven intervals include that. Since 2003 the data are too short to confirm or contradict the pooled YES.
+
+The chart below sets the CPI regime means beside the breakeven terciles and two exploratory periods discussed in section 5.
+
+![Mean 10-year Treasury return in the worst S&P 500 weeks was −0.17% a week when CPI inflation was above 3% and +0.33% when it was 3% or below, with breakeven terciles and the exploratory 1970s and 2021-26 periods shown alongside](/basis/treasury-hedge-inflation-regime/fig2_mean_bond_return_tail_weeks.svg)
+
+## 4. The robustness checks do not move it
+
+The first ten rows below are robustness checks on the method. The last two are exploratory. Each uses 4,000 replicates.
+
+| Specification | Tail weeks, high / low | Gap (95% CI) |
+| --- | --- | --- |
+| Primary, 13-week blocks | 194 / 145 | −0.50 (−0.85 to −0.20) |
+| 4-week blocks | 194 / 145 | −0.50 (−0.82 to −0.22) |
+| 26-week blocks | 194 / 145 | −0.50 (−0.86 to −0.19) |
+| 52-week blocks | 194 / 145 | −0.50 (−0.86 to −0.16) |
+| Worst 5% of weeks | 95 / 75 | −0.62 (−1.05 to −0.16) |
+| Worst 20% of weeks | 408 / 269 | −0.41 (−0.64 to −0.18) |
+| Core CPI above 3% | 169 / 170 | −0.89 (−1.21 to −0.58) |
+| CPI lagged a further month | 194 / 145 | −0.50 (−0.85 to −0.20) |
+| 10-year breakeven, expanding-window terciles | 31 / 50 | −0.59 (−1.17 to +0.22) |
+| 5y5y, expanding-window terciles | 23 / 55 | +0.33 (−0.34 to +1.15) |
+| Price return only, no carry (exploratory) | 194 / 145 | −0.56 (−0.92 to −0.26) |
+| Tail defined within each regime (exploratory) | 175 / 164 | −0.56 (−0.85 to −0.20) |
+
+The two exploratory rows answer obvious objections. High inflation means high yields and so more carry, which flatters the high regime. Dropping carry makes the gap slightly larger, −0.56 against −0.50, not smaller. Equity volatility also differs by regime, so one cutoff could pick different kinds of weeks. Defining the tail within each regime gives −0.56.
+
+The expanding-window terciles use only breakeven history available at the time, so they have no look-ahead. They do not change the breakeven verdicts. I also tried CPI thresholds of 2%, 2.5%, 4% and 5% after seeing the primary result, so these are exploratory. The gaps are −0.62, −0.64, −0.51 and −0.66 points, and every interval excludes zero.
+
+## 5. Inflation or era
+
+The checks in section 4 vary the method. They do not vary when the weeks happened, and the regimes are not spread evenly in time. I added an era split after seeing the primary result, because I suspected this confound. It is exploratory.
+
+| Window | Tail weeks, high / low | Mean, high | Mean, low | Gap (95% CI) |
+| --- | --- | --- | --- | --- |
+| Pooled, 1962–2026 | 194 / 145 | −0.17% | +0.33% | −0.50 (−0.85 to −0.20) |
+| 1962–1999 | 142 / 57 | −0.41% | −0.14% | −0.28 (−0.64 to +0.13) |
+| 1966–1999 | 134 / 44 | −0.44% | −0.15% | −0.29 (−0.69 to +0.21) |
+| 2000–2026 | 55 / 86 | +0.37% | +0.61% | −0.25 (−0.77 to +0.37) |
+
+The era rows redefine the worst 10% inside each era, so their tail weeks are not the pooled test's. That is why 142 plus 55 high-regime weeks makes 197, not 194, and 57 plus 86 low-regime weeks makes 143, not 145. Under the full-sample cutoff of −2.40%, the decade table below puts 131 / 53 tail weeks before 2000 and 63 / 92 from 2000, which sum to the pooled counts. I have not rerun the era gaps on that fixed cutoff, so part of the move from −0.50 to about −0.28 may come from the changed tail definition and not from the era.
+
+With that caveat, the within-era gaps are about half the pooled one. Both intervals include zero, but they are wide because each era has fewer weeks, so that is not evidence of no effect either. The rest of the pooled gap comes from comparing eras. Before 2000 the bond's mean return in equity tail weeks was negative even with low CPI (−0.14%); after 2000 it was positive even with high CPI (+0.37%). The high regime draws most of its weeks from the first era and the low regime from the second.
+
+The decade breakdown shows how uneven that is. It uses the full-sample cutoff of −2.40% and is descriptive.
+
+| Period | Tail weeks, high / low | Mean bond return, high | Mean bond return, low | Bonds up, high / low |
+| --- | --- | --- | --- | --- |
+| 1962–69 | 10 / 17 | −0.05% | −0.03% | 50% / 53% |
+| 1970–79 | 65 / 0 | −0.30% | n/a | 35% / n/a |
+| 1980–89 | 42 / 8 | −0.65% | −0.16% | 26% / 63% |
+| 1990–99 | 14 / 28 | −0.72% | −0.16% | 14% / 46% |
+| 2000–20 | 36 / 83 | +0.86% | +0.69% | 78% / 77% |
+| 2021–26 | 27 / 9 | −0.26% | −0.34% | 30% / 44% |
+
+The 1970s give no within-decade contrast at all: all 65 tail weeks are high-inflation. The 1980s and 1990s point the claimed way, on 8 and 14 weeks in the smaller cell. From 2000 to 2020 bonds hedged about equally well in both regimes, slightly better in the high one. Since 2021 they hedged poorly in both. The 194 high-regime tail weeks spread over 38 calendar years, but 107 of them fall in the 1970s and 1980s and 27 fall from 2021 on. Described without intervals, since the windows were picked after the fact: in 2022 alone, 16 tail weeks averaged −0.69% for the bond and it rose in 25% of them, while from 2000 to 2020, 119 tail weeks averaged +0.74% and it rose in 77%.
+
+The rolling correlation below shows the same three eras. A positive correlation of returns means bonds fell with stocks, so a poor hedge. Li and Yoldas (2026) correlate with yield changes, which flips the sign.
+
+![The three-year correlation of weekly S&P 500 and 10-year Treasury returns was positive before about 2000, negative from 2000 to 2020 with a low of −0.63 in 2013, and positive again since 2021, last at 0.14](/basis/treasury-hedge-inflation-regime/fig3_rolling_corr.svg)
+
+One exploratory check also keeps part of the gap within eras. If high inflation simply lifts bond returns in every week through carry, a better measure is the hedge payoff: tail-week mean minus non-tail-week mean. In non-tail weeks bonds averaged 0.204% with CPI above 3% and 0.033% otherwise. On that difference-in-differences measure the gap is −0.67 pooled (interval −1.03 to −0.37), −0.43 within 1962–1999 (−0.81 to −0.03), −0.35 within 2000–2026 (−0.86 to +0.27) and −0.45 on breakeven terciles (−1.06 to +0.29). The pre-2000 interval only just excludes zero, and I chose this measure after seeing the data. It is a lead, not a result.
+
+## 6. The regression view
+
+As a second view of the full sample, added after the primary result and so not pre-specified, I regressed the weekly bond return on the S&P 500 return, the CPI dummy and their interaction, with Newey-West standard errors at 8 lags (Newey and West, 1987), n = 3,383 and R² of 0.029.
+
+| Term | Coefficient (s.e.) | Plain meaning |
+| --- | --- | --- |
+| S&P return, low regime | −0.048 (0.020) | Bonds weakly rise as stocks fall |
+| S&P return × CPI above 3% | +0.142 (0.031) | High regime adds this per 1% S&P move |
+| CPI above 3% | +0.082 (0.038) | Higher average return, consistent with carry |
+
+The implied slope in the high regime is −0.048 + 0.142 = +0.094, so in high-inflation weeks falling stocks came with falling bonds. The interaction is well over 2 standard errors in the full sample. Restricted to 2003–2026 it shrinks and loses precision: +0.071 (s.e. 0.048) with the CPI dummy, and +0.067 (s.e. 0.045) with a top-tercile 10-year breakeven dummy. Same sign, both under 2 standard errors. An exploratory version using only the downside of equity returns gives an interaction of +0.160 (s.e. 0.052). The unconditional weekly correlation is 0.067, 0.188 with CPI above 3% and −0.106 otherwise.
+
+The regression carries the same confound as the tail test. It pools eras, and the full-sample interaction may largely reflect the pre-2000 era against the post-2000 one. I did not fit era terms, so that is untested.
+
+## 7. Limits
+
+| Limit | What it means |
+| --- | --- |
+| Inflation and era are confounded | About half the CPI gap remains within 1962–1999 and within 2000–2026, but both intervals include zero, and the era rows use era-specific tail cutoffs. The pooled YES is not evidence that inflation itself drives the hedge failure. |
+| Clustered tail weeks | 107 of 194 high-regime tail weeks fall in the 1970s and 1980s, and 27 from 2021. The effective number of episodes is far below 194. The 13-week blocks only partly reflect that, though intervals are stable from 4 to 52 weeks. |
+| Short breakeven sample | 35 to 49 tail weeks per tercile. The 10-year breakeven interval includes a gap the size of the CPI result. The 5y5y interval excludes it and its estimate has the wrong sign, which is mild evidence against the CPI result on that measure. |
+| Bond return is a proxy | Constant-maturity duration and convexity from the CMT yield, no roll-down or on-the-run effects. Validated against IEF only after August 2002. |
+| Real-time CPI is approximated | Release dates set to the 15th of the next month, no ALFRED vintages. Core CPI is seasonally adjusted at today's vintage. Investors also saw surveys and expectations that CPI year-on-year ignores. |
+| Equity series and frequency | The S&P 500 is a price index without dividends. Wednesday-to-Wednesday returns hide moves within the week. One cutoff covers eras with different volatility. |
+| Post hoc work | The era split, difference-in-differences, price return without carry, within-regime tails, other thresholds, period means, both regressions and the rolling correlation came after the primary result. |
+| End of sample | The last CPI print is September 2026. Weeks after that reuse it. |
+
+## 8. What I'd do next
+
+1. **Separate era from inflation.** Rerun the era gaps on the fixed −2.40% cutoff, then fit the tail test and the regression with era fixed effects and their interactions, so the inflation term is identified from variation within an era and comes with an interval.
+2. **Replace the proxy with CRSP returns.** Pull daily 10-year bucket returns from the CRSP Treasury database through WRDS (`crsp.tfz_dly` with the fixed-term indexes in `crsp.tfz_ft`, or the 7–10 year index), compound Wednesday to Wednesday, and add 3-month T-bill returns for excess returns. That validates the 1962–2002 bond series the proxy cannot.
+3. **Use real-time vintages and expectations.** Swap the release-date approximation for ALFRED vintages of CPI and core CPI, and test Michigan and Cleveland Fed expectations as regime variables.
+4. **Condition on the shock.** Split selloffs into supply and demand shocks, for example with oil price moves as a covariate, as Li and Yoldas (2026) argue. Repeat for 5-year and 30-year Treasuries and TIPS, and cluster the bootstrap by year.
+
+## 9. How this was made
+
+The code, analysis and drafts were produced with Claude, Anthropic's language model, through an automated research pipeline under my direction. I chose to pursue the question, reviewed the code and results, edited the draft and take responsibility for the content.
+
+## Sources
+
+Project: [code and results for this issue](https://github.com/ajaiupadhyaya/esnupi/tree/main/lab/runs/2026-11-07-treasury-hedge-inflation-regime), with every number read from `results.json`. Data: FRED CSV downloads, retrieved 7 November 2026, of [`DGS10`](https://fred.stlouisfed.org/graph/fredgraph.csv?id=DGS10) (10-year constant-maturity yield, 16,197 non-missing days from 2 January 1962), [`CPIAUCNS`](https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS) (CPI-U, not seasonally adjusted, to September 2026), [`CPILFESL`](https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPILFESL) (core CPI), [`T10YIE`](https://fred.stlouisfed.org/graph/fredgraph.csv?id=T10YIE) and [`T5YIFR`](https://fred.stlouisfed.org/graph/fredgraph.csv?id=T5YIFR) (breakevens from 2 January 2003); Yahoo Finance through yfinance for `^GSPC` daily closes from 1962 and IEF and TLT adjusted closes from 30 July 2002. Inspiration: Li, C. and Yoldas, E. (2026), [Government Bonds' Safe-Haven Property and Inflationary Pressures](https://www.federalreserve.gov/econres/notes/feds-notes/government-bonds-safe-haven-property-and-inflationary-pressures-20261016.html), FEDS Notes, 16 October 2026, whose evidence uses daily Bloomberg data, correlations with yield changes and Consensus forecasts, and which this note does not replicate. Methods: Politis and Romano (1994), "The Stationary Bootstrap", Journal of the American Statistical Association 89(428), for the block bootstrap; Newey and West (1987), Econometrica 55(3), for the regression standard errors.
+
+This is a description of one long sample, not a trading signal, and it is not a view on where Treasuries or inflation go next. It finds that bonds hedged equity selloffs worse in high-inflation weeks, and that this sample cannot say whether that is inflation or the decades in which inflation was high. The 3% threshold came from the brief. The proxy, the 13-week block, the era split and the reading of the confound are mine to argue with.
