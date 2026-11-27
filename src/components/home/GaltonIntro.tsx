@@ -62,12 +62,16 @@ function peakProbability(n: number) {
 
 function buildField(w: number, h: number, seed: number): Field {
   const floor = Math.round(h * 0.64);
-  const cols = Math.max(9, Math.round(w / (w < 700 ? 24 : 28)));
+  const narrow = w < 700;
+  const cols = Math.max(9, Math.round(w / (narrow ? 26 : 38)));
   const pitch = w / cols;
-  const n = Math.min(12, cols - 3);
+  // A large n spreads the draws over more columns: a wide bell rather than a spike.
+  const n = Math.min(36, cols - 3);
   const nominalRow = pitch * 0.9;
-  // Cap the height relative to the mound's width so it reads as a bell, not a tower.
-  const usable = Math.max(80, Math.min(floor * 0.72, (n + 1) * pitch * 1.15));
+  // Cap the height against the bell's visible width (±2σ) so it reads wider than tall.
+  // Phones have few columns, so there the cap comes from the column count instead.
+  const visibleWidth = 2 * Math.sqrt(n) * pitch;
+  const usable = Math.max(80, Math.min(floor * 0.8, narrow ? (n + 1) * pitch * 1.2 : visibleWidth * 1.05));
   const draws = Math.min(240, Math.max(24, Math.round(((usable / nominalRow) * 0.82) / peakProbability(n))));
 
   const rand = rng(seed);
@@ -133,7 +137,8 @@ export function GaltonIntro({ onDone }: { onDone?: () => void }) {
     const buildEnd = Math.max(...f.beads.map((b) => b.land)) + SETTLE;
     setCaption({
       text: `Fig. 0 — ${f.draws} draws, Binomial(${f.n}, ½)`,
-      left: Math.max(16, f.firstCol * f.pitch + (f.pitch - f.d) / 2),
+      // Under the bell's visible left edge (mean − 2σ), not its empty outer columns.
+      left: Math.max(16, (f.firstCol + f.n / 2 - Math.sqrt(f.n)) * f.pitch),
       top: f.floor + 14,
     });
 
