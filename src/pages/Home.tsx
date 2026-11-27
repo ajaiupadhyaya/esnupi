@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ParticleFigure } from "@/components/home/ParticleFigure";
+import { GaltonIntro } from "@/components/home/GaltonIntro";
 import { MosaicPhoto } from "@/components/home/MosaicPhoto";
 import { Signature } from "@/components/home/Signature";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
@@ -116,6 +117,8 @@ export default function Home() {
 
   return (
     <div className="ajh-root">
+      {/* First-visit loading animation; redraw the signature once it has faded. */}
+      <GaltonIntro onDone={() => setSigRun((r) => r + 1)} />
       <a className="ajh-legacy" href="/desktop" onClick={go("/desktop")}>
         Old desktop version
       </a>
