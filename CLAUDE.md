@@ -42,6 +42,7 @@ Supabase schema lives in `supabase/*.sql` and must be applied manually in the SQ
 - `MosaicPhoto` draws the image into a canvas with the destination-rect form of `drawImage`. Don't switch to source-rect cropping: with `srcset`, `naturalWidth` is density-corrected and source-rect crops land on the wrong pixels.
 - The page sets `data-home-page` on `<html>` while mounted (light background), the same pattern as `/film`.
 - Every animation has a `prefers-reduced-motion` fallback; keep it that way.
+- First-visit loading animation: `GaltonIntro` ("Fig. 0") is a full-screen overlay, portalled into `<body>`, in the panel blue. White hairlines string down the screen, then beads fall and stack into a real seeded `Binomial(12, ½)` sample, so a bell curve builds itself. Then the beads shrink and the overlay fades to reveal the page, which it never changes. It plays once per session (`sessionStorage` key `ajh:galton-intro`). Reduced motion means it never mounts, and any wheel, key, pointer or touch input skips to the fade. Its `onDone` redraws the signature so the strokes aren't spent under the overlay. The overlay keeps catching clicks while it fades, so the click that skips it can't land on a link.
 
 ### BASIS (`/basis`)
 
