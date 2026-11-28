@@ -4,7 +4,6 @@ import { GaltonIntro } from "@/components/home/GaltonIntro";
 import { MosaicPhoto } from "@/components/home/MosaicPhoto";
 import { Signature } from "@/components/home/Signature";
 import { useRouteTransition } from "@/components/layout/RouteTransition";
-import { CASE_STUDY_URL } from "@/lib/caseStudyUrl";
 import { BASIS_ISSUES, formatIssueNumber } from "@/lib/basisIssues";
 import { HOME_INDEX, INDEX_SECTIONS, type IndexEntry, type IndexKind } from "@/lib/homeIndex";
 import {
@@ -147,21 +146,9 @@ export default function Home() {
               </button>
             </li>
             <li>
-              <a href={CASE_STUDY_URL}>
-                <span className="ajh-dot" aria-hidden />
-                Dashboard
-              </a>
-            </li>
-            <li>
               <a href="/basis" onClick={go("/basis")}>
                 <span className="ajh-dot" aria-hidden />
                 BASIS
-              </a>
-            </li>
-            <li>
-              <a href={SITE_OWNER_SUBSTACK}>
-                <span className="ajh-dot" aria-hidden />
-                Writing
               </a>
             </li>
           </ul>
